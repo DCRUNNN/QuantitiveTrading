@@ -4,6 +4,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.math3.stat.correlation.Covariance;
 import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
 import org.apache.commons.math3.stat.descriptive.moment.Variance;
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

@@ -1,4 +1,4 @@
-package cn.edu.nju.p.service;
+package cn.edu.nju.p.service.exhibition;
 
 import cn.edu.nju.p.exception.StockNotFoundException;
 import cn.edu.nju.p.vo.KLineVO;

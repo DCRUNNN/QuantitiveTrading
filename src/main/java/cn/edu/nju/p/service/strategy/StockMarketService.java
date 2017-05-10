@@ -1,4 +1,4 @@
-package cn.edu.nju.p.service;
+package cn.edu.nju.p.service.strategy;
 
 import cn.edu.nju.p.exception.StockNoneException;
 import cn.edu.nju.p.exception.StockNotFoundException;

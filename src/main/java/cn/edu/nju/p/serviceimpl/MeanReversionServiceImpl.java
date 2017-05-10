@@ -1,13 +1,14 @@
 package cn.edu.nju.p.serviceimpl;
 
 import cn.edu.nju.p.dao.StockDao;
-import cn.edu.nju.p.service.MeanReversionService;
+import cn.edu.nju.p.service.exhibition.MeanReversionService;
 import cn.edu.nju.p.utils.CalculateHelper;
 import cn.edu.nju.p.utils.DateHelper;
 import cn.edu.nju.p.utils.StockHelper;
 import cn.edu.nju.p.vo.MeanReversionParamVO;
 import cn.edu.nju.p.vo.MeanReversionResultVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 /**
  * 均线回归策略的实现类
  */
+@Service
 public class MeanReversionServiceImpl implements MeanReversionService {
 
     @Autowired

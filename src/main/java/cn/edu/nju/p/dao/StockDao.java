@@ -14,8 +14,7 @@ public interface StockDao {
 	 * @return 若存在符合条件的股票PO则返回该PO，否则返回null
 	 */
 	StockPO getStockPO(String code, String date) throws StockNotFoundException;
-	
-	
+
 	/**
 	 * 通过股票代码得到一个股票PO
 	 * @param code 股票代码
@@ -62,7 +61,7 @@ public interface StockDao {
 	 * @param date 查询日期
 	 * @return 该股票当天的成交量
 	 */
-	int getStockVolumn(String code, String date)throws StockNotFoundException;
+	int getStockVolume(String code, String date)throws StockNotFoundException;
 	
 	/**
 	 * 得到该股票当天复盘后的收盘价

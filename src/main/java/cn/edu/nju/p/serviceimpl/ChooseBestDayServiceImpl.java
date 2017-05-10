@@ -1,11 +1,12 @@
 package cn.edu.nju.p.serviceimpl;
 
 import cn.edu.nju.p.dao.StockDao;
-import cn.edu.nju.p.service.ChooseBestDayService;
-import cn.edu.nju.p.service.MeanReversionService;
-import cn.edu.nju.p.service.MomentumService;
+import cn.edu.nju.p.service.strategy.ChooseBestDayService;
+import cn.edu.nju.p.service.exhibition.MeanReversionService;
+import cn.edu.nju.p.service.strategy.MomentumService;
 import cn.edu.nju.p.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import java.util.Map;
 /**
  * 使用全部股票作为默认的股票池
  */
+@Service
 public class ChooseBestDayServiceImpl implements ChooseBestDayService {
 
     @Autowired

@@ -112,11 +112,7 @@ public class StockHelper {
         return stockHolding
                 .stream()
                 .map(code -> {
-                    try {
-                        return (stockDao.getStockAdjClose(code, date.toString()) - stockDao.getStockAdjClose(code, lastDate.toString())) / stockDao.getStockAdjClose(code, lastDate.toString());
-                    } catch (StockNotFoundException e) {
-                        return 0.0;
-                    }
+                    return (stockDao.getStockAdjClose(code, date.toString()) - stockDao.getStockAdjClose(code, lastDate.toString())) / stockDao.getStockAdjClose(code, lastDate.toString());
                 })
                 .reduce(0.0,(a,b)->a + b) / stockHolding.size();
     }

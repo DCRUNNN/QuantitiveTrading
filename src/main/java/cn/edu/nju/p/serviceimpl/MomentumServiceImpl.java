@@ -1,13 +1,14 @@
 package cn.edu.nju.p.serviceimpl;
 
 import cn.edu.nju.p.dao.StockDao;
-import cn.edu.nju.p.service.MomentumService;
+import cn.edu.nju.p.service.strategy.MomentumService;
 import cn.edu.nju.p.utils.CalculateHelper;
 import cn.edu.nju.p.utils.DateHelper;
 import cn.edu.nju.p.utils.StockHelper;
 import cn.edu.nju.p.vo.MomentumResultVO;
 import cn.edu.nju.p.vo.MomentumVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 /**
  * MomentumService的实现类，实现了动量策略，使用简单收益率作为动量因子
  */
+@Service
 public class MomentumServiceImpl implements MomentumService {
 
     @Autowired

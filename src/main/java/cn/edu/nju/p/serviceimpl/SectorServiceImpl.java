@@ -2,14 +2,16 @@ package cn.edu.nju.p.serviceimpl;
 
 import cn.edu.nju.p.dao.StockDao;
 import cn.edu.nju.p.exception.SectorNotExistException;
-import cn.edu.nju.p.service.SectorService;
+import cn.edu.nju.p.service.strategy.SectorService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
  * sectorService的实现类
  */
+@Service
 public class SectorServiceImpl implements SectorService {
 
     @Autowired

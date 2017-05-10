@@ -2,12 +2,16 @@ package cn.edu.nju.p.dao;
 
 import cn.edu.nju.p.exception.StockNotFoundException;
 import cn.edu.nju.p.po.StockPO;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
  * Created by xihao on 17-5-10.
  */
+@Repository
 public class StockDaoImpl implements StockDao {
     /**
      * 通过股票代码和查询日期得到一个股票PO
@@ -88,7 +92,7 @@ public class StockDaoImpl implements StockDao {
      * @return 该股票当天的成交量
      */
     @Override
-    public int getStockVolumn(String code, String date) throws StockNotFoundException {
+    public int getStockVolume(String code, String date) throws StockNotFoundException {
         return 0;
     }
 
@@ -237,7 +241,7 @@ public class StockDaoImpl implements StockDao {
      */
     @Override
     public List<String> getStockBySector(String sector) {
-        return null;
+        return Arrays.asList("");
     }
 
     /**

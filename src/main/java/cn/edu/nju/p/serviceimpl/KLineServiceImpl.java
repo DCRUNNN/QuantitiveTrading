@@ -2,11 +2,12 @@ package cn.edu.nju.p.serviceimpl;
 
 import cn.edu.nju.p.dao.StockDao;
 import cn.edu.nju.p.exception.StockNotFoundException;
-import cn.edu.nju.p.service.KLineService;
+import cn.edu.nju.p.service.exhibition.KLineService;
 import cn.edu.nju.p.utils.DateHelper;
 import cn.edu.nju.p.utils.StockHelper;
 import cn.edu.nju.p.vo.KLineVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import java.util.List;
 /**
  * KLineService的实现类
  */
+@Service
 public class KLineServiceImpl implements KLineService {
 
     @Autowired
@@ -41,7 +43,7 @@ public class KLineServiceImpl implements KLineService {
             double high = stockDao.getStockHigh(code,date.toString());
             double open = stockDao.getStockOpen(code,date.toString());
             double close = stockDao.getStockClose(code,date.toString());
-            int volume = stockDao.getStockVolumn(code,date.toString());
+            int volume = stockDao.getStockVolume(code,date.toString());
             boolean isGoHigh = open<close;
             double range = high-low;
             double dBetweenOpenAndClose = Math.abs(open-close);
