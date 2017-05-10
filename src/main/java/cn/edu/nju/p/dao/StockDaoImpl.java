@@ -100,7 +100,7 @@ public class StockDaoImpl implements StockDao {
      * @return 该股票当天复盘后的收盘价
      */
     @Override
-    public double getStockAdjClose(String code, String date) throws StockNotFoundException {
+    public double getStockAdjClose(String code, String date) {
         return 0;
     }
 

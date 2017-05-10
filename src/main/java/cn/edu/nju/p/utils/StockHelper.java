@@ -97,8 +97,6 @@ public class StockHelper {
      */
     public static List<String> getRecommendStock(LocalDate currentDate) {
 
-
-
         return null;
     }
 

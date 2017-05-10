@@ -70,7 +70,7 @@ public interface StockDao {
 	 * @param date 查询日期
 	 * @return 该股票当天复盘后的收盘价
 	 */
-	double getStockAdjClose(String code, String date)throws StockNotFoundException;
+	double getStockAdjClose(String code, String date);
 		
 	/**
 	 * 得到该股票的名字
