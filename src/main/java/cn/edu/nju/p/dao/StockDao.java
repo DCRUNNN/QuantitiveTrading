@@ -3,25 +3,34 @@ package cn.edu.nju.p.dao;
 
 import cn.edu.nju.p.exception.StockNotFoundException;
 import cn.edu.nju.p.po.StockPO;
+import org.apache.ibatis.annotations.*;
+
 import java.util.List;
 
+@Mapper
 public interface StockDao {
 
 	/**
 	 * 通过股票代码和查询日期得到一个股票PO
+	 *
 	 * @param code 股票代码
 	 * @param date 查询的日期 格式是2017-03-09
 	 * @return 若存在符合条件的股票PO则返回该PO，否则返回null
 	 */
-	StockPO getStockPO(String code, String date) throws StockNotFoundException;
-
-	/**
-	 * 通过股票代码得到一个股票PO
-	 * @param code 股票代码
-	 * @return 若存在符合条件的股票PO则返回该PO，否则返回null
-	 */
-	StockPO getStockPO(String code) throws StockNotFoundException;
-	
+//	@Select(value = "SELECT * FROM t_stock WHERE code=#{code} AND date=#{date}")
+//	@Results(id = "t_stock", value = {
+//			@Result(column = "date", property = "date"),
+//			@Result(column = "open", property = "open"),
+//			@Result(column = "high", property = "high"),
+//			@Result(column = "low", property = "low"),
+//			@Result(column = "close", property = "close"),
+//			@Result(column = " volume", property = "volume"),
+//			@Result(column = "adj_close", property = "adj_close"),
+//			@Result(column = "code", property = "code"),
+//			@Result(column = "name", property = "name"),
+//			@Result(column = "market", property = "market")
+//	})
+	StockPO getStockPO(@Param("code") String code, @Param("date") String date) throws StockNotFoundException;
 	
 	/**
 	 * 得到该股票当天的开盘价
@@ -29,7 +38,8 @@ public interface StockDao {
 	 * @param date 查询日期
 	 * @return 该股票当天的开盘价
 	 */
-	double getStockOpen(String code, String date) throws StockNotFoundException;
+	@Select(value = "SELECT open FROM t_stock WHERE code=#{code} AND date=#{date}")
+	double getStockOpen(@Param("code") String code, @Param("date") String date) throws StockNotFoundException;
 	
 	/**
 	 * 得到该股票当天的最高价
@@ -37,7 +47,8 @@ public interface StockDao {
 	 * @param date 查询日期
 	 * @return 该股票当天的最高价
 	 */
-	double getStockHigh(String code, String date)throws StockNotFoundException;
+	@Select(value="SELECT high FROM t_stock WHERE code=#{code} AND date=#{date}")
+	double getStockHigh(@Param("code") String code, @Param("date") String date)throws StockNotFoundException;
 	
 	/**
 	 * 得到该股票当天的最低价
@@ -45,7 +56,8 @@ public interface StockDao {
 	 * @param date 查询日期
 	 * @return 该股票当天的最低价
 	 */
-	double getStockLow(String code, String date)throws StockNotFoundException;
+	@Select(value="SELECT low FROM t_stock WHERE code=#{code} AND date=#{date}")
+	double getStockLow(@Param("code") String code, @Param("date") String date)throws StockNotFoundException;
 	
 	/**
 	 * 得到该股票当天的收盘价
@@ -53,7 +65,8 @@ public interface StockDao {
 	 * @param date 查询日期
 	 * @return 该股票当天的收盘价
 	 */
-	double getStockClose(String code, String date) throws StockNotFoundException;
+	@Select(value="SELECT close FROM t_stock WHERE code=#{code} AND date=#{date}")
+	double getStockClose(@Param("code") String code, @Param("date") String date) throws StockNotFoundException;
 	
 	/**
 	 * 得到该股票当天的成交量
@@ -61,7 +74,8 @@ public interface StockDao {
 	 * @param date 查询日期
 	 * @return 该股票当天的成交量
 	 */
-	int getStockVolume(String code, String date)throws StockNotFoundException;
+	@Select(value="SELECT volume FROM t_stock WHERE code=#{code} AND date=#{date}")
+	int getStockVolume(@Param("code")String code, @Param("date") String date)throws StockNotFoundException;
 	
 	/**
 	 * 得到该股票当天复盘后的收盘价
@@ -69,13 +83,15 @@ public interface StockDao {
 	 * @param date 查询日期
 	 * @return 该股票当天复盘后的收盘价
 	 */
-	double getStockAdjClose(String code, String date);
+	@Select(value="SELECT adj_close FROM t_stock WHERE code=#{code} AND date=#{date}")
+	double getStockAdjClose(@Param("code") String code, @Param("date") String date);
 		
 	/**
 	 * 得到该股票的名字
 	 * @param code 代码
 	 * @return 股票名字
 	 */
+	@Select(value="SELECT name FROM t_stock WHERE code=#{code} limit 1")
 	String getStockName(String code)throws StockNotFoundException;
 	
 	/**
@@ -83,6 +99,7 @@ public interface StockDao {
 	 * @param code 股票代码
 	 * @return 市场名称
 	 */
+	@Select(value="SELECT market FROM t_stock WHERE code=#{code} limit 1")
 	String getStockMarket(String code)throws StockNotFoundException;
 
 	/**
@@ -90,6 +107,7 @@ public interface StockDao {
 	 * @param name 股票名称
 	 * @return 股票代码
 	 */
+	@Select(value="SELECT code FROM t_stock WHERE code=#{code} limit 1")
 	String getStockCode(String name)throws StockNotFoundException;
 
 	/**
@@ -98,7 +116,8 @@ public interface StockDao {
 	 * @param date 查询日期
 	 * @return 股票收盘价
 	 */
-	double getStockCloseByName(String name, String date) throws StockNotFoundException;
+	@Select(value="SELECT close FROM t_stock WHERE name=#{name} AND date=#{date}")
+	double getStockCloseByName(@Param("name") String name, @Param("date") String date) throws StockNotFoundException;
 
 	
 	/**
@@ -107,7 +126,8 @@ public interface StockDao {
 	 * @param date 查询日期
 	 * @return 股票最低价
 	 */
-	double getStockLowByName(String name, String date)throws StockNotFoundException;
+	@Select(value="SELECT low FROM t_stock WHERE name=#{name} AND date=#{date}")
+	double getStockLowByName(@Param("name") String name, @Param("date") String date)throws StockNotFoundException;
 
 	/**
 	 * 根据股票名称得到当天股票最高价
@@ -115,7 +135,8 @@ public interface StockDao {
 	 * @param date 查询日期
 	 * @return 股票最高价
 	 */
-	double getStockHighByName(String name, String date)throws StockNotFoundException;
+	@Select(value="SELECT high FROM t_stock WHERE name=#{name} AND date=#{date}")
+	double getStockHighByName(@Param("name") String name, @Param("date") String date)throws StockNotFoundException;
 
 	/**
 	 * 根据股票名称得到当天股票开盘价
@@ -123,7 +144,8 @@ public interface StockDao {
 	 * @param date 查询日期
 	 * @return 股票开盘价
 	 */
-	double getStockOpenByName(String name, String date)throws StockNotFoundException;
+	@Select(value="SELECT open FROM t_stock WHERE name=#{name} AND date=#{date}")
+	double getStockOpenByName(@Param("name") String name, @Param("date") String date)throws StockNotFoundException;
 
 	/**
 	 * 根据股票名称得到当天股票成交量
@@ -131,13 +153,15 @@ public interface StockDao {
 	 * @param date 查询日期
 	 * @return 股票成交量
 	 */
-	int getStockVolumnByName(String name, String date)throws StockNotFoundException;
+	@Select(value="SELECT volume FROM t_stock WHERE name=#{name} AND date=#{date}")
+	int getStockVolumeByName(String name, String date)throws StockNotFoundException;
 
 	/**
 	 * 根据查询日期得到当天所有股票的PO
 	 * @param date 查询日期
 	 * @return 当天所有股票PO
 	 */
+
 	List<StockPO> getPOList(String date)throws StockNotFoundException;
 
 	/**
@@ -165,5 +189,6 @@ public interface StockDao {
 	 * @return 以name,code的形式返回
 	 */
 	List<String> getAllStocks();
-	
+
+
 }
