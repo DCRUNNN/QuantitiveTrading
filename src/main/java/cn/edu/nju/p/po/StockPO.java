@@ -62,40 +62,80 @@ public class StockPO {
         return date;
     }
 
+    public void setDate(String date) {
+        this.date = date;
+    }
+
     public double getOpen(){
         return open;
     }
 
-    public double gethigh(){
+    public void setOpen(double open) {
+        this.open = open;
+    }
+
+    public double getHigh(){
         return high;
+    }
+
+    public void setHigh(double high) {
+        this.high = high;
     }
 
     public double getLow(){
         return low;
     }
 
+    public void setLow(double low) {
+        this.low = low;
+    }
+
     public double getClose(){
         return close;
+    }
+
+    public void setClose(double close) {
+        this.close = close;
     }
 
     public int getVolume(){
         return volume;
     }
 
+    public void setVolume(int volume) {
+        this.volume = volume;
+    }
+
     public double getAdjClose(){
         return adjClose;
+    }
+
+    public void setAdjClose(double adjClose) {
+        this.adjClose = adjClose;
     }
 
     public String getCode(){
         return code;
     }
 
+    public void setCode(String code) {
+        this.code = code;
+    }
+
     public String getName(){
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getMarket(){
         return market;
+    }
+
+    public void setMarket(String market) {
+        this.market = market;
     }
 
    public String getTime() {
@@ -112,6 +152,24 @@ public class StockPO {
 
     public void setCurrentPrice(double currentPrice) {
         this.currentPrice = currentPrice;
+    }
+
+    @Override
+    public String toString() {
+        return "StockPO{" +
+                "date='" + date + '\'' +
+                ", open=" + open +
+                ", high=" + high +
+                ", low=" + low +
+                ", close=" + close +
+                ", volume=" + volume +
+                ", adjClose=" + adjClose +
+                ", code='" + code + '\'' +
+                ", name='" + name + '\'' +
+                ", market='" + market + '\'' +
+                ", time='" + time + '\'' +
+                ", currentPrice=" + currentPrice +
+                '}';
     }
 }
 
