@@ -50,7 +50,7 @@ public class StockMarketServiceImpl implements StockMarketService {
             //使用lambda表达式输入过滤条件（有效日期）作为参数
             LocalDate lastDate = DateHelper.getLastDate(date, checkDate -> StockHelper.isValidByCode(po.getCode(), checkDate));
 
-            double lastClose = stockDao.getStockAdjClose(po.getCode(), lastDate.toString());//昨天收盘指数
+            double lastClose = stockDao.getStockAdjClose(po.getCode(), lastDate);//昨天收盘指数
             double currentClose = po.getAdjClose();
 
             if (lastClose < currentClose) {

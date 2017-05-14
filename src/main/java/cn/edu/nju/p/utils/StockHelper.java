@@ -27,7 +27,7 @@ public class StockHelper {
     public static boolean isValidByCode(String stockCode, LocalDate date) {
 
         try {
-            stockDao.getStockClose(stockCode,date.toString());
+            stockDao.getStockClose(stockCode,date);
             return true;
         } catch (StockNotFoundException e) {
             return false;
@@ -44,7 +44,7 @@ public class StockHelper {
     public static boolean isValidByName(String stockName, LocalDate date) {
 
         try {
-            stockDao.getStockCloseByName(stockName,date.toString());
+            stockDao.getStockCloseByName(stockName,date);
             return true;
         } catch (StockNotFoundException e) {
             return false;
@@ -112,7 +112,7 @@ public class StockHelper {
         return stockHolding
                 .stream()
                 .map(code -> {
-                    return (stockDao.getStockAdjClose(code, date.toString()) - stockDao.getStockAdjClose(code, lastDate.toString())) / stockDao.getStockAdjClose(code, lastDate.toString());
+                    return (stockDao.getStockAdjClose(code, date) - stockDao.getStockAdjClose(code, lastDate)) / stockDao.getStockAdjClose(code, lastDate);
                 })
                 .reduce(0.0,(a,b)->a + b) / stockHolding.size();
     }

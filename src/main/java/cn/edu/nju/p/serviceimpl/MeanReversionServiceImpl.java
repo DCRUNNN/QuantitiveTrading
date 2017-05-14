@@ -98,7 +98,7 @@ public class MeanReversionServiceImpl implements MeanReversionService {
 
         double total = 0;
         for (int i = 0; i < meanDayNum; i++) {
-            total += stockDao.getStockAdjClose(stockCode, currentDate.toString());
+            total += stockDao.getStockAdjClose(stockCode, currentDate);
             currentDate = DateHelper.getLastDate(currentDate, a -> true);
         }
 
@@ -135,7 +135,7 @@ public class MeanReversionServiceImpl implements MeanReversionService {
     public double getOffsetRate(LocalDate currentDate, String stockCode, int meanDayNum) {
 
         double average = getAverage(meanDayNum, currentDate, stockCode);
-        return (average - stockDao.getStockAdjClose(stockCode, currentDate.toString())) / average;
+        return (average - stockDao.getStockAdjClose(stockCode, currentDate)) / average;
     }
 
 }

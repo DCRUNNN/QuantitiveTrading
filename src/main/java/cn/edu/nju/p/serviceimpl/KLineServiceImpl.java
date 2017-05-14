@@ -39,11 +39,11 @@ public class KLineServiceImpl implements KLineService {
 
         for (LocalDate date : dateList) {
             String stockName = stockDao.getStockName(code);
-            double low = stockDao.getStockLow(code,date.toString());
-            double high = stockDao.getStockHigh(code,date.toString());
-            double open = stockDao.getStockOpen(code,date.toString());
-            double close = stockDao.getStockClose(code,date.toString());
-            int volume = stockDao.getStockVolume(code,date.toString());
+            double low = stockDao.getStockLow(code,date);
+            double high = stockDao.getStockHigh(code,date);
+            double open = stockDao.getStockOpen(code,date);
+            double close = stockDao.getStockClose(code,date);
+            int volume = stockDao.getStockVolume(code,date);
             boolean isGoHigh = open<close;
             double range = high-low;
             double dBetweenOpenAndClose = Math.abs(open-close);

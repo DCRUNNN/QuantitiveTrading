@@ -33,6 +33,8 @@ public class StockVO {
 	private String code;
 	private String name;
 	private String market;
+	private double currentPrice;
+	private String time;
 	
 	public StockVO(StockPO po){
 //		this.serial=po.getSerial();
@@ -46,6 +48,8 @@ public class StockVO {
 		this.code=po.getCode();
 		this.name=po.getName();
 		this.market=po.getMarket();
+		this.time = po.getTime();
+		this.currentPrice = po.getCurrentPrice();
 	}
 
 	public String getDate() {
@@ -128,6 +132,22 @@ public class StockVO {
 		this.market = market;
 	}
 
+	public String getTime() {
+		return time;
+	}
+
+	public void setTime(String time) {
+		this.time = time;
+	}
+
+	public double getCurrentPrice() {
+		return currentPrice;
+	}
+
+	public void setCurrentPrice(double currentPrice) {
+		this.currentPrice = currentPrice;
+	}
+
 	@Override
 	public String toString() {
 		return "StockVO{" +
@@ -141,6 +161,8 @@ public class StockVO {
 				", code='" + code + '\'' +
 				", name='" + name + '\'' +
 				", market='" + market + '\'' +
+				", currentPrice=" + currentPrice +
+				", time='" + time + '\'' +
 				'}';
 	}
 }

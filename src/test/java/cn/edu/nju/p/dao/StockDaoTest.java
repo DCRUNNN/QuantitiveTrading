@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.time.LocalDate;
+import java.time.Month;
+
 import static org.junit.Assert.*;
 /**
  * Created by dell- on 2017/5/11.
@@ -16,9 +19,9 @@ import static org.junit.Assert.*;
 @ContextConfiguration(classes = QuantradingApplication.class)
 public class StockDaoTest {
 
-//    @Autowired
-    //提示说没有找到bean??????
-//    private StockDao stockDao;
+    @Autowired
+//    提示说没有找到bean??????
+    private StockDao stockDao;
 
     @Test
     public void getStockPO() throws Exception {
@@ -33,7 +36,9 @@ public class StockDaoTest {
 
     @Test
     public void getStockHigh() throws Exception {
-//        System.out.println(stockDao.getStockOpen("000001","2017-05-11"));
+        LocalDate date = LocalDate.of(2010, Month.MAY, 12);
+        System.out.println(date);
+        System.out.println(stockDao.getStockHigh("000001",date));
     }
 
     @Test
@@ -121,5 +126,11 @@ public class StockDaoTest {
     public void getAllStocks() throws Exception {
 
     }
+
+    @Test
+    public void insertIntoStockDatabase() throws Exception {
+
+    }
+
 
 }

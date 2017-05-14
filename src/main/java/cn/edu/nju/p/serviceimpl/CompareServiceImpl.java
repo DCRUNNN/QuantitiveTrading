@@ -43,25 +43,25 @@ public class CompareServiceImpl implements CompareService {
 
         ArrayList<Double> closeList = new ArrayList<>();//这段日期的所有收盘指数
         for (LocalDate date : dateList) {
-            closeList.add(stockDao.getStockClose(code, date.toString()));
+            closeList.add(stockDao.getStockClose(code, date));
         }
 
         double max = 0;//这段时间内的最高指数
         double min = Double.MAX_VALUE;//这段时间内的最低指数
         for (LocalDate date : dateList) {
-            double high = stockDao.getStockHigh(code, date.toString());
+            double high = stockDao.getStockHigh(code, date);
             if (high > max) {
                 max = high;
             }
 
-            double low = stockDao.getStockLow(code, date.toString());
+            double low = stockDao.getStockLow(code, date);
             if (low < min) {
                 min = low;
             }
         }
 
-        double endClose = stockDao.getStockAdjClose(code,dateList.get(dateList.size()-1).toString());
-        double beginClose = stockDao.getStockAdjClose(code,dateList.get(0).toString());
+        double endClose = stockDao.getStockAdjClose(code,dateList.get(dateList.size()-1));
+        double beginClose = stockDao.getStockAdjClose(code,dateList.get(0));
         boolean hasIncreased = endClose>beginClose;//这段时间内是否上涨
         double amountOfChange = Math.abs(endClose-beginClose);//涨幅
 
@@ -72,13 +72,13 @@ public class CompareServiceImpl implements CompareService {
         //输入lambda表达式的过滤条件，（过滤掉无效日期）
         LocalDate lastDate = DateHelper.getLastDate(firstDate,checkDate-> StockHelper.isValidByCode(code,checkDate));
 
-        double firstLogClose = Math.log(stockDao.getStockAdjClose(code,firstDate.toString())/stockDao.getStockAdjClose(code,lastDate.toString()));
+        double firstLogClose = Math.log(stockDao.getStockAdjClose(code,firstDate)/stockDao.getStockAdjClose(code,lastDate));
         logList.add(firstLogClose);
 
         //计算除去第一天的所有对数收益率
         for (int k = 1; k < dateList.size(); k++) {
-            double lastClose = stockDao.getStockAdjClose(code,dateList.get(k-1).toString());
-            double currentClose = stockDao.getStockAdjClose(code,dateList.get(k).toString());
+            double lastClose = stockDao.getStockAdjClose(code,dateList.get(k-1));
+            double currentClose = stockDao.getStockAdjClose(code,dateList.get(k));
 
             double logClose = Math.log(currentClose/lastClose);
             logList.add(logClose);

@@ -133,8 +133,8 @@ public class MomentumServiceImpl implements MomentumService {
     public double countRate(LocalDate beginDate,LocalDate endDate,String stockCode){
 
         LocalDate beginDate_last = DateHelper.getLastDate(beginDate, a -> true);
-        double beginClose = stockDao.getStockAdjClose(stockCode,beginDate_last.toString());
-        double endClose = stockDao.getStockAdjClose(stockCode,endDate.toString());
+        double beginClose = stockDao.getStockAdjClose(stockCode,beginDate_last);
+        double endClose = stockDao.getStockAdjClose(stockCode,endDate);
         return (endClose-beginClose)/beginClose;
     }
 

@@ -80,14 +80,14 @@ public class AverageLineServiceImpl implements AverageLineService {
         for (int i = 0; i < meanDayNum; i++) {
             if (isCode) {
                 try {
-                    total += stockDao.getStockClose(codeOrName, currentDate.toString());
+                    total += stockDao.getStockClose(codeOrName, currentDate);
                 } catch (StockNotFoundException e) {
                     throw new RuntimeException(e);
                 }
                 currentDate = DateHelper.getLastDate(currentDate, date -> StockHelper.isValidByCode(codeOrName, date));
             } else {
                 try {
-                    total += stockDao.getStockCloseByName(codeOrName, currentDate.toString());
+                    total += stockDao.getStockCloseByName(codeOrName, currentDate);
                 } catch (StockNotFoundException e) {
                     throw new RuntimeException(e);
                 }
