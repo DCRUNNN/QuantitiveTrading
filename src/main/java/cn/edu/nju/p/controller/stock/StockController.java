@@ -19,9 +19,6 @@ public class StockController {
     @Autowired
     private SectorService sectorService;
 
-    @Autowired
-    private StockDao stockDao;
-
     @GetMapping("/stock")
     public BaseResult getSectorStocks(@RequestParam String sector) {
         List<String> stocks = sectorService.getStocks(sector);
