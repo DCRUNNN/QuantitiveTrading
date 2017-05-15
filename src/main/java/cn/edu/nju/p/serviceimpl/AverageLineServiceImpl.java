@@ -44,7 +44,7 @@ public class AverageLineServiceImpl implements AverageLineService {
         for (int level : values) {
             if (validDates.size() > level) {
                 Map<LocalDate, Double> result = new LinkedHashMap<>();
-                validDates.forEach(date -> result.put(date,getAverage(level,date,code,true)));
+                validDates.forEach(date -> result.put(date,getAverage(level,date,code)));
                 lines.add(result);
             }
         }
@@ -67,34 +67,19 @@ public class AverageLineServiceImpl implements AverageLineService {
     }
 
     /**
-     * 获得当日的均线值
-     * @param meanDayNum 几日均线
-     * @param currentDate 当前日期
-     * @param codeOrName 股票代码或者股票名称
-     * @param isCode 是否是代码
-     * @return 平均值
+     * get the mean value of an exact date
+     * @param meadDayNum the number of mean day num
+     * @param currentDate current date
+     * @param code
+     * @return
      */
-    private double getAverage(int meanDayNum, LocalDate currentDate, String codeOrName, boolean isCode) {
+    private double getAverage(int meadDayNum, LocalDate currentDate,String code) {
 
         double total = 0.0;
-        for (int i = 0; i < meanDayNum; i++) {
-            if (isCode) {
-                try {
-                    total += stockDao.getStockClose(codeOrName, currentDate);
-                } catch (StockNotFoundException e) {
-                    throw new RuntimeException(e);
-                }
-                currentDate = DateHelper.getLastDate(currentDate, date -> StockHelper.isValidByCode(codeOrName, date));
-            } else {
-                try {
-                    total += stockDao.getStockCloseByName(codeOrName, currentDate);
-                } catch (StockNotFoundException e) {
-                    throw new RuntimeException(e);
-                }
-                currentDate = DateHelper.getLastDate(currentDate, date -> StockHelper.isValidByName(codeOrName, date));
-            }
+        for (int i = 0; i < meadDayNum; i++) {
+            total += stockDao.getStockClose(code, currentDate);
+            currentDate = DateHelper.getLastDate(currentDate, date -> StockHelper.isValidByCode(code, date));
         }
-
-        return total / meanDayNum;
+        return total / meadDayNum;
     }
 }
