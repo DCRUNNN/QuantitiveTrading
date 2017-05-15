@@ -1,6 +1,7 @@
 package cn.edu.nju.p;
 
 import cn.edu.nju.p.utils.CalculateHelper;
+import org.apache.ibatis.session.Configuration;
 import org.apache.tomcat.jdbc.pool.DataSource;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.springframework.boot.SpringApplication;
@@ -34,4 +35,12 @@ public class QuantradingApplication {
 		return dataSource;
 	}
 
+	@Bean
+	public Configuration configuration(){
+
+		Configuration configuration = new Configuration();
+		configuration.setCallSettersOnNulls(true);
+		//locate the mybatis global settings here
+		return configuration;
+	}
 }

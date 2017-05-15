@@ -25,5 +25,4 @@ public class StockController {
         return new BaseResult<>(stocks);
     }
 
-
 }
