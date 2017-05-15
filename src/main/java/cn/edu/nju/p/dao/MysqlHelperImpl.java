@@ -4,10 +4,7 @@ import cn.edu.nju.p.QuantradingApplication;
 import cn.edu.nju.p.po.StockPO;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 
@@ -16,23 +13,25 @@ import java.text.DecimalFormat;
  */
 public class MysqlHelperImpl implements MysqlHelper {
 
-    private static final String PATH="d://StockData_";
+    private static final String PATH="d:\\\\StockData_";
     private static final MysqlHelperImpl helper=new MysqlHelperImpl();
 
     AnnotationConfigApplicationContext annotationConfigApplicationContext = new AnnotationConfigApplicationContext(QuantradingApplication.class);
     StockDao stockDao = annotationConfigApplicationContext.getBean(StockDao.class);
 
     @Override
-    public void getDataFromCSV(String year) {
-        String path = PATH + year;
+    public void getDataFromCSV(String year) throws SQLException{
+        String path = PATH + year + ".csv";
         String encoding="GBK";
 
-        InputStream is = null;
+        FileInputStream is = null;
         InputStreamReader reader = null;
         BufferedReader br = null;
-
+        int count = 0;
         try {
-            is = Thread.currentThread().getContextClassLoader().getResourceAsStream(PATH);
+            File file = new File(path);
+//            is = Thread.currentThread().getContextClassLoader().getResourceAsStream(path);
+            is = new FileInputStream(file);
             reader = new InputStreamReader(is, encoding);
             br = new BufferedReader(reader);
             String content = br.readLine();
@@ -51,7 +50,15 @@ public class MysqlHelperImpl implements MysqlHelper {
                 String market = data[9];
 
                 StockPO stockPO = new StockPO(date, open, high, low, close, volume, adjClose, code, name, market,"",0.0);
-                helper.insertIntoDataBase(year,stockPO);
+                try {
+                    helper.insertIntoDataBase(year, stockPO);
+                    System.out.println(stockPO.getName() + "已经写入数据库");
+                    count++;
+                    System.out.println(count);
+
+                } catch (SQLException ex) {
+                    System.out.println(stockPO.getName()+" "+stockPO.getCode()+" 没有写入数据库");
+                }
 
                 content=br.readLine();
             }
@@ -69,7 +76,7 @@ public class MysqlHelperImpl implements MysqlHelper {
     }
 
     @Override
-    public void insertIntoDataBase(String year, StockPO po) {
+    public void insertIntoDataBase(String year, StockPO po) throws SQLException {
         try {
             stockDao.insertIntoStockDatabase(year,po);
         } catch (SQLException e) {
@@ -103,4 +110,14 @@ public class MysqlHelperImpl implements MysqlHelper {
         DecimalFormat df = new DecimalFormat("#.00");
         return Double.parseDouble(df.format(data));
     }
+
+    public static void main(String[] args) {
+        String year = "2012";
+        try {
+            helper.getDataFromCSV(year);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
 }

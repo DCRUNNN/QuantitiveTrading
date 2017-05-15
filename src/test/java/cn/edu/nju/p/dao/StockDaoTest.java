@@ -2,6 +2,8 @@ package cn.edu.nju.p.dao;
 
 import cn.edu.nju.p.QuantradingApplication;
 import cn.edu.nju.p.po.StockPO;
+import com.sun.javafx.binding.BindingHelperObserver;
+import org.apache.tomcat.jni.Local;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,10 @@ public class StockDaoTest {
     @Autowired
 //    提示说没有找到bean??????
     private StockDao stockDao;
+    private LocalDate date = LocalDate.of(2010, Month.MAY, 13);
+    private String code = "000001";
+    private String name = "深发展A";
+
 
     @Test
     public void getStockPO() throws Exception {
@@ -31,75 +37,73 @@ public class StockDaoTest {
 
     @Test
     public void getStockOpen() throws Exception {
-
+        assertEquals(stockDao.getStockOpen(code, date), 18.01, 0.01);
+//        System.out.println(stockDao.getStockOpen(code, date));
     }
 
     @Test
     public void getStockHigh() throws Exception {
-        LocalDate date = LocalDate.of(2010, Month.MAY, 12);
-        System.out.println(date);
-        System.out.println(stockDao.getStockHigh("000001",date));
+        assertEquals(stockDao.getStockHigh(code, date), 18.92, 0.01);
     }
 
     @Test
     public void getStockLow() throws Exception {
-
+        assertEquals(stockDao.getStockLow(code, date), 18.00, 0.01);
     }
 
     @Test
     public void getStockClose() throws Exception {
-
+        assertEquals(stockDao.getStockClose(code, date), 18.68, 0.01);
     }
 
     @Test
     public void getStockVolume() throws Exception {
-
+        assertEquals(stockDao.getStockVolume(code, date), 156909800, 0.0);
     }
 
     @Test
     public void getStockAdjClose() throws Exception {
-
+        assertEquals(stockDao.getStockAdjClose(code, date), 6.12, 0.01);
     }
 
     @Test
     public void getStockName() throws Exception {
-//        System.out.println(stockDao.getStockName("000001"));
-
+        assertEquals(stockDao.getStockName(code), "深发展A");
     }
 
     @Test
     public void getStockMarket() throws Exception {
-
+        assertEquals(stockDao.getStockMarket(code), "SZ");
     }
 
     @Test
     public void getStockCode() throws Exception {
-
+        assertEquals("000001", stockDao.getStockCode(name));
     }
 
     @Test
     public void getStockCloseByName() throws Exception {
-
+        assertEquals(18.68, stockDao.getStockCloseByName(name,date),0.01);
     }
 
     @Test
     public void getStockLowByName() throws Exception {
-
+        assertEquals(18.00, stockDao.getStockLowByName(name, date), 0.01);
     }
 
     @Test
     public void getStockHighByName() throws Exception {
-
+        assertEquals(18.92, stockDao.getStockHighByName(name, date), 0.01);
     }
 
     @Test
     public void getStockOpenByName() throws Exception {
-
+        assertEquals(18.01, stockDao.getStockOpenByName(name, date), 0.01);
     }
 
     @Test
     public void getStockVolumeByName() throws Exception {
-
+        assertEquals(156909800, stockDao.getStockVolumeByName(name, date), 0.0);
     }
 
     @Test
