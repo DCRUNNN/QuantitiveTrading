@@ -4,8 +4,7 @@ import cn.edu.nju.p.QuantradingApplication;
 import cn.edu.nju.p.po.StockPO;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -39,10 +38,26 @@ public class GetDataFromSinaUtil {
                 }
                 String result = new String(bo.toByteArray(),"gbk");
                 String[] stocks = result.split(";");
-
                 for (String stock : stocks) {
                     System.out.println(stock);
                     String[] datas = stock.substring(21,stock.length()-1).split(",");
+                    if(datas.length==0){
+                        FileWriter fileWriter=null;
+                        BufferedWriter bw=null;
+                        try {
+                            fileWriter = new FileWriter("D://error.txt", true);
+                            bw = new BufferedWriter(fileWriter);
+                            bw.write(code);
+                            bw.newLine();
+                            bw.flush();
+                            bw.close();
+                        } catch (IOException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }  finally {
+
+                        }
+                    }
                     //获取需要的数据
                     String name = datas[0];
                     double open = Double.valueOf(datas[1]);//今日开盘价
@@ -59,7 +74,7 @@ public class GetDataFromSinaUtil {
                     StockPO po = new StockPO(date, open, high, low, close, volume, close, code, name, market, time, currentprice);
                     AnnotationConfigApplicationContext annotationConfigApplicationContext = new AnnotationConfigApplicationContext(QuantradingApplication.class);
                     StockDao stockDao = annotationConfigApplicationContext.getBean(StockDao.class);
-                    stockDao.insertIntoStockDatabase("2010",po);
+                    stockDao.insertIntoStockDatabase("2017",po);
                 }
                 bo.reset();
             } catch (Exception e) {
@@ -78,7 +93,7 @@ public class GetDataFromSinaUtil {
 
     public static void main(String[] args) {
 
-        GetDataFromSinaUtil.getInstance().getStockCurrentData("000001", "sz");
+        GetDataFromSinaUtil.getInstance().getStockCurrentData("002204", "sz");
     }
 
 }

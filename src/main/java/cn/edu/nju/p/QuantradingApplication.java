@@ -31,6 +31,7 @@ public class QuantradingApplication {
 		dataSource.setUsername("root");
 		dataSource.setPassword("mysql");
 		dataSource.setDriverClassName("com.mysql.jdbc.Driver");
+		dataSource.setMaxActive(50);
 		return dataSource;
 	}
 

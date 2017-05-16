@@ -14,7 +14,7 @@ import java.text.DecimalFormat;
 public class MysqlHelperImpl implements MysqlHelper {
 
     private static final String PATH="d:\\\\StockData_";
-    private static final MysqlHelperImpl helper=new MysqlHelperImpl();
+    private static final MysqlHelperImpl helper=new MysqlHelperImpl(); //单例模式
 
     AnnotationConfigApplicationContext annotationConfigApplicationContext = new AnnotationConfigApplicationContext(QuantradingApplication.class);
     StockDao stockDao = annotationConfigApplicationContext.getBean(StockDao.class);
@@ -27,7 +27,7 @@ public class MysqlHelperImpl implements MysqlHelper {
         FileInputStream is = null;
         InputStreamReader reader = null;
         BufferedReader br = null;
-        int count = 0;
+//        int count = 0;
         try {
             File file = new File(path);
 //            is = Thread.currentThread().getContextClassLoader().getResourceAsStream(path);
@@ -53,8 +53,8 @@ public class MysqlHelperImpl implements MysqlHelper {
                 try {
                     helper.insertIntoDataBase(year, stockPO);
                     System.out.println(stockPO.getName() + "已经写入数据库");
-                    count++;
-                    System.out.println(count);
+//                    count++;
+//                    System.out.println(count);
 
                 } catch (SQLException ex) {
                     System.out.println(stockPO.getName()+" "+stockPO.getCode()+" 没有写入数据库");
@@ -75,6 +75,12 @@ public class MysqlHelperImpl implements MysqlHelper {
         }
     }
 
+    /**
+     * 插入数据库
+     * @param year
+     * @param po
+     * @throws SQLException
+     */
     @Override
     public void insertIntoDataBase(String year, StockPO po) throws SQLException {
         try {
@@ -86,6 +92,11 @@ public class MysqlHelperImpl implements MysqlHelper {
 
     }
 
+    /**
+     * 调整一下股票的名称，去除间隔，解决A的全角半角问题
+     * @param name
+     * @return
+     */
     public static String adjustName(String name){
         String newName=name.replaceAll(" ", "");
         if(newName.contains("Ａ")){
@@ -95,6 +106,11 @@ public class MysqlHelperImpl implements MysqlHelper {
         return newName;
     }
 
+    /**
+     * 调整股票代码 变成六位标准的代码
+     * @param code
+     * @return
+     */
     public static String adjustCode(String code){
         String result=code;
         int len=code.length();
@@ -105,6 +121,11 @@ public class MysqlHelperImpl implements MysqlHelper {
         return result;
     }
 
+    /**
+     * 设置数据精度，保留小数点后两位小数
+     * @param value
+     * @return
+     */
     public double setPrecision(String value){
         double data=Double.parseDouble(value);
         DecimalFormat df = new DecimalFormat("#.00");
