@@ -28,12 +28,11 @@ public class DaoExceptionHandleAop {
         Object result = null;
         try {
             result = proceedingJoinPoint.proceed();
-        } catch (NullPointerException ne) {
-            throw new StockNotFoundException(proceedingJoinPoint.getSignature().getName() + " could not find the stock!");
         } catch (Throwable throwable) {
-            /**
-             * to be completed
-             */
+            throwable.printStackTrace();
+        }
+        if (result == null) {
+            throw new StockNotFoundException(proceedingJoinPoint.getSignature().getName() + " could not find the stock!");
         }
         return result;
     }
