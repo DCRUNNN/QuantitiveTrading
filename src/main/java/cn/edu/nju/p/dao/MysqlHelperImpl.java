@@ -2,7 +2,11 @@ package cn.edu.nju.p.dao;
 
 import cn.edu.nju.p.QuantradingApplication;
 import cn.edu.nju.p.po.StockPO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.stereotype.Component;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 
 import java.io.*;
 import java.sql.SQLException;
@@ -11,13 +15,14 @@ import java.text.DecimalFormat;
 /**
  * Created by dell- on 2017/5/12.
  */
+@Component
 public class MysqlHelperImpl implements MysqlHelper {
 
     private static final String PATH="d:\\\\StockData_";
     private static final MysqlHelperImpl helper=new MysqlHelperImpl(); //单例模式
 
-    AnnotationConfigApplicationContext annotationConfigApplicationContext = new AnnotationConfigApplicationContext(QuantradingApplication.class);
-    StockDao stockDao = annotationConfigApplicationContext.getBean(StockDao.class);
+    @Autowired
+    private StockDao stockDao;
 
     @Override
     public void getDataFromCSV(String year) throws SQLException{
@@ -133,12 +138,13 @@ public class MysqlHelperImpl implements MysqlHelper {
     }
 
     public static void main(String[] args) {
-        String year = "2012";
+        System.out.println("Hello World!");
+       /* String year = "2012";
         try {
             helper.getDataFromCSV(year);
         } catch (SQLException ex) {
             ex.printStackTrace();
-        }
+        }*/
     }
 
 }

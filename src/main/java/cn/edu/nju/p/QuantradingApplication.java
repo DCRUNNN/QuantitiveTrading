@@ -36,13 +36,4 @@ public class QuantradingApplication {
 		dataSource.setMaxActive(50);
 		return dataSource;
 	}
-
-	@Bean
-	public Configuration configuration(){
-
-		Configuration configuration = new Configuration();
-		configuration.setCallSettersOnNulls(true);
-		//locate the mybatis global settings here
-		return configuration;
-	}
 }
