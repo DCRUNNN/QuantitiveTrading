@@ -24,7 +24,7 @@ public interface StockDao {
 	 * @param date 查询的日期 格式是2017-03-09
 	 * @return 若存在符合条件的股票PO则返回该PO，否则返回null
 	 */
-	@Results(id = "stockpo", value = {
+/*	@Results(id = "stockpo", value = {
 			@Result(id=true,property = "date",column = "date",javaType = String.class,jdbcType = JdbcType.DATE),
 			@Result(property = "open",column = "open",javaType = Double.class,jdbcType = JdbcType.DOUBLE),
 			@Result(property = "high",column = "high",javaType = Double.class,jdbcType = JdbcType.DOUBLE),
@@ -37,7 +37,7 @@ public interface StockDao {
 			@Result(property = "market",column = "market",javaType = String.class,jdbcType = JdbcType.VARCHAR),
 			@Result(property = "time",column = "time",javaType = String.class,jdbcType = JdbcType.VARCHAR),
 			@Result(property = "currentPrice",column = "currentprice",javaType = Double.class,jdbcType = JdbcType.DOUBLE)
-	})
+	})*/
 	@Select(value = "SELECT * FROM t_stock_" + "${date.getYear()}" + " WHERE code=#{code} AND date=#{date}")
 	@StockNotFoundCheck
 	StockPO getStockPO(@Param("code") String code, @Param("date") LocalDate date) throws StockNotFoundException;

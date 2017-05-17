@@ -133,6 +133,19 @@ public class StockHelper {
         return primaryRate;
     }
 
+    /**
+     * to check if the stock exists
+     * @param stockCode
+     * @return true if exists,else false
+     */
+    public static boolean codeExists(String stockCode) {
+        List<String> codes = stockDao.getPOCodes();
+        if (codes.contains(stockCode)) {
+            return true;
+        }
+        return false;
+    }
+
     @Autowired
     public void setStockDao(StockDao dao) {
         stockDao = dao;

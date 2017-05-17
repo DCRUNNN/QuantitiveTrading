@@ -5,6 +5,7 @@ import cn.edu.nju.p.vo.CompanyNewsVO;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,21 +14,17 @@ import java.util.List;
 /**
  * Created by dell- on 2017/5/17.
  */
+@Repository
 public class CompanyDaoImpl implements CompanyDao {
 
     private static final String THS_URL="http://stockpage.10jqka.com.cn/";
-    private static final CompanyDaoImpl INSTANCE=new CompanyDaoImpl(); //单例模式
-
-    public static CompanyDaoImpl getInstance() {
-        return INSTANCE;
-    }
 
     /**
      * Jsoup初始化
      * @param URL
      * @return
      */
-    public Document getDocument(String URL) {
+    private Document getDocument(String URL) {
         try{
             return Jsoup.connect(URL).get();
         } catch (IOException e) {
@@ -41,8 +38,8 @@ public class CompanyDaoImpl implements CompanyDao {
      * @param code
      * @return 股票名称
      */
-    public static String getName(String code) {
-        Document doc = CompanyDaoImpl.getInstance().getDocument(THS_URL + code + "/");
+    private String getName(String code) {
+        Document doc = getDocument(THS_URL + code + "/");
         Elements html = doc.select("[class=m_logo fl]");
         return html.select("strong").text();
     }
@@ -56,10 +53,10 @@ public class CompanyDaoImpl implements CompanyDao {
     public CompanyInfoVO getCompanyInfoVO(String code) {
         CompanyInfoVO vo=new CompanyInfoVO();
 
-        String name = CompanyDaoImpl.getName(code);
+        String name = getName(code);
         vo.setName(name); //设置公司名称
 
-        Document doc = CompanyDaoImpl.getInstance().getDocument(THS_URL + code + "/");
+        Document doc = getDocument(THS_URL + code + "/");
         Elements html = doc.select("[class=company_details]");//选择公司信息所在的class
         Elements data = html.select("dd");//得到公司的信息
         //设置VO属性
@@ -87,7 +84,7 @@ public class CompanyDaoImpl implements CompanyDao {
     @Override
     public List<CompanyNewsVO> getCompanyNewsVOList(String code) {
         List<CompanyNewsVO> list = new ArrayList<CompanyNewsVO>();
-        Document doc = CompanyDaoImpl.getInstance().getDocument(THS_URL + code + "/");
+        Document doc = getDocument(THS_URL + code + "/");
         Elements html = doc.select("[class=news_list stat][stat=f10_spqk_gsxw]");//选择公司新闻所在的class
         Elements data_title = html.select("span[class$=news_title fl]");//得到公司的新闻标题
         Elements data_date = html.select("span[class$=news_date]");
