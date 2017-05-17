@@ -3,6 +3,7 @@ package cn.edu.nju.p.utils;
 import cn.edu.nju.p.dao.StockDao;
 import cn.edu.nju.p.exception.StockNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.util.LinkedHashMap;
@@ -13,6 +14,7 @@ import java.util.stream.Collectors;
 /**
  * @see StockDao 调用股票数据层接口，对股票进行一些逻辑处理
  */
+@Component
 public class StockHelper {
 
     private static StockDao stockDao;
@@ -27,6 +29,7 @@ public class StockHelper {
     public static boolean isValidByCode(String stockCode, LocalDate date) {
 
         try {
+            System.out.println(stockDao == null);
             stockDao.getStockClose(stockCode, date);
             return true;
         } catch (StockNotFoundException /*| NullPointerException*/ e) {

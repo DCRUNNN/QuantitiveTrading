@@ -11,8 +11,8 @@ import org.springframework.stereotype.Component;
 /**
  * Created by soft on 2017/5/15.
  */
-//@Aspect
-//@Component
+@Aspect
+@Component
 public class DaoExceptionHandleAop {
 
     /* execution(* cn.edu.nju.p.dao.StockDao.*(..)) && @annotation(cn.edu.nju.p.annotation.StockNotFoundCheck)*/
@@ -23,7 +23,7 @@ public class DaoExceptionHandleAop {
     @Pointcut("execution(* cn.edu.nju.p.controller.exhibition.ExhibitionController.*(..))")
     public void exhibition(){}
 
-    @Around(value = "exhibition()")
+    @Around(value = "getStockInfo()")
     public Object getStockInfo(ProceedingJoinPoint proceedingJoinPoint) {
         System.out.println("Could go here!");
         Object result = null;
