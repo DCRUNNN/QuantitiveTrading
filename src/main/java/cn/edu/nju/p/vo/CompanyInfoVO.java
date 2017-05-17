@@ -1,6 +1,5 @@
 package cn.edu.nju.p.vo;
 
-import cn.edu.nju.p.po.CompanyInfoPO;
 
 /**
  * Created by dc on 2017/5/16.
@@ -24,23 +23,8 @@ public class CompanyInfoVO {
     private String totalShareCapital;//总股本
     private String outstandingShares;//流通股
 
-    public CompanyInfoVO(CompanyInfoPO po) {
-        this.name = po.getName();
-        this.area = po.getArea();
-        this.concept = po.getConcept();
-        this.business = po.getBusiness();
-        this.businessDetail = po.getBusinessDetail();
-        this.listingDate = po.getListingDate();
-        this.netAssetPerShare = po.getNetAssetPerShare();
-        this.incomePerShare = po.getIncomePerShare();
-        this.profit = po.getProfit();
-        this.growthRate_profit = po.getGrowthRate_profit();
-        this.incomeAll = po.getIncomeAll();
-        this.cashFlowPerShare = po.getIncomePerShare();
-        this.fundPerShare = po.getFundPerShare();
-        this.undistributedProfitPerShare = po.getUndistributedProfitPerShare();
-        this.totalShareCapital = po.getTotalShareCapital();
-        this.outstandingShares = po.getOutstandingShares();
+    public CompanyInfoVO() {
+
     }
 
 

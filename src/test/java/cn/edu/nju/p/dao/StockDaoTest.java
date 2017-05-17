@@ -34,8 +34,12 @@ public class StockDaoTest {
 
     @Test
     public void getStockPO() throws Exception {
-//        StockPO po = stockDao.getStockPO("000001", "2017-05-11");
-//        System.out.println(po.getName());
+        StockPO po = stockDao.getStockPO(code, date);
+        if (po == null) {
+            System.out.println("po是null！！");
+        } else {
+            System.out.println(po.toString());
+        }
     }
 
     @Test
