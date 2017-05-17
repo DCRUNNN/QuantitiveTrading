@@ -21,6 +21,10 @@ public class MysqlHelperImpl implements MysqlHelper {
     private static final String PATH="d:\\\\StockData_";
 //    private static final MysqlHelperImpl helper=new MysqlHelperImpl(); //单例模式
 
+//    public static MysqlHelperImpl getInstance() {
+//        return helper;
+//    }
+
     @Autowired
     private StockDao stockDao;
 
@@ -89,6 +93,7 @@ public class MysqlHelperImpl implements MysqlHelper {
     @Override
     public void insertIntoDataBase(String year, StockPO po) throws SQLException {
         try {
+            System.out.println(stockDao == null);
             stockDao.insertIntoStockDatabase(year,po);
         } catch (SQLException e) {
             System.out.println(po.getName()+" "+po.getCode()+" 没有写入数据库");
@@ -137,14 +142,13 @@ public class MysqlHelperImpl implements MysqlHelper {
         return Double.parseDouble(df.format(data));
     }
 
-    /*public static void main(String[] args) {
-//        System.out.println("Hello World!");
-        String year = "2012";
-        try {
-            new MysqlHelperImpl().getDataFromCSV(year);
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-    }*/
+//    public static void main(String[] args) {
+//        String year = "2016";
+//        try {
+//            new MysqlHelperImpl().getDataFromCSV(year);
+//        } catch (SQLException ex) {
+//            ex.printStackTrace();
+//        }
+//    }
 
 }

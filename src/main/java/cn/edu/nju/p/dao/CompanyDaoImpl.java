@@ -99,4 +99,13 @@ public class CompanyDaoImpl implements CompanyDao {
         }
         return list;
     }
+
+    public static void main(String[] args) {
+        CompanyDaoImpl test = new CompanyDaoImpl();
+        System.out.println(test.getCompanyInfoVO("000001").toString());
+        List<CompanyNewsVO> list = test.getCompanyNewsVOList("000001");
+        for (int i=0;i<list.size();i++) {
+            System.out.println(list.get(i).toString());
+        }
+    }
 }

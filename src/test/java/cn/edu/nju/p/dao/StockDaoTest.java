@@ -14,6 +14,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.List;
 
 import static org.junit.Assert.*;
 /**
@@ -27,19 +28,21 @@ public class StockDaoTest {
     @Autowired
 //    提示说没有找到bean??????
     private StockDao stockDao;
-    private LocalDate date = LocalDate.of(2010, Month.MAY, 13);
+    private LocalDate date = LocalDate.of(2013, Month.MAY, 13);
     private String code = "000001";
     private String name = "深发展A";
 
 
     @Test
     public void getStockPO() throws Exception {
+        System.out.println("=================================================");
         StockPO po = stockDao.getStockPO(code, date);
         if (po == null) {
             System.out.println("po是null！！");
         } else {
             System.out.println(po.toString());
         }
+        System.out.println("==================================================");
     }
 
     @Test
@@ -120,7 +123,8 @@ public class StockDaoTest {
 
     @Test
     public void getPOCodes() throws Exception {
-
+        List<String> list = stockDao.getPOCodes();
+        System.out.println(list);
     }
 
     @Test

@@ -189,6 +189,7 @@ public interface StockDao {
 	 * 获取所有有数据股票的股票代码
 	 * @return 股票代码的列表
 	 */
+	@Select(value="SELECT distinct code from t_stock_2016")
 	List<String> getPOCodes();
 	
 	/**
