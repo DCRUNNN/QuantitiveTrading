@@ -137,7 +137,7 @@ public class MysqlHelperImpl implements MysqlHelper {
         return Double.parseDouble(df.format(data));
     }
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
 //        System.out.println("Hello World!");
         String year = "2012";
         try {
@@ -145,6 +145,6 @@ public class MysqlHelperImpl implements MysqlHelper {
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-    }
+    }*/
 
 }
