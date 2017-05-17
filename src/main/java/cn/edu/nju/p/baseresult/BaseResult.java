@@ -14,9 +14,10 @@ public class BaseResult<T> implements Serializable{
 
     /**
      * successfully get the result data,error code is 0
+     * @param errorCode
      * @param data the data to be transferred
      */
-    public BaseResult( T data) {
+    public BaseResult(int errorCode, T data) {
         this.data = data;
         this.errorCode = 0;
     }

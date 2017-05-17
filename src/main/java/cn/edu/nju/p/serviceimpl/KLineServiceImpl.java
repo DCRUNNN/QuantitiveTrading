@@ -30,7 +30,7 @@ public class KLineServiceImpl implements KLineService {
      * @param endDate   结束日期
      * @return 返回每一天的KLine数据
      */
-    public List<KLineVO> getKLineVOSByCode(String code, LocalDate beginDate, LocalDate endDate) throws StockNotFoundException {
+    public List<KLineVO> getKLineVOSByCode(String code, LocalDate beginDate, LocalDate endDate) {
 
 //        使用lambda表达式过滤没有数据的日期
         List<LocalDate> dateList = DateHelper.getBetweenDateAndFilter(beginDate,endDate, date-> StockHelper.isValidByCode(code,date));

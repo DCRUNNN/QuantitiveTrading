@@ -5,14 +5,16 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.stereotype.Component;
 
 /**
  * Created by soft on 2017/5/15.
  */
-//@Aspect
+@Aspect
+@Component
 public class DaoExceptionHandleAop {
 
-    @Pointcut("execution(* cn.edu.nju.p.dao.StockDao.*(..))") //implies all the methods of stock dao
+    @Pointcut(value = "execution(* cn.edu.nju.p.dao.StockDao.*(..)) && @annotation(cn.edu.nju.p.annotation.StockNotFoundCheck)") //implies all the methods of stock dao
     public void getStockInfo(){}
 
     @Around(value = "getStockInfo()")
@@ -25,7 +27,7 @@ public class DaoExceptionHandleAop {
             }
         } catch (Throwable throwable) {
             /**
-             * to be complete
+             * to be completed
              */
         }
         return result;

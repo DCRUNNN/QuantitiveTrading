@@ -22,7 +22,7 @@ public class StockController {
     @GetMapping("/stock")
     public BaseResult getSectorStocks(@RequestParam String sector) {
         List<String> stocks = sectorService.getStocks(sector);
-        return new BaseResult<>(stocks);
+        return new BaseResult<>(0,stocks);
     }
 
 }
