@@ -1,7 +1,5 @@
 package cn.edu.nju.p.vo;
 
-import cn.edu.nju.p.po.CompanyNewsPO;
-
 /**
  * Created by dell- on 2017/5/16.
  */
@@ -11,10 +9,10 @@ public class CompanyNewsVO {
     private String link; //新闻的URL链接
     private String title; //新闻标题
 
-    public CompanyNewsVO(CompanyNewsPO po) {
-        this.date = po.getDate();
-        this.link = po.getLink();
-        this.title = po.getTitle();
+    public CompanyNewsVO(String title, String link, String date) {
+        this.title = title;
+        this.link = link;
+        this.date = date;
     }
 
     public CompanyNewsVO() {

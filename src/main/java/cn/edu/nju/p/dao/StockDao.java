@@ -5,10 +5,12 @@ import cn.edu.nju.p.annotation.StockNotFoundCheck;
 import cn.edu.nju.p.exception.StockNotFoundException;
 import cn.edu.nju.p.po.StockPO;
 import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.type.JdbcType;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface StockDao {
@@ -20,22 +22,26 @@ public interface StockDao {
 	 * @param date 查询的日期 格式是2017-03-09
 	 * @return 若存在符合条件的股票PO则返回该PO，否则返回null
 	 */
-//	@Select(value = "SELECT * FROM t_stock WHERE code=#{code} AND date=#{date}")
-//	@Results(id = "t_stock", value = {
-//			@Result(column = "date", property = "date"),
-//			@Result(column = "open", property = "open"),
-//			@Result(column = "high", property = "high"),
-//			@Result(column = "low", property = "low"),
-//			@Result(column = "close", property = "close"),
-//			@Result(column = " volume", property = "volume"),
-//			@Result(column = "adj_close", property = "adj_close"),
-//			@Result(column = "code", property = "code"),
-//			@Result(column = "name", property = "name"),
-//			@Result(column = "market", property = "market")
-//	})
+	@Results(id = "stockpo", value = {
+			@Result(id=true,property = "date",column = "date",javaType = String.class,jdbcType = JdbcType.DATE),
+			@Result(property = "open",column = "open",javaType = Double.class,jdbcType = JdbcType.DOUBLE),
+			@Result(property = "high",column = "high",javaType = Double.class,jdbcType = JdbcType.DOUBLE),
+			@Result(property = "low",column = "low",javaType = Double.class,jdbcType = JdbcType.DOUBLE),
+			@Result(property = "close",column = "close",javaType = Double.class,jdbcType = JdbcType.DOUBLE),
+			@Result(property = "volume",column = " volume",javaType = Integer.class,jdbcType = JdbcType.INTEGER),
+			@Result(property = "adjClose",column = "adj_close",javaType = Double.class,jdbcType = JdbcType.DOUBLE),
+			@Result(id=true,property = "code",column = "code",javaType = String.class,jdbcType = JdbcType.VARCHAR),
+			@Result(property = "name",column = "name",javaType = String.class,jdbcType = JdbcType.VARCHAR),
+			@Result(property = "market",column = "market",javaType = String.class,jdbcType = JdbcType.VARCHAR),
+			@Result(property = "time",column = "time",javaType = String.class,jdbcType = JdbcType.VARCHAR),
+			@Result(property = "currentPrice",column = "currentprice",javaType = Double.class,jdbcType = JdbcType.DOUBLE)
+	})
+	@Select(value = "SELECT * FROM t_stock_" + "${date.getYear()}" + " WHERE code=#{code} AND date=#{date}")
 	@StockNotFoundCheck
-	StockPO getStockPO(@Param("code") String code, @Param("date") String date) throws StockNotFoundException;
-	
+	StockPO getStockPO(@Param("code") String code, @Param("date") LocalDate date) throws StockNotFoundException;
+
+	public List<StockPO> findStockPOByMap(Map<String, LocalDate> params);
+
 	/**
 	 * 得到该股票当天的开盘价
 	 * @param code 股票代码和市场名称 eg 000001.SZ
