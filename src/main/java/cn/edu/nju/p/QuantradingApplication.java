@@ -30,6 +30,7 @@ public class QuantradingApplication {
 	public DataSource dataSource(){
 		DataSource dataSource = new DataSource();
 		dataSource.setUrl("jdbc:mysql://localhost:3306/quantitivetrading");
+//		dataSource.
 		dataSource.setUsername("root");
 		dataSource.setPassword("mysql");
 		dataSource.setDriverClassName("com.mysql.jdbc.Driver");
