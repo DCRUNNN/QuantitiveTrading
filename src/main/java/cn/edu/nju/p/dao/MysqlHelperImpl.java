@@ -58,7 +58,21 @@ public class MysqlHelperImpl implements MysqlHelper {
                 String name = adjustName(data[8]);
                 String market = data[9];
 
-                StockPO stockPO = new StockPO(date, open, high, low, close, volume, adjClose, code, name, market,"",0.0);
+                StockPO stockPO = new StockPO();
+                //date, open, high, low, close, volume, adjClose, code, name, market,"",0.0
+                stockPO.setAdj_close(adjClose);
+                stockPO.setClose(close);
+                stockPO.setCode(code);
+                stockPO.setCurrentPrice(0.0);
+                stockPO.setDate(date);
+                stockPO.setOpen(open);
+                stockPO.setHigh(high);
+                stockPO.setLow(low);
+                stockPO.setVolume(volume);
+                stockPO.setMarket(market);
+                stockPO.setName(name);
+                stockPO.setTime("");
+
                 try {
                     insertIntoDataBase(year, stockPO);
                     System.out.println(stockPO.getName() + "已经写入数据库");

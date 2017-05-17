@@ -29,27 +29,9 @@ public class StockHelper {
     public static boolean isValidByCode(String stockCode, LocalDate date) {
 
         try {
-            System.out.println(stockDao == null);
             stockDao.getStockClose(stockCode, date);
             return true;
         } catch (StockNotFoundException /*| NullPointerException*/ e) {
-            return false;
-        }
-    }
-
-    /**
-     * 根据股票名称判断这个日期是否存在数据
-     *
-     * @param stockName
-     * @param date
-     * @return 存在数据返回true，不存在数据返回false
-     */
-    public static boolean isValidByName(String stockName, LocalDate date) {
-
-        try {
-            stockDao.getStockCloseByName(stockName,date);
-            return true;
-        } catch (StockNotFoundException e) {
             return false;
         }
     }

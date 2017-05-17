@@ -29,14 +29,14 @@ public class StockPO {
     private double low;
     private double close;
     private int volume;
-    private double adjClose;
+    private double adj_close;
     private String code;
     private String name;
     private String market;
     private String time;
     private double currentPrice;
 
-    public StockPO(String date,double open,double high,double low,
+  /*  public StockPO(String date,double open,double high,double low,
                    double close,int volume,double adjClose,String code,String name,String market,String time,double currentPrice){
 //		this.serial=serial;
         this.date = date;
@@ -52,13 +52,13 @@ public class StockPO {
         this.time = time;
         this.currentPrice = currentPrice;
     }
-
+*/
 
 //	public int getSerial(){
 //		return serial;
 //	}
 
-    public String getDate(){
+    public String getDate() {
         return date;
     }
 
@@ -66,7 +66,7 @@ public class StockPO {
         this.date = date;
     }
 
-    public double getOpen(){
+    public double getOpen() {
         return open;
     }
 
@@ -74,7 +74,7 @@ public class StockPO {
         this.open = open;
     }
 
-    public double getHigh(){
+    public double getHigh() {
         return high;
     }
 
@@ -82,7 +82,7 @@ public class StockPO {
         this.high = high;
     }
 
-    public double getLow(){
+    public double getLow() {
         return low;
     }
 
@@ -90,7 +90,7 @@ public class StockPO {
         this.low = low;
     }
 
-    public double getClose(){
+    public double getClose() {
         return close;
     }
 
@@ -98,7 +98,7 @@ public class StockPO {
         this.close = close;
     }
 
-    public int getVolume(){
+    public int getVolume() {
         return volume;
     }
 
@@ -106,15 +106,15 @@ public class StockPO {
         this.volume = volume;
     }
 
-    public double getAdjClose(){
-        return adjClose;
+    public double getAdj_close() {
+        return adj_close;
     }
 
-    public void setAdjClose(double adjClose) {
-        this.adjClose = adjClose;
+    public void setAdj_close(double adj_close) {
+        this.adj_close = adj_close;
     }
 
-    public String getCode(){
+    public String getCode() {
         return code;
     }
 
@@ -122,7 +122,7 @@ public class StockPO {
         this.code = code;
     }
 
-    public String getName(){
+    public String getName() {
         return name;
     }
 
@@ -130,7 +130,7 @@ public class StockPO {
         this.name = name;
     }
 
-    public String getMarket(){
+    public String getMarket() {
         return market;
     }
 
@@ -138,13 +138,13 @@ public class StockPO {
         this.market = market;
     }
 
-   public String getTime() {
-       return time;
-   }
+    public String getTime() {
+        return time;
+    }
 
-   public void setTime(String time) {
-       this.time = time;
-   }
+    public void setTime(String time) {
+        this.time = time;
+    }
 
     public double getCurrentPrice() {
         return currentPrice;
@@ -163,7 +163,7 @@ public class StockPO {
                 ", low=" + low +
                 ", close=" + close +
                 ", volume=" + volume +
-                ", adjClose=" + adjClose +
+                ", adj_close=" + adj_close +
                 ", code='" + code + '\'' +
                 ", name='" + name + '\'' +
                 ", market='" + market + '\'' +

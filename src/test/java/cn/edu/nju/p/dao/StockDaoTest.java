@@ -18,7 +18,7 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 /**
- * Created by dell- on 2017/5/11.
+ * attention! must use the mysql on the server,because the column current_time has been modified.
  */
 @RunWith(SpringRunner.class)
 @WebAppConfiguration
@@ -73,7 +73,7 @@ public class StockDaoTest {
 
     @Test
     public void getStockAdjClose() throws Exception {
-        assertEquals(stockDao.getStockAdjClose(code, date), 6.12, 0.01);
+        assertEquals(stockDao.getStockAdjClose(code, date), 6.66, 0.01);
     }
 
     @Test
@@ -92,33 +92,8 @@ public class StockDaoTest {
     }
 
     @Test
-    public void getStockCloseByName() throws Exception {
-        assertEquals(18.68, stockDao.getStockCloseByName(name,date),0.01);
-    }
-
-    @Test
-    public void getStockLowByName() throws Exception {
-        assertEquals(18.00, stockDao.getStockLowByName(name, date), 0.01);
-    }
-
-    @Test
-    public void getStockHighByName() throws Exception {
-        assertEquals(18.92, stockDao.getStockHighByName(name, date), 0.01);
-    }
-
-    @Test
-    public void getStockOpenByName() throws Exception {
-        assertEquals(18.01, stockDao.getStockOpenByName(name, date), 0.01);
-    }
-
-    @Test
-    public void getStockVolumeByName() throws Exception {
-        assertEquals(156909800, stockDao.getStockVolumeByName(name, date), 0.0);
-    }
-
-    @Test
     public void getPOList() throws Exception {
-
+        System.out.println(stockDao.getPOList(date.toString()));
     }
 
     @Test

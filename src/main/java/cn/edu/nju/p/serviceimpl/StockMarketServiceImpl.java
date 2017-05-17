@@ -51,7 +51,7 @@ public class StockMarketServiceImpl implements StockMarketService {
             LocalDate lastDate = DateHelper.getLastDate(date, checkDate -> StockHelper.isValidByCode(po.getCode(), checkDate));
 
             double lastClose = stockDao.getStockAdjClose(po.getCode(), lastDate);//昨天收盘指数
-            double currentClose = po.getAdjClose();
+            double currentClose = po.getAdj_close();
 
             if (lastClose < currentClose) {
                 double percent = (currentClose - lastClose) / lastClose;

@@ -24,25 +24,9 @@ public interface StockDao {
 	 * @param date 查询的日期 格式是2017-03-09
 	 * @return 若存在符合条件的股票PO则返回该PO，否则返回null
 	 */
-/*	@Results(id = "stockpo", value = {
-			@Result(id=true,property = "date",column = "date",javaType = String.class,jdbcType = JdbcType.DATE),
-			@Result(property = "open",column = "open",javaType = Double.class,jdbcType = JdbcType.DOUBLE),
-			@Result(property = "high",column = "high",javaType = Double.class,jdbcType = JdbcType.DOUBLE),
-			@Result(property = "low",column = "low",javaType = Double.class,jdbcType = JdbcType.DOUBLE),
-			@Result(property = "close",column = "close",javaType = Double.class,jdbcType = JdbcType.DOUBLE),
-			@Result(property = "volume",column = " volume",javaType = Integer.class,jdbcType = JdbcType.INTEGER),
-			@Result(property = "adjClose",column = "adj_close",javaType = Double.class,jdbcType = JdbcType.DOUBLE),
-			@Result(id=true,property = "code",column = "code",javaType = String.class,jdbcType = JdbcType.VARCHAR),
-			@Result(property = "name",column = "name",javaType = String.class,jdbcType = JdbcType.VARCHAR),
-			@Result(property = "market",column = "market",javaType = String.class,jdbcType = JdbcType.VARCHAR),
-			@Result(property = "time",column = "time",javaType = String.class,jdbcType = JdbcType.VARCHAR),
-			@Result(property = "currentPrice",column = "currentprice",javaType = Double.class,jdbcType = JdbcType.DOUBLE)
-	})*/
 	@Select(value = "SELECT * FROM t_stock_" + "${date.getYear()}" + " WHERE code=#{code} AND date=#{date}")
 	@StockNotFoundCheck
 	StockPO getStockPO(@Param("code") String code, @Param("date") LocalDate date);
-
-	public List<StockPO> findStockPOByMap(Map<String, LocalDate> params);
 
 	/**
 	 * 得到该股票当天的开盘价
@@ -52,6 +36,7 @@ public interface StockDao {
 	 */
 	@StockNotFoundCheck
 	@Select(value = "SELECT open FROM t_stock_"+"${date.getYear()}"+" WHERE code=#{code} AND date=#{date}")
+	@Results(id = "stockPo")
 	Double getStockOpen(@Param("code") String code, @Param("date") LocalDate date) ;
 
 	/**
@@ -132,58 +117,27 @@ public interface StockDao {
 	String getStockCode(String name);
 
 	/**
-	 * 根据股票名称得到当天股票的收盘价
-	 * @param name 股票名称
-	 * @param date 查询日期
-	 * @return 股票收盘价
-	 */
-	@Select(value="SELECT close FROM t_stock_"+"${date.getYear()}"+" WHERE name=#{name} AND date=#{date}")
-	Double getStockCloseByName(@Param("name") String name, @Param("date") LocalDate date) ;
-
-	
-	/**
-	 * 根据股票名称得到当天股票的最低价
-	 * @param name 股票名称
-	 * @param date 查询日期
-	 * @return 股票最低价
-	 */
-	@Select(value="SELECT low FROM t_stock_"+"${date.getYear()}"+" WHERE name=#{name} AND date=#{date}")
-	Double getStockLowByName(@Param("name") String name, @Param("date") LocalDate date);
-
-	/**
-	 * 根据股票名称得到当天股票最高价
-	 * @param name 股票名称
-	 * @param date 查询日期
-	 * @return 股票最高价
-	 */
-	@Select(value="SELECT high FROM t_stock_"+"${date.getYear()}"+" WHERE name=#{name} AND date=#{date}")
-	Double getStockHighByName(@Param("name") String name, @Param("date") LocalDate date);
-
-	/**
-	 * 根据股票名称得到当天股票开盘价
-	 * @param name 股票名称
-	 * @param date 查询日期
-	 * @return 股票开盘价
-	 */
-	@Select(value="SELECT open FROM t_stock_"+"${date.getYear()}"+" WHERE name=#{name} AND date=#{date}")
-	Double getStockOpenByName(@Param("name") String name, @Param("date") LocalDate date);
-
-	/**
-	 * 根据股票名称得到当天股票成交量
-	 * @param name 股票名称
-	 * @param date 查询日期
-	 * @return 股票成交量
-	 */
-	@Select(value="SELECT volume FROM t_stock_"+"${date.getYear()}"+" WHERE name=#{name} AND date=#{date}")
-	Integer getStockVolumeByName(@Param("name") String name, @Param("date") LocalDate date);
-
-	/**
 	 * 根据查询日期得到当天所有股票的PO
 	 * @param date 查询日期
 	 * @return 当天所有股票PO
 	 */
-
-	List<StockPO> getPOList(String date);
+	@Select(value = "SELECT * FROM t_stock_" + "${date.split('-')[0]}" + " WHERE date=#{date}")
+	@Results(
+			value = {
+			@Result(property = "date",column = "date",javaType = String.class,jdbcType = JdbcType.DATE),
+			@Result(property = "open",column = "open",javaType = Double.class,jdbcType = JdbcType.DOUBLE),
+			@Result(property = "high",column = "high",javaType = Double.class,jdbcType = JdbcType.DOUBLE),
+			@Result(property = "low",column = "low",javaType = Double.class,jdbcType = JdbcType.DOUBLE),
+			@Result(property = "close",column = "close",javaType = Double.class,jdbcType = JdbcType.DOUBLE),
+			@Result(property = "volume",column = " volume",javaType = Integer.class,jdbcType = JdbcType.INTEGER),
+			@Result(property = "adj_close",column = "adj_close",javaType = Double.class,jdbcType = JdbcType.DOUBLE),
+			@Result(property = "code",column = "code",javaType = String.class,jdbcType = JdbcType.VARCHAR),
+			@Result(property = "name",column = "name",javaType = String.class,jdbcType = JdbcType.VARCHAR),
+			@Result(property = "market",column = "market",javaType = String.class,jdbcType = JdbcType.VARCHAR),
+			@Result(property = "time",column = "time",javaType = String.class,jdbcType = JdbcType.VARCHAR),
+			@Result(property = "currentPrice",column = "current_price",javaType = Double.class,jdbcType = JdbcType.DOUBLE)
+	})
+	List<StockPO> getPOList(@Param("date") String date);
 
 	/**
 	 * 获取所有有数据股票的股票代码
@@ -212,7 +166,7 @@ public interface StockDao {
 	 */
 	List<String> getAllStocks();
 
-	@Insert("INSERT INTO t_stock_"+"${year}"+"(date,open,high,low,close,volume,adj_close,code,name,market,time,currentprice)" +
+	@Insert("INSERT INTO t_stock_"+"${year}"+"(date,open,high,low,close,volume,adj_close,code,name,market,time,current_price)" +
 			" VALUES(#{StockPO.date},#{StockPO.open},#{StockPO.high},#{StockPO.low},#{StockPO.close},#{StockPO.volume},#{StockPO.adjClose},#{StockPO.code},#{StockPO.name},#{StockPO.market},#{StockPO.time},#{StockPO.currentPrice})")
 	void insertIntoStockDatabase(@Param("year") String year,@Param("StockPO") StockPO po) throws SQLException;
 }

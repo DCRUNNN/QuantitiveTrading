@@ -4,6 +4,7 @@ import cn.edu.nju.p.utils.CalculateHelper;
 import org.apache.ibatis.session.Configuration;
 import org.apache.tomcat.jdbc.pool.DataSource;
 import org.mybatis.spring.SqlSessionFactoryBean;
+import org.mybatis.spring.boot.autoconfigure.SpringBootVFS;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -29,7 +30,7 @@ public class QuantradingApplication {
 	@Bean
 	public DataSource dataSource(){
 		DataSource dataSource = new DataSource();
-		dataSource.setUrl("jdbc:mysql://localhost:3306/quantitivetrading");
+		dataSource.setUrl("jdbc:mysql://106.14.224.189:3306/quantitivetrading");
 //		dataSource.
 		dataSource.setUsername("root");
 		dataSource.setPassword("mysql");
@@ -37,4 +38,12 @@ public class QuantradingApplication {
 		dataSource.setMaxActive(50);
 		return dataSource;
 	}
+
+	/*@Bean
+	public SqlSessionFactoryBean sqlSessionFactoryBean(){
+		SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
+		sqlSessionFactoryBean.setVfs(SpringBootVFS.class);
+		sqlSessionFactoryBean.setDataSource(dataSource());
+		return sqlSessionFactoryBean;
+	}*/
 }

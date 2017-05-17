@@ -44,7 +44,7 @@ public class StockVO {
 		this.low=po.getLow();
 		this.close=po.getClose();
 		this.volume=po.getVolume();
-		this.adjClose=po.getAdjClose();
+		this.adjClose=po.getAdj_close();
 		this.code=po.getCode();
 		this.name=po.getName();
 		this.market=po.getMarket();

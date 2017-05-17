@@ -71,10 +71,23 @@ public class GetDataFromSinaUtil {
                     String time = datas[31];//时间
 
                     //写入数据库
-                    StockPO po = new StockPO(date, open, high, low, close, volume, close, code, name, market, time, currentprice);
+                    StockPO stockPO = new StockPO();
+                    //date, open, high, low, close, volume, adjClose, code, name, market,"",0.0
+                    stockPO.setClose(close);
+                    stockPO.setCode(code);
+                    stockPO.setCurrentPrice(0.0);
+                    stockPO.setDate(date);
+                    stockPO.setOpen(open);
+                    stockPO.setHigh(high);
+                    stockPO.setLow(low);
+                    stockPO.setVolume(volume);
+                    stockPO.setMarket(market);
+                    stockPO.setName(name);
+                    stockPO.setTime("");
+
                     AnnotationConfigApplicationContext annotationConfigApplicationContext = new AnnotationConfigApplicationContext(QuantradingApplication.class);
                     StockDao stockDao = annotationConfigApplicationContext.getBean(StockDao.class);
-                    stockDao.insertIntoStockDatabase("2017",po);
+                    stockDao.insertIntoStockDatabase("2017",stockPO);
                 }
                 bo.reset();
             } catch (Exception e) {

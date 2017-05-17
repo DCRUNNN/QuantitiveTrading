@@ -22,7 +22,7 @@ public class StockCodeValidationAop {
     @Around("getCompanyInfoAndNews()")
     public Object stockCodeExistCheck(ProceedingJoinPoint proceedingJoinPoint) {
         String code = (String) proceedingJoinPoint.getArgs()[0];
-        if (StockHelper.codeExists(code)) {
+        if (! StockHelper.codeExists(code)) {
             return new BaseResult(ErrorCode.STOCK_NOT_FOUND.getErrorCode(), code + " Not Exists!");
         }
         try {
