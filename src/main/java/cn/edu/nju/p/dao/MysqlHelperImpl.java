@@ -19,7 +19,7 @@ import java.text.DecimalFormat;
 public class MysqlHelperImpl implements MysqlHelper {
 
     private static final String PATH="d:\\\\StockData_";
-    private static final MysqlHelperImpl helper=new MysqlHelperImpl(); //单例模式
+//    private static final MysqlHelperImpl helper=new MysqlHelperImpl(); //单例模式
 
     @Autowired
     private StockDao stockDao;
@@ -50,13 +50,13 @@ public class MysqlHelperImpl implements MysqlHelper {
                 double close = setPrecision(data[4]);
                 int volume = Integer.parseInt(data[5]);
                 double adjClose = setPrecision(data[6]);
-                String code = MysqlHelperImpl.adjustCode(data[7]);
-                String name = MysqlHelperImpl.adjustName(data[8]);
+                String code = adjustCode(data[7]);
+                String name = adjustName(data[8]);
                 String market = data[9];
 
                 StockPO stockPO = new StockPO(date, open, high, low, close, volume, adjClose, code, name, market,"",0.0);
                 try {
-                    helper.insertIntoDataBase(year, stockPO);
+                    insertIntoDataBase(year, stockPO);
                     System.out.println(stockPO.getName() + "已经写入数据库");
 //                    count++;
 //                    System.out.println(count);
@@ -102,7 +102,7 @@ public class MysqlHelperImpl implements MysqlHelper {
      * @param name
      * @return
      */
-    public static String adjustName(String name){
+    private String adjustName(String name){
         String newName=name.replaceAll(" ", "");
         if(newName.contains("Ａ")){
             String newStr=newName.replace('Ａ', 'A');
@@ -116,7 +116,7 @@ public class MysqlHelperImpl implements MysqlHelper {
      * @param code
      * @return
      */
-    public static String adjustCode(String code){
+    private String adjustCode(String code){
         String result=code;
         int len=code.length();
         int zero=6-len;
@@ -138,13 +138,13 @@ public class MysqlHelperImpl implements MysqlHelper {
     }
 
     public static void main(String[] args) {
-        System.out.println("Hello World!");
-       /* String year = "2012";
+//        System.out.println("Hello World!");
+        String year = "2012";
         try {
-            helper.getDataFromCSV(year);
+            new MysqlHelperImpl().getDataFromCSV(year);
         } catch (SQLException ex) {
             ex.printStackTrace();
-        }*/
+        }
     }
 
 }

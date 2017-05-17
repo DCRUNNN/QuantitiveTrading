@@ -6,6 +6,7 @@ import cn.edu.nju.p.exception.StockNotFoundException;
 import cn.edu.nju.p.po.StockPO;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.type.JdbcType;
+import org.springframework.stereotype.Repository;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 @Mapper
+@Repository
 public interface StockDao {
 
 	/**
