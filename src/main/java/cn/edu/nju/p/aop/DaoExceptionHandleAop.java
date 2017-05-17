@@ -14,7 +14,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class DaoExceptionHandleAop {
 
-    @Pointcut(value = "execution(* cn.edu.nju.p.dao.StockDao.*(..)) && @annotation(cn.edu.nju.p.annotation.StockNotFoundCheck)") //implies all the methods of stock dao
+    /* execution(* cn.edu.nju.p.dao.StockDao.*(..)) && @annotation(cn.edu.nju.p.annotation.StockNotFoundCheck)*/
+
+    @Pointcut(value = "execution(* cn.edu.nju.p.dao.StockDao.*(..))") //implies all the methods of stock dao
     public void getStockInfo(){}
 
     @Around(value = "getStockInfo()")
@@ -22,9 +24,8 @@ public class DaoExceptionHandleAop {
         Object result = null;
         try {
             result = proceedingJoinPoint.proceed();
-            if (result == null) {
-                throw new StockNotFoundException(proceedingJoinPoint.getSignature().getName() + " could not find the stock!");
-            }
+        } catch (NullPointerException ne) {
+            throw new StockNotFoundException(proceedingJoinPoint.getSignature().getName() + " could not find the stock!");
         } catch (Throwable throwable) {
             /**
              * to be completed

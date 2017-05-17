@@ -27,9 +27,9 @@ public class StockHelper {
     public static boolean isValidByCode(String stockCode, LocalDate date) {
 
         try {
-            stockDao.getStockClose(stockCode,date);
+            stockDao.getStockClose(stockCode, date);
             return true;
-        } catch (StockNotFoundException e) {
+        } catch (StockNotFoundException /*| NullPointerException*/ e) {
             return false;
         }
     }
