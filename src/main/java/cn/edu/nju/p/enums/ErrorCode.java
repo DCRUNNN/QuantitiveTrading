@@ -10,7 +10,11 @@ public enum ErrorCode {
     DATE_PARSE_ERROR(10000002),
 
     //Stock Error
-    STOCK_NOT_FOUND(20000001)
+    STOCK_NOT_FOUND(20000001),
+
+
+    //User Check Error
+    PASSWORD_NOT_MATCH(30000001)
     ;
 
     private int errorCode;
