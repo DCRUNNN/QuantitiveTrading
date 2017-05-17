@@ -1,5 +1,6 @@
 package cn.edu.nju.p.dao;
 
+import cn.edu.nju.p.vo.CompanyAnnouncementVO;
 import cn.edu.nju.p.vo.CompanyInfoVO;
 import cn.edu.nju.p.vo.CompanyNewsVO;
 import org.jsoup.Jsoup;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -81,20 +83,46 @@ public class CompanyDaoImpl implements CompanyDao {
         return vo;
     }
 
+    /**
+     * 根据股票代码得到公司新闻 以VO形式返回
+     * @param code
+     * @return
+     */
     @Override
     public List<CompanyNewsVO> getCompanyNewsVOList(String code) {
         List<CompanyNewsVO> list = new ArrayList<CompanyNewsVO>();
         Document doc = getDocument(THS_URL + code + "/");
         Elements html = doc.select("[class=news_list stat][stat=f10_spqk_gsxw]");//选择公司新闻所在的class
-        Elements data_title = html.select("span[class$=news_title fl]");//得到公司的新闻标题
-        Elements data_date = html.select("span[class$=news_date]");
-        Elements data_link = html.select("a[href]");
+        Elements news_title = html.select("span[class$=news_title fl]");//得到公司的新闻标题
+        Elements news_date = html.select("span[class$=news_date]");//得到公司新闻日期
+        Elements news_link = html.select("a[href]");//得到公司新闻链接
 
-        for(int i=0;i<data_title.size();i++) {
-            String title=data_title.get(i).text();
-            String link = data_link.get(i).attr("href");
-            String date = data_date.get(i).text();
+        for(int i=0;i<news_title.size();i++) {
+            String title=news_title.get(i).text();
+            String link = news_link.get(i).attr("href");
+            String date = news_date.get(i).text();
             CompanyNewsVO vo = new CompanyNewsVO(title, link, date);
+            list.add(vo);
+        }
+        return list;
+    }
+
+
+    @Override
+    public List<CompanyAnnouncementVO> getCompanyAnnouncementVOList(String code) {
+        List<CompanyAnnouncementVO> list = new ArrayList<CompanyAnnouncementVO>();
+        Document doc = getDocument(THS_URL + code + "/");
+        Elements html = doc.select("[class=news_list stat][stat=f10_spqk_gsgg]");//选择公司公告所在的class
+
+        Elements announcement_title = html.select("span[class$=news_title fl]");//得到公司公告标题
+        Elements announcement_date = html.select("span[class$=news_date]");//得到公司公告日期
+        Elements announcement_link = html.select("a[href]");//得到公司公告链接
+
+        for(int i=0;i<announcement_title.size();i++) {
+            String title=announcement_title.get(i).text();
+            String link = announcement_link.get(i).attr("href");
+            String date = announcement_date.get(i).text();
+            CompanyAnnouncementVO vo = new CompanyAnnouncementVO(title, link, date);
             list.add(vo);
         }
         return list;
@@ -103,7 +131,7 @@ public class CompanyDaoImpl implements CompanyDao {
     public static void main(String[] args) {
         CompanyDaoImpl test = new CompanyDaoImpl();
         System.out.println(test.getCompanyInfoVO("000001").toString());
-        List<CompanyNewsVO> list = test.getCompanyNewsVOList("000001");
+        List<CompanyAnnouncementVO> list = test.getCompanyAnnouncementVOList("000001");
         for (int i=0;i<list.size();i++) {
             System.out.println(list.get(i).toString());
         }

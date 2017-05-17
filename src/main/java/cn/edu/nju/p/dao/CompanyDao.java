@@ -1,5 +1,6 @@
 package cn.edu.nju.p.dao;
 
+import cn.edu.nju.p.vo.CompanyAnnouncementVO;
 import cn.edu.nju.p.vo.CompanyInfoVO;
 import cn.edu.nju.p.vo.CompanyNewsVO;
 
@@ -13,4 +14,6 @@ public interface CompanyDao {
     public CompanyInfoVO getCompanyInfoVO(String code);
 
     public List<CompanyNewsVO> getCompanyNewsVOList(String code);
+
+    public List<CompanyAnnouncementVO> getCompanyAnnouncementVOList(String code);
 }
