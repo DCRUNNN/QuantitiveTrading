@@ -162,6 +162,6 @@ public interface StockDao {
 	List<String> getAllStocks();
 
 	@Insert("INSERT INTO t_stock_"+"${year}"+"(date,open,high,low,close,volume,adj_close,code,name,market,time,current_price)" +
-			" VALUES(#{StockPO.date},#{StockPO.open},#{StockPO.high},#{StockPO.low},#{StockPO.close},#{StockPO.volume},#{StockPO.adjClose},#{StockPO.code},#{StockPO.name},#{StockPO.market},#{StockPO.time},#{StockPO.currentPrice})")
+			" VALUES(#{StockPO.date},#{StockPO.open},#{StockPO.high},#{StockPO.low},#{StockPO.close},#{StockPO.volume},#{StockPO.adj_close},#{StockPO.code},#{StockPO.name},#{StockPO.market},#{StockPO.time},#{StockPO.currentPrice})")
 	void insertIntoStockDatabase(@Param("year") String year,@Param("StockPO") StockPO po) throws SQLException;
 }

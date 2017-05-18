@@ -22,7 +22,7 @@ public class GetDataFromSinaUtil {
     }//通过调用static方法来获得GetDataFromSinaUtil实例
 
     //获取股票实时数据
-    public void getStockCurrentData(String code,String market){
+    public StockPO getStockCurrentData(String code,String market){
         String url = SINA_FINACE_URL + market + code;
         try {
             URL u = new URL(url);
@@ -75,19 +75,18 @@ public class GetDataFromSinaUtil {
                     //date, open, high, low, close, volume, adjClose, code, name, market,"",0.0
                     stockPO.setClose(close);
                     stockPO.setCode(code);
-                    stockPO.setCurrentPrice(0.0);
+                    stockPO.setCurrentPrice(currentprice);
                     stockPO.setDate(date);
                     stockPO.setOpen(open);
                     stockPO.setHigh(high);
                     stockPO.setLow(low);
+                    stockPO.setAdj_close(close);
                     stockPO.setVolume(volume);
                     stockPO.setMarket(market);
                     stockPO.setName(name);
-                    stockPO.setTime("");
+                    stockPO.setTime(time);
 
-                    AnnotationConfigApplicationContext annotationConfigApplicationContext = new AnnotationConfigApplicationContext(QuantradingApplication.class);
-                    StockDao stockDao = annotationConfigApplicationContext.getBean(StockDao.class);
-                    stockDao.insertIntoStockDatabase("2017",stockPO);
+                    return stockPO;
                 }
                 bo.reset();
             } catch (Exception e) {
@@ -101,13 +100,9 @@ public class GetDataFromSinaUtil {
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
+        return null;
     }
 
-
-    public static void main(String[] args) {
-
-        GetDataFromSinaUtil.getInstance().getStockCurrentData("002204", "sz");
-    }
 
 }
 
