@@ -35,7 +35,7 @@ public class CorsFilter implements Filter {
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
-        if (StringUtils.isNotEmpty(allowOrigin)) {
+        /*if (StringUtils.isNotEmpty(allowOrigin)) {
             List<String> allowOriginList = Arrays.asList(allowOrigin.split(","));
             if (allowOriginList==null || allowOriginList.size()==0) {
                 String currentOrigin = request.getHeader("Origin");
@@ -43,7 +43,9 @@ public class CorsFilter implements Filter {
                     response.setHeader("Access-Control-Allow-Origin", currentOrigin);
                 }
             }
-        }
+        }*/
+        response.setHeader("Access-Control-Allow-Origin",allowOrigin);
+
         if (StringUtils.isNotEmpty(allowMethods)) {
             response.setHeader("Access-Control-Allow-Methods", allowMethods);
         }
