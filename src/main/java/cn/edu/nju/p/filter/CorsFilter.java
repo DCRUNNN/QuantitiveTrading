@@ -16,19 +16,19 @@ import java.util.List;
  */
 public class CorsFilter implements Filter {
 
-    private String allowOrigin;
+    /*private String allowOrigin;
     private String allowMethods;
     private String allowCredentials;
     private String allowHeaders;
-    private String exposeHeaders;
+    private String exposeHeaders;*/
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        allowOrigin = filterConfig.getInitParameter("allowOrigin");
+        /*allowOrigin = filterConfig.getInitParameter("allowOrigin");
         allowMethods = filterConfig.getInitParameter("allowMethods");
         allowCredentials = filterConfig.getInitParameter("allowCredentials");
         allowHeaders = filterConfig.getInitParameter("allowHeaders");
-        exposeHeaders = filterConfig.getInitParameter("exposeHeaders");
+        exposeHeaders = filterConfig.getInitParameter("exposeHeaders");*/
     }
 
     @Override
@@ -44,9 +44,9 @@ public class CorsFilter implements Filter {
                 }
             }
         }*/
-        response.setHeader("Access-Control-Allow-Origin",allowOrigin);
+        response.setHeader("Access-Control-Allow-Origin","*");
 
-        if (StringUtils.isNotEmpty(allowMethods)) {
+        /*if (StringUtils.isNotEmpty(allowMethods)) {
             response.setHeader("Access-Control-Allow-Methods", allowMethods);
         }
         if (StringUtils.isNotEmpty(allowCredentials)) {
@@ -57,7 +57,7 @@ public class CorsFilter implements Filter {
         }
         if (StringUtils.isNotEmpty(exposeHeaders)) {
             response.setHeader("Access-Control-Expose-Headers", exposeHeaders);
-        }
+        }*/
         chain.doFilter(req, res);
     }
 

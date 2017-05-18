@@ -18,10 +18,6 @@ public class FilterConfig {
         corsFilterReg.setFilter(new CorsFilter());
         corsFilterReg.addUrlPatterns("/*");
         corsFilterReg.setName("corsFilter");
-        corsFilterReg.addInitParameter("allowOrigin","*");
-        corsFilterReg.addInitParameter("allowMethods","GET,POST,PUT,DELETE,OPTIONS");
-        corsFilterReg.addInitParameter("allowCredentials", "true");
-        corsFilterReg.addInitParameter("allowHeaders","Content-Type");
         return corsFilterReg;
     }
 }
