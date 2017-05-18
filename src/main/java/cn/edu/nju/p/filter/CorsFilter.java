@@ -14,7 +14,6 @@ import java.util.List;
 /**
  * Created by soft on 2017/5/18.
  */
-@Component
 public class CorsFilter implements Filter {
 
     private String allowOrigin;

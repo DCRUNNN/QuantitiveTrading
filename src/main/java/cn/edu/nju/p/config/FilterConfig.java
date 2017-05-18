@@ -12,10 +12,10 @@ import org.springframework.context.annotation.Configuration;
 public class FilterConfig {
 
     @Bean
-    public FilterRegistrationBean corsFilter(CorsFilter corsFilter){
+    public FilterRegistrationBean corsFilter(){
 
         FilterRegistrationBean corsFilterReg = new FilterRegistrationBean();
-        corsFilterReg.setFilter(corsFilter);
+        corsFilterReg.setFilter(new CorsFilter());
         corsFilterReg.addUrlPatterns("/*");
         corsFilterReg.setName("corsFilter");
         corsFilterReg.addInitParameter("allowOrigin","*");
