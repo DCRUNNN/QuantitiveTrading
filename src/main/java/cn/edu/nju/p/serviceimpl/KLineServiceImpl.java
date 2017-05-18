@@ -5,10 +5,12 @@ import cn.edu.nju.p.exception.StockNotFoundException;
 import cn.edu.nju.p.service.exhibition.KLineService;
 import cn.edu.nju.p.utils.DateHelper;
 import cn.edu.nju.p.utils.StockHelper;
+import cn.edu.nju.p.utils.ema.MACDUtils;
 import cn.edu.nju.p.vo.KLineVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +23,9 @@ public class KLineServiceImpl implements KLineService {
 
     @Autowired
     private StockDao stockDao;
+
+    @Autowired
+    private MACDUtils macdUtils;
 
     /**
      * 通过股票代码获得KLine需要的所有VO
@@ -45,9 +50,19 @@ public class KLineServiceImpl implements KLineService {
             double close = stockDao.getStockClose(code,date);
             int volume = stockDao.getStockVolume(code,date);
             boolean isGoHigh = open<close;
+            int targ = isGoHigh ? 1 : 0;
             double range = high-low;
             double dBetweenOpenAndClose = Math.abs(open-close);
-            kLineVOList.add(new KLineVO(stockName, code, date, isGoHigh, low, high, open, close, range, dBetweenOpenAndClose, volume));
+
+            double diff = macdUtils.getEmaValue(12, date, code) - macdUtils.getEmaValue(26, date, code);
+            double dea = macdUtils.getDea(9, date, code);
+            double macd = (diff - dea) * 2;
+
+            diff = formatDouble(diff);
+            dea = formatDouble(dea);
+            macd = formatDouble(macd);
+            kLineVOList.add(new KLineVO(stockName, code, date.toString(), targ, low, high, open, close, range, dBetweenOpenAndClose, volume, macd, diff, dea));
+
         }
 
         return kLineVOList;
@@ -66,5 +81,8 @@ public class KLineServiceImpl implements KLineService {
         return getKLineVOSByCode(code, beginDate, endDate);
     }
 
-
+    private double formatDouble(double d) {
+        BigDecimal bigDecimal = new BigDecimal(d);
+        return bigDecimal.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+    }
 }

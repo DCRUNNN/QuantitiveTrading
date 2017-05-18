@@ -3,6 +3,7 @@ package cn.edu.nju.p.utils;
 
 import cn.edu.nju.p.exception.DateNotOrderedException;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -104,17 +105,12 @@ public class DateHelper {
      */
     public static LocalDate getLastDate(LocalDate date,Predicate<LocalDate> predicate) {
 
-        ZoneId zoneId = ZoneId.systemDefault();
-        Calendar cal= Calendar.getInstance();
-        //设置日期
-        cal.setTime(Date.from(date.atStartOfDay(zoneId).toInstant()));
-
-        cal.add(Calendar.DAY_OF_MONTH,-1);//获得前一天的日期
-        while (cal.get(Calendar.DAY_OF_WEEK)==Calendar.SATURDAY || cal.get(Calendar.DAY_OF_WEEK)==Calendar.SUNDAY ||
-                !predicate.test(LocalDateTime.ofInstant(cal.getTime().toInstant(),zoneId).toLocalDate())){
-            cal.add(Calendar.DAY_OF_MONTH,-1);
+        date = date.plusDays(-1);
+        while (date.getDayOfWeek() == DayOfWeek.SATURDAY || date.getDayOfWeek() == DayOfWeek.SUNDAY ||
+                !predicate.test(date)){
+            date.plusDays(-1);
         }
-        return LocalDateTime.ofInstant(cal.getTime().toInstant(),zoneId).toLocalDate();
+        return date;
     }
 
     /**

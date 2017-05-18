@@ -7,6 +7,7 @@ import org.apache.tomcat.jni.Local;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -22,7 +23,7 @@ import static org.junit.Assert.*;
  */
 @RunWith(SpringRunner.class)
 @WebAppConfiguration
-@ContextConfiguration(classes = QuantradingApplication.class)
+@SpringBootTest
 public class StockDaoTest {
 
     @Autowired
@@ -63,7 +64,7 @@ public class StockDaoTest {
 
     @Test
     public void getStockClose() throws Exception {
-        assertEquals(stockDao.getStockClose(code, date), 18.68, 0.01);
+        assertEquals(stockDao.getStockClose("000001", LocalDate.of(2012,10,20)), 18.68, 0.01);
     }
 
     @Test

@@ -65,7 +65,7 @@ public interface StockDao {
 	 * @param date 查询日期
 	 * @return 该股票当天的收盘价
 	 */
-	@StockNotFoundCheck
+//	@StockNotFoundCheck
 	@Select(value="SELECT close FROM t_stock_"+"${date.getYear()}"+" WHERE code=#{code} AND date=#{date}")
 	Double getStockClose(@Param("code") String code, @Param("date") LocalDate date) ;
 	
