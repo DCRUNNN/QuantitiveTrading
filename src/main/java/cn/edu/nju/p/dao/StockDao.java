@@ -140,13 +140,6 @@ public interface StockDao {
 	List<StockPO> getPOList(@Param("date") String date);
 
 	/**
-	 * 获取所有有数据股票的股票代码
-	 * @return 股票代码的列表
-	 */
-	@Select(value="SELECT distinct code from t_stock_2016")
-	List<String> getPOCodes();
-	
-	/**
 	 * 根据股票代码得到所在的股票板块
 	 * @param code
 	 * @return 股票所属板块
@@ -159,11 +152,13 @@ public interface StockDao {
 	 * @return 该板块内的股票 以list返回
 	 */
 	List<String> getStockBySector(String sector);
+
 	
 	/**
 	 * 返回所有股票
-	 * @return 以name,code的形式返回
+	 * @return all the stock codes
 	 */
+	@Select(value="SELECT distinct code from t_stock_2016")
 	List<String> getAllStocks();
 
 	@Insert("INSERT INTO t_stock_"+"${year}"+"(date,open,high,low,close,volume,adj_close,code,name,market,time,current_price)" +

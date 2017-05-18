@@ -24,7 +24,6 @@ public class DaoExceptionHandleAop {
 
     @Around(value = "getStockInfo()")
     public Object getStockInfo(ProceedingJoinPoint proceedingJoinPoint) {
-        System.out.println("Could go here!");
         Object result = null;
         try {
             result = proceedingJoinPoint.proceed();

@@ -121,7 +121,7 @@ public class StockHelper {
      * @return true if exists,else false
      */
     public static boolean codeExists(String stockCode) {
-        List<String> codes = stockDao.getPOCodes();
+        List<String> codes = stockDao.getAllStocks();
         if (codes.contains(stockCode)) {
             return true;
         }

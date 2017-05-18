@@ -96,11 +96,6 @@ public class StockDaoTest {
         System.out.println(stockDao.getPOList(date.toString()));
     }
 
-    @Test
-    public void getPOCodes() throws Exception {
-        List<String> list = stockDao.getPOCodes();
-        System.out.println(list);
-    }
 
     @Test
     public void getStockSector() throws Exception {
@@ -115,6 +110,7 @@ public class StockDaoTest {
     @Test
     public void getAllStocks() throws Exception {
 
+        System.out.println(stockDao.getAllStocks().size() + "---->" + stockDao.getAllStocks());
     }
 
     @Test
