@@ -19,8 +19,8 @@ public class DaoExceptionHandleAop {
     @Pointcut(value = "execution(* cn.edu.nju.p.dao.StockDao.*(..)) && @annotation(cn.edu.nju.p.annotation.StockNotFoundCheck)") //implies all the methods of stock dao
     public void getStockInfo(){}
 
-    /*@Pointcut("execution(* cn.edu.nju.p.controller.exhibition.ExhibitionController.*(..))")
-    public void exhibition(){}*/
+    @Pointcut("execution(* cn.edu.nju.p.dao.StockDao.*getStockAdjClose(..) )")
+    public void getAdjClose(){}
 
     @Around(value = "getStockInfo()")
     public Object getStockInfo(ProceedingJoinPoint proceedingJoinPoint) {
@@ -35,4 +35,18 @@ public class DaoExceptionHandleAop {
         }
         return result;
     }
+
+    /*@Around("getAdjClose()")
+    public Object getAdjClose(ProceedingJoinPoint proceedingJoinPoint) {
+        try {
+            Object result = proceedingJoinPoint.proceed();
+            if (result == null) {
+                return 0.0;
+            }
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+        return 0.0;
+    }*/
+
 }

@@ -27,7 +27,7 @@ public class QuantradingApplication {
 		return new CalculateHelper(0.00023);
 	}
 
-	@Bean
+	/*@Bean
 	public DataSource dataSource(){
 		DataSource dataSource = new DataSource();
 		dataSource.setUrl("jdbc:mysql://106.14.224.189:3306/quantitivetrading");
@@ -37,13 +37,6 @@ public class QuantradingApplication {
 		dataSource.setDriverClassName("com.mysql.jdbc.Driver");
 		dataSource.setMaxActive(50);
 		return dataSource;
-	}
-
-	/*@Bean
-	public SqlSessionFactoryBean sqlSessionFactoryBean(){
-		SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
-		sqlSessionFactoryBean.setVfs(SpringBootVFS.class);
-		sqlSessionFactoryBean.setDataSource(dataSource());
-		return sqlSessionFactoryBean;
 	}*/
+
 }

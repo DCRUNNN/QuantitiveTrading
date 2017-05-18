@@ -16,8 +16,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class StockCodeValidationAop {
 
-    @Pointcut("execution(* cn.edu.nju.p.controller.exhibition.CompanyController.*(..))")
-    public void getCompanyInfoAndNews(){}
+    @Pointcut("execution(* cn.edu.nju.p.controller.exhibition.*.*(..))")
+    public void getCompanyInfoAndNews() {
+    }
 
     @Around("getCompanyInfoAndNews()")
     public Object stockCodeExistCheck(ProceedingJoinPoint proceedingJoinPoint) {

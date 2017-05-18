@@ -6,6 +6,7 @@ import cn.edu.nju.p.service.exhibition.AverageLineService;
 import cn.edu.nju.p.utils.DateHelper;
 import cn.edu.nju.p.utils.StockHelper;
 import cn.edu.nju.p.vo.AverageVO;
+import com.sun.xml.internal.bind.v2.runtime.output.SAXOutput;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -77,6 +78,7 @@ public class AverageLineServiceImpl implements AverageLineService {
 
         double total = 0.0;
         for (int i = 0; i < meadDayNum; i++) {
+            System.out.println("stock dao is null ?--------------------->"+stockDao == null);
             total += stockDao.getStockClose(code, currentDate);
             currentDate = DateHelper.getLastDate(currentDate, date -> StockHelper.isValidByCode(code, date));
         }
