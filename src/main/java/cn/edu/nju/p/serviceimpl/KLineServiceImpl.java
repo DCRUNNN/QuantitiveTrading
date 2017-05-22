@@ -4,6 +4,7 @@ import cn.edu.nju.p.dao.StockDao;
 import cn.edu.nju.p.exception.StockNotFoundException;
 import cn.edu.nju.p.service.exhibition.KLineService;
 import cn.edu.nju.p.utils.DateHelper;
+import cn.edu.nju.p.utils.DoubleUtils;
 import cn.edu.nju.p.utils.StockHelper;
 import cn.edu.nju.p.utils.ema.MACDUtils;
 import cn.edu.nju.p.vo.KLineVO;
@@ -61,9 +62,10 @@ public class KLineServiceImpl implements KLineService {
             double dea = macdUtils.getDea(9, date, code);
             double macd = (diff - dea) * 2;
 
-            diff = formatDouble(diff);
-            dea = formatDouble(dea);
-            macd = formatDouble(macd);
+            diff = DoubleUtils.formatDouble(diff);
+            dea = DoubleUtils.formatDouble(dea);
+            macd = DoubleUtils.formatDouble(macd);
+
             kLineVOList.add(new KLineVO(stockName, code, date.toString(), targ, low, high, open, close, range, dBetweenOpenAndClose, volume, macd, diff, dea));
         });
 
@@ -86,8 +88,4 @@ public class KLineServiceImpl implements KLineService {
         return getKLineVOSByCode(code, beginDate, endDate);
     }
 
-    private double formatDouble(double d) {
-        BigDecimal bigDecimal = new BigDecimal(d);
-        return bigDecimal.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-    }
 }

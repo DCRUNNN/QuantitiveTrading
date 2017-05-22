@@ -27,7 +27,7 @@ public class MACDUtils {
 
         double close = stockDao.getStockClose(stockCode, currentDate); //当日收盘价
 
-        System.out.println("Calculate close "+currentDate.toString()+" ,stock code = "+ stockCode+" value -------->  "+close);
+//        System.out.println("Calculate close "+currentDate.toString()+" ,stock code = "+ stockCode+" value -------->  "+close);
 
         if (emaValue == 1) {
             //last efficient date
@@ -51,7 +51,7 @@ public class MACDUtils {
 
         double diff = getEmaValue(12, currentDate, stockCode) - getEmaValue(26, currentDate, stockCode);
 
-        System.out.println("Calculate diff "+currentDate.toString()+" ,stock code = "+ stockCode+" value -------->  "+diff);
+//        System.out.println("Calculate diff "+currentDate.toString()+" ,stock code = "+ stockCode+" value -------->  "+diff);
 
         if (deaValue == 1) {
             return diff;

@@ -49,48 +49,15 @@ public class DateHelper {
 
         //获得输入日期之间的所有日期
         if(isOkDate(beginDate,endDate)){
-
-            ZoneId zoneId = ZoneId.systemDefault();//使用系统默认时区
-
-            Calendar beginCal = Calendar.getInstance();
-            Calendar endCal = Calendar.getInstance();
-
-            //设置Calendar实例
-            beginCal.setTime(Date.from(beginDate
-                    .atStartOfDay(zoneId)
-                    .toInstant()));
-
-            //设置Calendar实例
-            endCal.setTime(Date.from(endDate
-                    .atStartOfDay(zoneId)
-                    .toInstant()));
-
-            while (beginCal.before(endCal)){
-                dateList.add(LocalDateTime
-                        .ofInstant(beginCal.getTime().toInstant(),zoneId)
-                        .toLocalDate());
-
-                beginCal.add(Calendar.DAY_OF_MONTH,1);
+            while (beginDate.isBefore(endDate)) {
+                dateList.add(beginDate);
+                beginDate = beginDate.plusDays(1);
             }
-
-            dateList.add(LocalDateTime
-                    .ofInstant(endCal.getTime().toInstant(),zoneId)
-                    .toLocalDate());//先得到两个日期之间的所有日期，接下来对其进行过滤
-
+            dateList.add(endDate);
         }
 
         //过滤周末日期
-        Predicate<LocalDate> notWeekend = localDate ->{
-            ZoneId zoneId = ZoneId.systemDefault();
-            Calendar calendar = Calendar.getInstance();
-            //填充日期
-            calendar.setTime(Date.from(localDate
-                    .atStartOfDay(zoneId)
-                    .toInstant()));
-
-            int day = calendar.get(Calendar.DAY_OF_WEEK);
-            return !(day == Calendar.SATURDAY || day == Calendar.SUNDAY);
-        };
+        Predicate<LocalDate> notWeekend = localDate -> !(localDate.getDayOfWeek() == DayOfWeek.SATURDAY || localDate.getDayOfWeek() == DayOfWeek.SUNDAY);
 
         //直接在此处对dateList进行过滤
         return dateList.stream()
