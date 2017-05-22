@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Created by soft on 2017/5/18.
+ * a filter to handle cross domain request
  */
 public class CorsFilter implements Filter {
 

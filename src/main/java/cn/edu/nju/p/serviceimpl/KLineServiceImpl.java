@@ -43,14 +43,10 @@ public class KLineServiceImpl implements KLineService {
 //        使用lambda表达式过滤没有数据的日期
         List<LocalDate> dateList = DateHelper.getBetweenDateAndFilter(beginDate,endDate, date-> StockHelper.isValidByCode(code,date));
 
-//        List<KLineVO> kLineVOList = new ArrayList<>();
-
         List<List<Object>> finalResult = new ArrayList<>();
-
         String stockName = stockDao.getStockName(code);
 
         dateList.parallelStream().forEach(date -> {
-
             double low = stockDao.getStockLow(code,date);
             double high = stockDao.getStockHigh(code,date);
             double open = stockDao.getStockOpen(code,date);
@@ -67,8 +63,6 @@ public class KLineServiceImpl implements KLineService {
             dea = DoubleUtils.formatDouble(dea);
             macd = DoubleUtils.formatDouble(macd);
 
-//            kLineVOList.add(new KLineVO(stockName, code, date.toString(), targ, low, high, open, close, range, dBetweenOpenAndClose, volume, macd, diff, dea));
-
             List<Object> results = new ArrayList<>();
             results.add(date.toString());
             results.add(open);
@@ -80,7 +74,6 @@ public class KLineServiceImpl implements KLineService {
             results.add(macd);
             results.add(diff);
             results.add(dea);
-
             finalResult.add(results);
         });
 

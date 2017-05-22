@@ -1,7 +1,7 @@
 package cn.edu.nju.p.po;
 
 /**
- * Created by soft on 2017/5/17.
+ * the information of user
  */
 public class UserPO {
 

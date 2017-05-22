@@ -25,12 +25,12 @@ public class CompanyController {
     @GetMapping("/info/{code}")
     public BaseResult getCompanyInfo(@RequestParam String code) {
         CompanyInfoVO infoVO =  companyDao.getCompanyInfoVO(code);
-        return new BaseResult(0, infoVO);
+        return new BaseResult<>(0, infoVO);
     }
 
     @GetMapping("/news/{code}")
     public BaseResult getCompanyNews(@RequestParam String code) {
         List<CompanyNewsVO> newsVOS = companyDao.getCompanyNewsVOList(code);
-        return new BaseResult(0, newsVOS);
+        return new BaseResult<>(0, newsVOS);
     }
 }

@@ -10,7 +10,7 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
 /**
- * Created by soft on 2017/5/17.
+ * an aop to validate stock code to see whether the stock code exists
  */
 @Aspect
 @Component
@@ -21,16 +21,11 @@ public class StockCodeValidationAop {
     }
 
     @Around("getCompanyInfoAndNews()")
-    public Object stockCodeExistCheck(ProceedingJoinPoint proceedingJoinPoint) {
+    public Object stockCodeExistCheck(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         String code = (String) proceedingJoinPoint.getArgs()[0];
         if (! StockHelper.codeExists(code)) {
             return new BaseResult(ErrorCode.STOCK_NOT_FOUND.getErrorCode(), "Code of "+ code + " Not Exists!");
         }
-        try {
-            return proceedingJoinPoint.proceed();
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
-        }
-        return null;
+        return proceedingJoinPoint.proceed();
     }
 }

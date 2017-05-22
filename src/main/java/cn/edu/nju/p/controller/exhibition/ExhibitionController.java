@@ -29,7 +29,7 @@ public class ExhibitionController {
         LocalDate begin = LocalDate.parse(beginDate);
         LocalDate end = LocalDate.parse(endDate);
         KLineVO kLineVO = kLineService.getKLineVOSByCode(code, begin, end);
-        return new BaseResult(0, kLineVO);
+        return new BaseResult<>(0, kLineVO);
     }
 
     @GetMapping("/averageline/{code}")
@@ -37,6 +37,6 @@ public class ExhibitionController {
         LocalDate begin = LocalDate.parse(beginDate);
         LocalDate end = LocalDate.parse(endDate);
         AverageVO averageVO = averageLineService.getAverageVOByCode(code, begin, end);
-        return new BaseResult(0, averageVO);
+        return new BaseResult<>(0, averageVO);
     }
 }

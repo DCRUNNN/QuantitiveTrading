@@ -7,7 +7,7 @@ package cn.edu.nju.p.po;
  * high 最高指数
  * low 最低指数
  * close 收盘指数
- * volumn 成交量
+ * volume 成交量
  * adjClose 复权后的收盘指数
  * code 股票代码
  * name 股票名称
