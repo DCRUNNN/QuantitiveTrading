@@ -3,6 +3,7 @@ package cn.edu.nju.p.utils;
 import cn.edu.nju.p.dao.StockDao;
 import cn.edu.nju.p.exception.StockNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -26,14 +27,12 @@ public class StockHelper {
      * @param date
      * @return 存在数据返回true，不存在数据返回false
      */
+    @Cacheable("checkValid")
     public static boolean isValidByCode(String stockCode, LocalDate date) {
 
         try {
             Double close = stockDao.getStockClose(stockCode, date);
-            if (close == null) {
-                return false;
-            }
-            return true;
+            return close != null;
         } catch (StockNotFoundException | NullPointerException e) {
             return false;
         }

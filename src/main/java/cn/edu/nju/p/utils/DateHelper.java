@@ -2,6 +2,7 @@ package cn.edu.nju.p.utils;
 
 
 import cn.edu.nju.p.exception.DateNotOrderedException;
+import org.springframework.cache.annotation.Cacheable;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -108,7 +109,7 @@ public class DateHelper {
         date = date.plusDays(-1);
         while (date.getDayOfWeek() == DayOfWeek.SATURDAY || date.getDayOfWeek() == DayOfWeek.SUNDAY ||
                 !predicate.test(date)){
-            date.plusDays(-1);
+            date = date.plusDays(-1);
         }
         return date;
     }

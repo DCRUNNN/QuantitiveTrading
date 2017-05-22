@@ -13,7 +13,9 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * KLineService的实现类
@@ -42,7 +44,8 @@ public class KLineServiceImpl implements KLineService {
 
         List<KLineVO> kLineVOList = new ArrayList<>();
 
-        for (LocalDate date : dateList) {
+        dateList.parallelStream().forEach(date -> {
+
             String stockName = stockDao.getStockName(code);
             double low = stockDao.getStockLow(code,date);
             double high = stockDao.getStockHigh(code,date);
@@ -62,10 +65,12 @@ public class KLineServiceImpl implements KLineService {
             dea = formatDouble(dea);
             macd = formatDouble(macd);
             kLineVOList.add(new KLineVO(stockName, code, date.toString(), targ, low, high, open, close, range, dBetweenOpenAndClose, volume, macd, diff, dea));
+        });
 
-        }
-
-        return kLineVOList;
+        return kLineVOList
+                .parallelStream()
+                .sorted(Comparator.comparing(KLineVO::getDate))
+                .collect(Collectors.toList());
     }
 
     /**

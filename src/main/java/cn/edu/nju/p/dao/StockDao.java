@@ -6,6 +6,7 @@ import cn.edu.nju.p.exception.StockNotFoundException;
 import cn.edu.nju.p.po.StockPO;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.type.JdbcType;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
 import java.sql.SQLException;
@@ -66,6 +67,7 @@ public interface StockDao {
 	 * @return 该股票当天的收盘价
 	 */
 //	@StockNotFoundCheck
+	@Cacheable("getStockClose")
 	@Select(value="SELECT close FROM t_stock_"+"${date.getYear()}"+" WHERE code=#{code} AND date=#{date}")
 	Double getStockClose(@Param("code") String code, @Param("date") LocalDate date) ;
 	
