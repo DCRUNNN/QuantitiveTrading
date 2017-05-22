@@ -14,13 +14,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class DaoExceptionHandleAop {
 
-    /* execution(* cn.edu.nju.p.dao.StockDao.*(..)) && @annotation(cn.edu.nju.p.annotation.StockNotFoundCheck)*/
-
-    @Pointcut(value = "execution(* cn.edu.nju.p.dao.StockDao.*(..)) && @annotation(cn.edu.nju.p.annotation.StockNotFoundCheck)") //implies all the methods of stock dao
+    //it seems impossible to use @annotation on an interface method,so abandon the @annotation
+    @Pointcut(value = "execution(* cn.edu.nju.p.dao.StockDao.*(..))") //implies all the methods of stock dao
     public void getStockInfo(){}
 
-    @Pointcut("execution(* cn.edu.nju.p.dao.StockDao.*getStockAdjClose(..) )")
-    public void getAdjClose(){}
 
     @Around(value = "getStockInfo()")
     public Object getStockInfo(ProceedingJoinPoint proceedingJoinPoint) throws Throwable{

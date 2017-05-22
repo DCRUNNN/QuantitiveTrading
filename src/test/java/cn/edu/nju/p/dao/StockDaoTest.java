@@ -59,7 +59,7 @@ public class StockDaoTest {
 
     @Test
     public void getStockLow() throws Exception {
-        assertEquals(stockDao.getStockLow(code, date), 18.00, 0.01);
+        assertEquals(stockDao.getStockLow("001", date), 18.00, 0.01);
     }
 
     @Test
@@ -69,7 +69,7 @@ public class StockDaoTest {
 
     @Test
     public void getStockVolume() throws Exception {
-        assertEquals(stockDao.getStockVolume(code, date), 156909800, 0.0);
+        assertEquals(stockDao.getStockVolume("00001", date), 156909800, 0.0);
     }
 
     @Test

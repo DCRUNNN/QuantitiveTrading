@@ -1,8 +1,6 @@
 package cn.edu.nju.p.dao;
 
 
-import cn.edu.nju.p.annotation.StockNotFoundCheck;
-import cn.edu.nju.p.exception.StockNotFoundException;
 import cn.edu.nju.p.po.StockPO;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.type.JdbcType;
@@ -12,7 +10,6 @@ import org.springframework.stereotype.Repository;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
 @Mapper
 @Repository
@@ -20,13 +17,11 @@ public interface StockDao {
 
 	/**
 	 * 通过股票代码和查询日期得到一个股票PO
-	 *
 	 * @param code 股票代码
 	 * @param date 查询的日期 格式是2017-03-09
 	 * @return 若存在符合条件的股票PO则返回该PO，否则返回null
 	 */
 	@Select(value = "SELECT * FROM t_stock_" + "${date.getYear()}" + " WHERE code=#{code} AND date=#{date}")
-	@StockNotFoundCheck
 	StockPO getStockPO(@Param("code") String code, @Param("date") LocalDate date);
 
 	/**
@@ -35,7 +30,6 @@ public interface StockDao {
 	 * @param date 查询日期
 	 * @return 该股票当天的开盘价
 	 */
-	@StockNotFoundCheck
 	@Select(value = "SELECT open FROM t_stock_"+"${date.getYear()}"+" WHERE code=#{code} AND date=#{date}")
 	@Results(id = "stockPo")
 	Double getStockOpen(@Param("code") String code, @Param("date") LocalDate date) ;
@@ -46,7 +40,6 @@ public interface StockDao {
 	 * @param date 查询日期
 	 * @return 该股票当天的最高价
 	 */
-	@StockNotFoundCheck
 	@Select(value="SELECT high FROM t_stock_"+"${date.getYear()}"+" WHERE code=#{code} AND date=#{date}")
 	Double getStockHigh(@Param("code") String code, @Param("date") LocalDate date);
 	
@@ -56,7 +49,6 @@ public interface StockDao {
 	 * @param date 查询日期
 	 * @return 该股票当天的最低价
 	 */
-	@StockNotFoundCheck
 	@Select(value="SELECT low FROM t_stock_"+"${date.getYear()}"+" WHERE code=#{code} AND date=#{date}")
 	Double getStockLow(@Param("code") String code, @Param("date") LocalDate date);
 	
@@ -66,7 +58,7 @@ public interface StockDao {
 	 * @param date 查询日期
 	 * @return 该股票当天的收盘价
 	 */
-//	@StockNotFoundCheck
+//
 	@Cacheable("getStockClose") // use concurrent internal storage as cache to accelerate the calculation
 	@Select(value="SELECT close FROM t_stock_"+"${date.getYear()}"+" WHERE code=#{code} AND date=#{date}")
 	Double getStockClose(@Param("code") String code, @Param("date") LocalDate date) ;
@@ -77,7 +69,6 @@ public interface StockDao {
 	 * @param date 查询日期
 	 * @return 该股票当天的成交量
 	 */
-	@StockNotFoundCheck
 	@Select(value="SELECT volume FROM t_stock_"+"${date.getYear()}"+" WHERE code=#{code} AND date=#{date}")
 	Integer getStockVolume(@Param("code")String code, @Param("date") LocalDate date);
 	
@@ -87,7 +78,6 @@ public interface StockDao {
 	 * @param date 查询日期
 	 * @return 该股票当天复盘后的收盘价
 	 */
-	@StockNotFoundCheck
 	@Select(value="SELECT adj_close FROM t_stock_"+"${date.getYear()}"+" WHERE code=#{code} AND date=#{date}")
 	Double getStockAdjClose(@Param("code") String code, @Param("date") LocalDate date);
 		
@@ -96,7 +86,6 @@ public interface StockDao {
 	 * @param code 代码
 	 * @return 股票名字
 	 */
-	@StockNotFoundCheck
 	@Select(value="SELECT name FROM t_stock_2011 WHERE code=#{code} limit 1")
 	String getStockName(String code);
 	
@@ -105,7 +94,6 @@ public interface StockDao {
 	 * @param code 股票代码 不含市场
 	 * @return 市场名称
 	 */
-	@StockNotFoundCheck
 	@Select(value="SELECT market FROM t_stock_2011 WHERE code=#{code} limit 1")
 	String getStockMarket(String code);
 
@@ -114,7 +102,6 @@ public interface StockDao {
 	 * @param name 股票名称
 	 * @return 股票代码
 	 */
-	@StockNotFoundCheck
 	@Select(value="SELECT code FROM t_stock_2011 WHERE name=#{name} limit 1")
 	String getStockCode(String name);
 

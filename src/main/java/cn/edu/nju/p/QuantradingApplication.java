@@ -29,16 +29,4 @@ public class QuantradingApplication {
 		return new CalculateHelper(0.00023);
 	}
 
-	/*@Bean
-	public DataSource dataSource(){
-		DataSource dataSource = new DataSource();
-		dataSource.setUrl("jdbc:mysql://106.14.224.189:3306/quantitivetrading");
-//		dataSource.
-		dataSource.setUsername("root");
-		dataSource.setPassword("mysql");
-		dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-		dataSource.setMaxActive(50);
-		return dataSource;
-	}*/
-
 }
