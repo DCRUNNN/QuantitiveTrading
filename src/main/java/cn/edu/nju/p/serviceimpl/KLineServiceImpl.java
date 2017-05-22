@@ -38,16 +38,19 @@ public class KLineServiceImpl implements KLineService {
      * @param endDate   结束日期
      * @return 返回每一天的KLine数据
      */
-    public List<KLineVO> getKLineVOSByCode(String code, LocalDate beginDate, LocalDate endDate) {
+    public KLineVO getKLineVOSByCode(String code, LocalDate beginDate, LocalDate endDate) {
 
 //        使用lambda表达式过滤没有数据的日期
         List<LocalDate> dateList = DateHelper.getBetweenDateAndFilter(beginDate,endDate, date-> StockHelper.isValidByCode(code,date));
 
-        List<KLineVO> kLineVOList = new ArrayList<>();
+//        List<KLineVO> kLineVOList = new ArrayList<>();
+
+        List<List<Object>> finalResult = new ArrayList<>();
+
+        String stockName = stockDao.getStockName(code);
 
         dateList.parallelStream().forEach(date -> {
 
-            String stockName = stockDao.getStockName(code);
             double low = stockDao.getStockLow(code,date);
             double high = stockDao.getStockHigh(code,date);
             double open = stockDao.getStockOpen(code,date);
@@ -55,8 +58,6 @@ public class KLineServiceImpl implements KLineService {
             int volume = stockDao.getStockVolume(code,date);
             boolean isGoHigh = open<close;
             int targ = isGoHigh ? 1 : 0;
-            double range = high-low;
-            double dBetweenOpenAndClose = Math.abs(open-close);
 
             double diff = macdUtils.getEmaValue(12, date, code) - macdUtils.getEmaValue(26, date, code);
             double dea = macdUtils.getDea(9, date, code);
@@ -66,13 +67,27 @@ public class KLineServiceImpl implements KLineService {
             dea = DoubleUtils.formatDouble(dea);
             macd = DoubleUtils.formatDouble(macd);
 
-            kLineVOList.add(new KLineVO(stockName, code, date.toString(), targ, low, high, open, close, range, dBetweenOpenAndClose, volume, macd, diff, dea));
+//            kLineVOList.add(new KLineVO(stockName, code, date.toString(), targ, low, high, open, close, range, dBetweenOpenAndClose, volume, macd, diff, dea));
+
+            List<Object> results = new ArrayList<>();
+            results.add(date.toString());
+            results.add(open);
+            results.add(close);
+            results.add(low);
+            results.add(high);
+            results.add(volume);
+            results.add(targ);
+            results.add(macd);
+            results.add(diff);
+            results.add(dea);
+
+            finalResult.add(results);
         });
 
-        return kLineVOList
+        return new KLineVO(stockName, finalResult
                 .parallelStream()
-                .sorted(Comparator.comparing(KLineVO::getDate))
-                .collect(Collectors.toList());
+                .sorted(Comparator.comparing(a -> a.get(0).toString()))
+                .collect(Collectors.toList()));
     }
 
     /**
@@ -82,7 +97,7 @@ public class KLineServiceImpl implements KLineService {
      * @param endDate 结束日期
      * @return 有效日期的k线数据
      */
-    public List<KLineVO> getKLineVOSByName(String name, LocalDate beginDate, LocalDate endDate) throws  StockNotFoundException {
+    public KLineVO getKLineVOSByName(String name, LocalDate beginDate, LocalDate endDate) throws  StockNotFoundException {
 
         String code = stockDao.getStockCode(name);
         return getKLineVOSByCode(code, beginDate, endDate);

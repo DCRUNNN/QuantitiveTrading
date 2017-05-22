@@ -18,7 +18,7 @@ public interface KLineService {
      * @param endDate 结束日期
      * @return 返回每一天的KLine数据
      */
-    List<KLineVO> getKLineVOSByCode(String code, LocalDate beginDate, LocalDate endDate) throws StockNotFoundException;
+    KLineVO getKLineVOSByCode(String code, LocalDate beginDate, LocalDate endDate) throws StockNotFoundException;
 
 
     /**
@@ -28,6 +28,6 @@ public interface KLineService {
      * @param endDate 结束日期
      * @return 返回每一天的KLine数据
      */
-    List<KLineVO> getKLineVOSByName(String name, LocalDate beginDate, LocalDate endDate) throws StockNotFoundException;
+    KLineVO getKLineVOSByName(String name, LocalDate beginDate, LocalDate endDate) throws StockNotFoundException;
 
 }

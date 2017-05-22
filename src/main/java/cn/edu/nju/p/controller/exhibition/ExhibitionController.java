@@ -28,8 +28,8 @@ public class ExhibitionController {
     public BaseResult getKLineDataByCode(@PathVariable String code, @RequestParam String beginDate, @RequestParam String endDate) {
         LocalDate begin = LocalDate.parse(beginDate);
         LocalDate end = LocalDate.parse(endDate);
-        List<KLineVO> kLineVOList = kLineService.getKLineVOSByCode(code, begin, end);
-        return new BaseResult(0, kLineVOList);
+        KLineVO kLineVO = kLineService.getKLineVOSByCode(code, begin, end);
+        return new BaseResult(0, kLineVO);
     }
 
     @GetMapping("/averageline/{code}")
