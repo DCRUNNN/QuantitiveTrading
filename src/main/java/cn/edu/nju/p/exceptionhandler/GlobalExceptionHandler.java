@@ -3,6 +3,7 @@ package cn.edu.nju.p.exceptionhandler;
 import cn.edu.nju.p.baseresult.BaseResult;
 import cn.edu.nju.p.enums.ErrorCode;
 import cn.edu.nju.p.exception.DateNotOrderedException;
+import cn.edu.nju.p.exception.PasswordNotMatchException;
 import cn.edu.nju.p.exception.StockNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -42,4 +43,10 @@ public class GlobalExceptionHandler {
         return new BaseResult(ErrorCode.STOCK_NOT_FOUND.getErrorCode(), message);
     }
 
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public BaseResult handlePasswordNotMatch(PasswordNotMatchException pe){
+        String message = pe.getMessage();
+        return new BaseResult(ErrorCode.PASSWORD_NOT_MATCH.getErrorCode(), message);
+    }
 }
