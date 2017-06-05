@@ -17,17 +17,17 @@ public class CalculateHelper {
 
     private double depositReturn;
 
-    private Map<LocalDate,Double> primaryRates;
-    private Map<LocalDate,Double> fieldRates;
+        private Map<LocalDate,Double> primaryRates;
+        private Map<LocalDate,Double> fieldRates;
 
-    /**
-     * 手动传递基准收益率和策略收益率
-     * @param depositReturn 存储年收益
-     * @param primaryRates 基准收益率
-     * @param fieldRates 策略收益率
-     */
+        /**
+         * 手动传递基准收益率和策略收益率
+         * @param depositReturn 存储年收益
+         * @param primaryRates 基准收益率
+         * @param fieldRates 策略收益率
+         */
     public CalculateHelper(double depositReturn, Map<LocalDate, Double> primaryRates, Map<LocalDate, Double> fieldRates) {
-        this.depositReturn = depositReturn;
+            this.depositReturn = depositReturn;
         this.primaryRates = primaryRates;
         this.fieldRates = fieldRates;
     }

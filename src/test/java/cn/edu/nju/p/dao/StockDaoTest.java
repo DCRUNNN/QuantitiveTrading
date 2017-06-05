@@ -1,23 +1,17 @@
 package cn.edu.nju.p.dao;
 
-import cn.edu.nju.p.QuantradingApplication;
 import cn.edu.nju.p.po.StockPO;
-import com.sun.javafx.binding.BindingHelperObserver;
-import org.apache.tomcat.jni.Local;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 /**
  * attention! must use the mysql on the server,because the column current_time has been modified.
  */

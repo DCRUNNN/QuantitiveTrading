@@ -31,7 +31,7 @@ public interface StockDao {
 	 * @return 该股票当天的开盘价
 	 */
 	@Select(value = "SELECT open FROM t_stock_"+"${date.getYear()}"+" WHERE code=#{code} AND date=#{date}")
-	@Results(id = "stockPo")
+	@Cacheable("getStockOpen")
 	Double getStockOpen(@Param("code") String code, @Param("date") LocalDate date) ;
 
 	/**
@@ -70,6 +70,7 @@ public interface StockDao {
 	 * @return 该股票当天的成交量
 	 */
 	@Select(value="SELECT volume FROM t_stock_"+"${date.getYear()}"+" WHERE code=#{code} AND date=#{date}")
+	@Cacheable("getVolumes")
 	Integer getStockVolume(@Param("code")String code, @Param("date") LocalDate date);
 	
 	/**
@@ -148,6 +149,7 @@ public interface StockDao {
 	 * @return all the stock codes
 	 */
 	@Select(value="SELECT distinct code from t_stock_2016")
+	@Cacheable("allStocks")
 	List<String> getAllStocks();
 
 	@Insert("INSERT INTO t_stock_"+"${year}"+"(date,open,high,low,close,volume,adj_close,code,name,market,time,current_price)" +

@@ -32,7 +32,8 @@ public class StockHelper {
 
         try {
             Double close = stockDao.getStockClose(stockCode, date);
-            return close != null;
+            int volume = stockDao.getStockVolume(stockCode, date);
+            return close != null && volume != 0;
         } catch (StockNotFoundException | NullPointerException e) {
             return false;
         }
@@ -45,7 +46,7 @@ public class StockHelper {
      * @param endDate 结束日期
      * @return 存在停牌情况返回true，不存在返回false
      */
-    public static boolean hasStopped(String stockCode, LocalDate beginDate, LocalDate endDate) {
+    private static boolean hasStopped(String stockCode, LocalDate beginDate, LocalDate endDate) {
 
         List<LocalDate> betweenDates;//获取去除周末的日期
         betweenDates = DateHelper.getBetweenDateAndFilter(beginDate, endDate, a -> true);
@@ -98,9 +99,7 @@ public class StockHelper {
         LocalDate lastDate = DateHelper.getLastDate(date, a->true);
         return stockHolding
                 .stream()
-                .map(code -> {
-                    return (stockDao.getStockAdjClose(code, date) - stockDao.getStockAdjClose(code, lastDate)) / stockDao.getStockAdjClose(code, lastDate);
-                })
+                .map(code -> (stockDao.getStockAdjClose(code, date) - stockDao.getStockAdjClose(code, lastDate)) / stockDao.getStockAdjClose(code, lastDate))
                 .reduce(0.0,(a,b)->a + b) / stockHolding.size();
     }
 
@@ -119,15 +118,12 @@ public class StockHelper {
 
     /**
      * to check if the stock exists
-     * @param stockCode
+     * @param stockCode stock code
      * @return true if exists,else false
      */
     public static boolean codeExists(String stockCode) {
         List<String> codes = stockDao.getAllStocks();
-        if (codes.contains(stockCode)) {
-            return true;
-        }
-        return false;
+        return codes.contains(stockCode);
     }
 
     @Autowired

@@ -72,7 +72,6 @@ public class DateHelper {
      * @return 上一个不是周末的（有效日期）日期
      */
     public static LocalDate getLastDate(LocalDate date,Predicate<LocalDate> predicate) {
-
         date = date.plusDays(-1);
         while (date.getDayOfWeek() == DayOfWeek.SATURDAY || date.getDayOfWeek() == DayOfWeek.SUNDAY ||
                 !predicate.test(date)){

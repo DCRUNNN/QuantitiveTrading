@@ -15,8 +15,7 @@ public class EncryptHelper {
      */
     public static String getShaEncryption(String raw) {
         String type = "SHA-256";
-        String result = Encrypt(raw, type);
-        return result;
+        return Encrypt(raw, type);
     }
 
     /**
@@ -27,7 +26,7 @@ public class EncryptHelper {
      */
     public static boolean checkPassword(String rawPassword, String actualPassword) {
         String passwordEncrypted = Encrypt(rawPassword, "SHA-256");
-        return passwordEncrypted.equals(actualPassword);
+        return actualPassword.equals(passwordEncrypted);
     }
 
     private static String Encrypt(String strSrc, String encName) {
@@ -46,15 +45,15 @@ public class EncryptHelper {
     }
 
     private static String bytes2Hex(byte[] bts) {
-        String des = "";
-        String tmp = null;
-        for (int i = 0; i < bts.length; i++) {
-            tmp = (Integer.toHexString(bts[i] & 0xFF));
+        StringBuilder des = new StringBuilder();
+        String tmp;
+        for (byte bt : bts) {
+            tmp = (Integer.toHexString(bt & 0xFF));
             if (tmp.length() == 1) {
-                des += "0";
+                des.append("0");
             }
-            des += tmp;
+            des.append(tmp);
         }
-        return des;
+        return des.toString();
     }
 }
