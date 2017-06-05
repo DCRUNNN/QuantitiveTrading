@@ -40,6 +40,7 @@ public interface StockDao {
 	 * @param date 查询日期
 	 * @return 该股票当天的最高价
 	 */
+	@Cacheable("getStockHigh")
 	@Select(value="SELECT high FROM t_stock_"+"${date.getYear()}"+" WHERE code=#{code} AND date=#{date}")
 	Double getStockHigh(@Param("code") String code, @Param("date") LocalDate date);
 	
@@ -49,6 +50,7 @@ public interface StockDao {
 	 * @param date 查询日期
 	 * @return 该股票当天的最低价
 	 */
+	@Cacheable("getStockLow")
 	@Select(value="SELECT low FROM t_stock_"+"${date.getYear()}"+" WHERE code=#{code} AND date=#{date}")
 	Double getStockLow(@Param("code") String code, @Param("date") LocalDate date);
 	
@@ -79,6 +81,7 @@ public interface StockDao {
 	 * @param date 查询日期
 	 * @return 该股票当天复盘后的收盘价
 	 */
+	@Cacheable("getAdjClose")
 	@Select(value="SELECT adj_close FROM t_stock_"+"${date.getYear()}"+" WHERE code=#{code} AND date=#{date}")
 	Double getStockAdjClose(@Param("code") String code, @Param("date") LocalDate date);
 		

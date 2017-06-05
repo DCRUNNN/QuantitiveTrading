@@ -11,9 +11,9 @@ import java.util.List;
  */
 public interface CompanyDao {
 
-    public CompanyInfoVO getCompanyInfoVO(String code);
+    CompanyInfoVO getCompanyInfoVO(String code);
 
-    public List<CompanyNewsVO> getCompanyNewsVOList(String code);
+    List<CompanyNewsVO> getCompanyNewsVOList(String code);
 
-    public List<CompanyAnnouncementVO> getCompanyAnnouncementVOList(String code);
+    List<CompanyAnnouncementVO> getCompanyAnnouncementVOList(String code);
 }

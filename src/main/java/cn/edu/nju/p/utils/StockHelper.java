@@ -4,12 +4,11 @@ import cn.edu.nju.p.dao.StockDao;
 import cn.edu.nju.p.exception.StockNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -32,8 +31,7 @@ public class StockHelper {
 
         try {
             Double close = stockDao.getStockClose(stockCode, date);
-            int volume = stockDao.getStockVolume(stockCode, date);
-            return close != null && volume != 0;
+            return close != null;
         } catch (StockNotFoundException | NullPointerException e) {
             return false;
         }
@@ -46,7 +44,7 @@ public class StockHelper {
      * @param endDate 结束日期
      * @return 存在停牌情况返回true，不存在返回false
      */
-    private static boolean hasStopped(String stockCode, LocalDate beginDate, LocalDate endDate) {
+    public static boolean hasStopped(String stockCode, LocalDate beginDate, LocalDate endDate) {
 
         List<LocalDate> betweenDates;//获取去除周末的日期
         betweenDates = DateHelper.getBetweenDateAndFilter(beginDate, endDate, a -> true);
@@ -54,8 +52,8 @@ public class StockHelper {
         //存在无效日期就返回true
 
         for (LocalDate date:betweenDates) {
-            //成交量是0或者有效日无数据都是停牌
-            if(/*controller.getVolumeByCode(stockCode,date) == 0*/!isValidByCode(stockCode,date)){
+            //有效日期并且成交量为０就是停牌
+            if(isValidByCode(stockCode,date) && stockDao.getStockVolume(stockCode,date) == 0){
                 //System.out.println(date.toString()+" "+stockCode);
                 return true;
             }
@@ -126,8 +124,36 @@ public class StockHelper {
         return codes.contains(stockCode);
     }
 
+    public static List<String> getAllValidStocksLastTenDay(LocalDate date) {
+
+        LocalDate lastDate = date.minusDays(30);
+        List<String> allStocks = stockDao.getAllStocks();
+
+        List<LocalDate> betweenDates = DateHelper.getBetweenDateAndFilter(lastDate, date, a -> true);
+
+        List<String> results = new ArrayList<>();
+
+        for (String stock : allStocks) {
+            boolean hasStopped = false;
+            for (LocalDate localDate : betweenDates) {
+                boolean isValidAndNoVolume = isValidByCode(stock, localDate) && stockDao.getStockVolume(stock, localDate) == 0;
+                if (isValidAndNoVolume) {
+                    hasStopped = true;
+                    break;
+                }
+            }
+            if (!hasStopped) {
+                results.add(stock);
+            }
+        }
+
+        return results;
+    }
+
     @Autowired
     public void setStockDao(StockDao dao) {
         stockDao = dao;
     }
+
+
 }

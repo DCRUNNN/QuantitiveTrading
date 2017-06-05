@@ -26,7 +26,7 @@ public class LoginController {
          */
         String actualPassword = "";
         if (!EncryptHelper.checkPassword(password, actualPassword)) {
-            throw new PasswordNotMatchException(phoneNumber + "login faild!Password not match!");
+            throw new PasswordNotMatchException(phoneNumber + "login failed!Password not match!");
         }
         return new BaseResult(0, "Welcome Login In!" + phoneNumber);
     }

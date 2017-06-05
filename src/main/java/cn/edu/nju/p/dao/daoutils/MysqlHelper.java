@@ -1,4 +1,4 @@
-package cn.edu.nju.p.dao;
+package cn.edu.nju.p.dao.daoutils;
 
 import cn.edu.nju.p.po.StockPO;
 

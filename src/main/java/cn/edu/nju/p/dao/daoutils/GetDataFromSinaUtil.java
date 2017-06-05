@@ -1,13 +1,9 @@
-package cn.edu.nju.p.dao;
+package cn.edu.nju.p.dao.daoutils;
 
-import cn.edu.nju.p.QuantradingApplication;
 import cn.edu.nju.p.po.StockPO;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.io.*;
 import java.net.URL;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Created by dell- on 2017/5/12.

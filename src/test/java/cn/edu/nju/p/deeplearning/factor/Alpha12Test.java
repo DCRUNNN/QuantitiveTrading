@@ -28,7 +28,22 @@ public class Alpha12Test {
 
         String stockCode = "000001";
         LocalDate localDate = LocalDate.of(2012, 2, 3);
-        System.out.println(alpha12.getAlpha(stockCode, localDate));
+        assertEquals(-0.26136777700475045,alpha12.getAlpha(stockCode,localDate),0.000000000001);
     }
 
+    @Test
+    public void getAlpha2Test() throws Exception {
+
+        String code = "000002";
+        LocalDate localDate = LocalDate.of(2012, 2, 3);
+        assertEquals(0.4201615779544145,alpha12.getAlpha(code,localDate),0.000000000001);
+    }
+
+    @Test
+    public void getAlpha3Test() throws Exception {
+
+        String code = "000004";
+        LocalDate localDate = LocalDate.of(2012, 2, 3);
+        assertEquals(-0.013081359844710252,alpha12.getAlpha(code,localDate),0.000000000001);
+    }
 }

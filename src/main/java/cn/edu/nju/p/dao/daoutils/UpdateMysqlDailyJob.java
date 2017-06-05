@@ -1,11 +1,9 @@
-package cn.edu.nju.p.dao;
+package cn.edu.nju.p.dao.daoutils;
 
+import cn.edu.nju.p.dao.daoutils.GetDataFromSinaUtil;
 import org.quartz.Job;
-import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-
-import java.util.Date;
 
 
 /**

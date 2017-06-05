@@ -2,16 +2,15 @@ package cn.edu.nju.p.utils;
 
 
 import cn.edu.nju.p.exception.DateNotOrderedException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Component;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -40,7 +39,7 @@ public class DateHelper {
     /**
      * @param beginDate 开始日期
      * @param endDate 结束日期
-     * @param predicate 手动输入的对去掉周末之后的日期的筛选条件
+     * @param predicate 手动输入的对去掉周末之后和节假日日期的筛选条件
      * @return 返回去掉周末的日期列表
      */
     public static List<LocalDate> getBetweenDateAndFilter(LocalDate beginDate, LocalDate endDate,Predicate<LocalDate> predicate) {
@@ -59,9 +58,13 @@ public class DateHelper {
         //过滤周末日期
         Predicate<LocalDate> notWeekend = localDate -> !(localDate.getDayOfWeek() == DayOfWeek.SATURDAY || localDate.getDayOfWeek() == DayOfWeek.SUNDAY);
 
+        //过滤节假日
+        VacationDates vacationDates = new VacationDates();
+        Predicate<LocalDate> notVacation = localDate -> !vacationDates.isVacation(localDate);
+
         //直接在此处对dateList进行过滤
-        return dateList.stream()
-                .filter(notWeekend.and(predicate))
+        return dateList.parallelStream()
+                .filter(notWeekend.and(predicate).and(notVacation))
                 .collect(Collectors.toList());
     }
 
@@ -73,8 +76,9 @@ public class DateHelper {
      */
     public static LocalDate getLastDate(LocalDate date,Predicate<LocalDate> predicate) {
         date = date.plusDays(-1);
-        while (date.getDayOfWeek() == DayOfWeek.SATURDAY || date.getDayOfWeek() == DayOfWeek.SUNDAY ||
-                !predicate.test(date)){
+        VacationDates vacationDates = new VacationDates();
+        while (date.getDayOfWeek() == DayOfWeek.SATURDAY || date.getDayOfWeek() == DayOfWeek.SUNDAY || vacationDates.isVacation(date) ||
+                !predicate.test(date)) {
             date = date.plusDays(-1);
         }
         return date;
@@ -95,24 +99,4 @@ public class DateHelper {
         return result;
     }
 
-    /**
-     * 获取两个日期之间的日期天数，包括周末
-     * @param beginDate 开始日期
-     * @param endDate 结束日期
-     * @return 天数
-     */
-    public static int getBetweenDayNum(LocalDate beginDate,LocalDate endDate) {
-
-        if (isOkDate(beginDate, endDate)) {
-
-            int days = 0;
-            while (beginDate.isBefore(endDate) || beginDate.isEqual(endDate)) {
-                days++;
-                beginDate = beginDate.plusDays(1);
-            }
-            return days;
-        }
-
-        return 0;
-    }
 }

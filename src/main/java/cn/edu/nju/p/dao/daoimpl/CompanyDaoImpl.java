@@ -1,5 +1,6 @@
-package cn.edu.nju.p.dao;
+package cn.edu.nju.p.dao.daoimpl;
 
+import cn.edu.nju.p.dao.CompanyDao;
 import cn.edu.nju.p.vo.CompanyAnnouncementVO;
 import cn.edu.nju.p.vo.CompanyInfoVO;
 import cn.edu.nju.p.vo.CompanyNewsVO;
@@ -10,7 +11,6 @@ import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**

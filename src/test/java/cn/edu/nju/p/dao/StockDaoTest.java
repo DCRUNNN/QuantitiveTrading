@@ -23,7 +23,7 @@ public class StockDaoTest {
     @Autowired
 //    提示说没有找到bean??????
     private StockDao stockDao;
-    private LocalDate date = LocalDate.of(2013, Month.MAY, 13);
+    private LocalDate date = LocalDate.of(2012, 1, 26);
     private String code = "000001";
     private String name = "深发展A";
 

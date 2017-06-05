@@ -1,12 +1,9 @@
-package cn.edu.nju.p.dao;
+package cn.edu.nju.p.dao.daoutils;
 
-import cn.edu.nju.p.QuantradingApplication;
+import cn.edu.nju.p.dao.StockDao;
 import cn.edu.nju.p.po.StockPO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 
 import java.io.*;
 import java.sql.SQLException;
