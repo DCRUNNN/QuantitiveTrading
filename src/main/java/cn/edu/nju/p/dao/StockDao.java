@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.type.JdbcType;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -128,7 +129,8 @@ public interface StockDao {
 			@Result(property = "name",column = "name",javaType = String.class,jdbcType = JdbcType.VARCHAR),
 			@Result(property = "market",column = "market",javaType = String.class,jdbcType = JdbcType.VARCHAR),
 			@Result(property = "time",column = "time",javaType = String.class,jdbcType = JdbcType.VARCHAR),
-			@Result(property = "currentPrice",column = "current_price",javaType = Double.class,jdbcType = JdbcType.DOUBLE)
+			@Result(property = "currentPrice",column = "current_price",javaType = Double.class,jdbcType = JdbcType.DOUBLE),
+			@Result(property = "quoteChange",column = "quoteChange",javaType = Double.class,jdbcType = JdbcType.DOUBLE)
 	})
 	List<StockPO> getPOList(@Param("date") String date);
 
