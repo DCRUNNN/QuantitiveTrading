@@ -17,7 +17,7 @@ import cn.edu.nju.p.po.StockPO;
  * market 市场名称
  * time 查询时间
  * currentPrice 目前价格
- * quoteChange 涨跌幅
+ * quote_change 涨跌幅
  *
  * @author dc
  *
@@ -32,13 +32,13 @@ public class StockVO {
 	private double low;
 	private double close;
 	private int volume;
-	private double adjClose;
+	private double adj_close;
 	private String code;
 	private String name;
 	private String market;
 	private double currentPrice;
 	private String time;
-	private String quoteChange;//涨跌幅
+	private String quote_change;//涨跌幅
 	
 	public StockVO(StockPO po){
 //		this.serial=po.getSerial();
@@ -48,13 +48,13 @@ public class StockVO {
 		this.low=po.getLow();
 		this.close=po.getClose();
 		this.volume=po.getVolume();
-		this.adjClose=po.getAdj_close();
+		this.adj_close=po.getAdj_close();
 		this.code=po.getCode();
 		this.name=po.getName();
 		this.market=po.getMarket();
 		this.time = po.getTime();
 		this.currentPrice = po.getCurrentPrice();
-		this.quoteChange = po.getQuoteChange();
+		this.quote_change = po.getQuoteChange();
 	}
 
 	public String getDate() {
@@ -106,11 +106,11 @@ public class StockVO {
 	}
 
 	public double getAdjClose() {
-		return adjClose;
+		return adj_close;
 	}
 
 	public void setAdjClose(double adjClose) {
-		this.adjClose = adjClose;
+		this.adj_close = adjClose;
 	}
 
 	public String getCode() {
@@ -154,11 +154,11 @@ public class StockVO {
 	}
 
 	public String getQuoteChange() {
-		return quoteChange;
+		return quote_change;
 	}
 
 	public void setQuoteChange(String quoteChange) {
-		this.quoteChange = quoteChange;
+		this.quote_change = quoteChange;
 	}
 
 	@Override
@@ -170,13 +170,13 @@ public class StockVO {
 				", low=" + low +
 				", close=" + close +
 				", volume=" + volume +
-				", adjClose=" + adjClose +
+				", adj_close=" + adj_close +
 				", code='" + code + '\'' +
 				", name='" + name + '\'' +
 				", market='" + market + '\'' +
 				", currentPrice=" + currentPrice +
 				", time='" + time + '\'' +
-				", quoteChange='" + quoteChange + '\'' +
+				", quote_change='" + quote_change + '\'' +
 				'}';
 	}
 }
