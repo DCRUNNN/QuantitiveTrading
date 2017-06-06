@@ -14,6 +14,7 @@ package cn.edu.nju.p.po;
  * market 市场名称
  * time 查询时间
  * currentPrice 目前价格
+ * quoteChange 涨跌幅
  *
  * @author dc
  *
@@ -35,8 +36,16 @@ public class StockPO {
     private String market;
     private String time;
     private double currentPrice;
+    private String quoteChange;
 
-  /*  public StockPO(String date,double open,double high,double low,
+    public String getQuoteChange() {
+        return quoteChange;
+    }
+
+    public void setQuoteChange(String quoteChange) {
+        this.quoteChange = quoteChange;
+    }
+    /*  public StockPO(String date,double open,double high,double low,
                    double close,int volume,double adjClose,String code,String name,String market,String time,double currentPrice){
 //		this.serial=serial;
         this.date = date;
@@ -169,6 +178,7 @@ public class StockPO {
                 ", market='" + market + '\'' +
                 ", time='" + time + '\'' +
                 ", currentPrice=" + currentPrice +
+                ", quoteChange='" + quoteChange + '\'' +
                 '}';
     }
 }

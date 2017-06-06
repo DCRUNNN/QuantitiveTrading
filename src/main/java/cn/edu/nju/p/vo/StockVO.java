@@ -4,7 +4,7 @@ package cn.edu.nju.p.vo;
 import cn.edu.nju.p.po.StockPO;
 
 /**
- * serial 记录编号 
+ * serial 记录编号
  * date 日期（月/日/年）
  * open 开盘指数
  * high 最高指数
@@ -13,15 +13,18 @@ import cn.edu.nju.p.po.StockPO;
  * volume 成交量
  * adjClose 复权后的收盘指数
  * code 股票代码
- * name 股票名称 
+ * name 股票名称
  * market 市场名称
- * 
+ * time 查询时间
+ * currentPrice 目前价格
+ * quoteChange 涨跌幅
+ *
  * @author dc
  *
  */
 
 public class StockVO {
-	
+
 //	private int serial;
 	private String date;
 	private double open;
@@ -35,6 +38,7 @@ public class StockVO {
 	private String market;
 	private double currentPrice;
 	private String time;
+	private String quoteChange;//涨跌幅
 	
 	public StockVO(StockPO po){
 //		this.serial=po.getSerial();
@@ -50,6 +54,7 @@ public class StockVO {
 		this.market=po.getMarket();
 		this.time = po.getTime();
 		this.currentPrice = po.getCurrentPrice();
+		this.quoteChange = po.getQuoteChange();
 	}
 
 	public String getDate() {
@@ -148,6 +153,14 @@ public class StockVO {
 		this.currentPrice = currentPrice;
 	}
 
+	public String getQuoteChange() {
+		return quoteChange;
+	}
+
+	public void setQuoteChange(String quoteChange) {
+		this.quoteChange = quoteChange;
+	}
+
 	@Override
 	public String toString() {
 		return "StockVO{" +
@@ -163,6 +176,7 @@ public class StockVO {
 				", market='" + market + '\'' +
 				", currentPrice=" + currentPrice +
 				", time='" + time + '\'' +
+				", quoteChange='" + quoteChange + '\'' +
 				'}';
 	}
 }
