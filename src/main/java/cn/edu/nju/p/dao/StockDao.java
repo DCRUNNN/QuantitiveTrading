@@ -84,7 +84,17 @@ public interface StockDao {
 	@Cacheable("getAdjClose")
 	@Select(value="SELECT adj_close FROM t_stock_"+"${date.getYear()}"+" WHERE code=#{code} AND date=#{date}")
 	Double getStockAdjClose(@Param("code") String code, @Param("date") LocalDate date);
-		
+
+	/**
+	 * 得到该股票当天复盘后的收盘价
+	 * @param code 股票代码和市场名称 eg 000001.SZ
+	 * @param date 查询日期
+	 * @return 该股票当天复盘后的收盘价
+	 */
+	@Cacheable("getQuoteChange")
+	@Select(value="SELECT quote_change FROM t_stock_"+"${date.getYear()}"+" WHERE code=#{code} AND date=#{date}")
+	String getStockQuoteChange(@Param("code") String code, @Param("date") LocalDate date);
+
 	/**
 	 * 得到该股票的名字
 	 * @param code 代码
@@ -109,6 +119,7 @@ public interface StockDao {
 	@Select(value="SELECT code FROM t_stock_2011 WHERE name=#{name} limit 1")
 	String getStockCode(String name);
 
+
 	/**
 	 * 根据查询日期得到当天所有股票的PO
 	 * @param date 查询日期
@@ -128,8 +139,10 @@ public interface StockDao {
 			@Result(property = "name",column = "name",javaType = String.class,jdbcType = JdbcType.VARCHAR),
 			@Result(property = "market",column = "market",javaType = String.class,jdbcType = JdbcType.VARCHAR),
 			@Result(property = "time",column = "time",javaType = String.class,jdbcType = JdbcType.VARCHAR),
-			@Result(property = "currentPrice",column = "current_price",javaType = Double.class,jdbcType = JdbcType.DOUBLE)
-	})
+			@Result(property = "currentPrice",column = "current_price",javaType = Double.class,jdbcType = JdbcType.DOUBLE),
+			@Result(property = "quote_change",column = "quote_change",javaType = String.class,jdbcType = JdbcType.VARCHAR)
+
+			})
 	List<StockPO> getPOList(@Param("date") String date);
 
 	/**
@@ -155,7 +168,7 @@ public interface StockDao {
 	@Cacheable("allStocks")
 	List<String> getAllStocks();
 
-	@Insert("INSERT INTO t_stock_"+"${year}"+"(date,open,high,low,close,volume,adj_close,code,name,market,time,current_price)" +
-			" VALUES(#{StockPO.date},#{StockPO.open},#{StockPO.high},#{StockPO.low},#{StockPO.close},#{StockPO.volume},#{StockPO.adj_close},#{StockPO.code},#{StockPO.name},#{StockPO.market},#{StockPO.time},#{StockPO.currentPrice})")
+	@Insert("INSERT INTO t_stock_"+"${year}"+"(date,open,high,low,close,volume,adj_close,code,name,market,time,current_price,quote_change)" +
+			" VALUES(#{StockPO.date},#{StockPO.open},#{StockPO.high},#{StockPO.low},#{StockPO.close},#{StockPO.volume},#{StockPO.adj_close},#{StockPO.code},#{StockPO.name},#{StockPO.market},#{StockPO.time},#{StockPO.currentPrice},#{StockPO.quote_change})")
 	void insertIntoStockDatabase(@Param("year") String year,@Param("StockPO") StockPO po) throws SQLException;
 }
