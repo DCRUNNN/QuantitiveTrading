@@ -1,4 +1,4 @@
-package cn.edu.nju.p.controller.exhibition;
+package cn.edu.nju.p.controller.stock;
 
 import cn.edu.nju.p.baseresult.BaseResult;
 import cn.edu.nju.p.exception.StockNoneException;
@@ -25,10 +25,11 @@ public class HomePageController {
     private HomePageService homePageService;
 
     @GetMapping("/market/{date}")
-    public BaseResult getMarketVO(@PathVariable LocalDate date){
+    public BaseResult getMarketVO(@PathVariable String date){
+        LocalDate currentDate = LocalDate.parse(date);
         StockMarketVO marketVO=null;
         try {
-           StockMarketVO vo=homePageService.getMarketVO(date);
+           StockMarketVO vo=homePageService.getMarketVO(currentDate);
            marketVO=vo;
         }catch (StockNoneException e){
             e.printStackTrace();
@@ -36,9 +37,9 @@ public class HomePageController {
         return new BaseResult<>(0, marketVO);
     }
 
-    @GetMapping("/allstock")
-    public BaseResult getAllStock(@PathVariable LocalDate date){
-        List<StockVO> voList=homePageService.getStockVO(date);
+    @GetMapping("/allstock/{date}")
+    public BaseResult getAllStock(@PathVariable String date){
+        List<StockVO> voList=homePageService.getStockVO(LocalDate.parse(date));
 
         return new BaseResult<>(0, voList);
     }

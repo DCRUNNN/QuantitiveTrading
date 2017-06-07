@@ -14,21 +14,21 @@ import java.util.List;
 public interface ClientDao {
 
     @Select(value="select password from client_information where userId=#{userId}")
-    public String getPassword(@Param("userId") String userId);
+    String getPassword(@Param("userId") String userId);
 
     @Select(value="select email from client_information where userId=#{userId}")
-    public String getEmail(@Param("userId") String userId);
+    String getEmail(@Param("userId") String userId);
 
     @Select(value="select unit from client_information where userId=#{userId}")
-    public String getUnit(@Param("userId") String userId);
+    String getUnit(@Param("userId") String userId);
 
     @Select(value="select phone_number from client_information where userId=#{userId}")
-    public String getPhone_number(@Param("userId") String userId);
+    String getPhone_number(@Param("userId") String userId);
 
     @Select(value="select place from client_information where userId=#{userId}")
-    public String getPlace(@Param("userId") String userId);
+    String getPlace(@Param("userId") String userId);
 
     @Update("update client_information set password=#{list.get(0)},email=#{list.get(1)},unit=#{list.get(2)},phone_number=#{list.get(3)},place=#{list.get(4)} where userId=#{userId}")
-    public void modifyClientMessage(String userId,List<String> list);
+    void modifyClientMessage(String userId,List<String> list);
 
 }
