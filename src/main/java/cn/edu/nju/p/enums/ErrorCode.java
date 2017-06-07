@@ -14,7 +14,11 @@ public enum ErrorCode {
 
 
     //User Check Error
-    PASSWORD_NOT_MATCH(30000001)
+    PASSWORD_NOT_MATCH(30000001),
+
+    //code error
+    NO_CLASS_NAME(40000001),
+    COMPILE_ERROR(40000002)
     ;
 
     private int errorCode;
