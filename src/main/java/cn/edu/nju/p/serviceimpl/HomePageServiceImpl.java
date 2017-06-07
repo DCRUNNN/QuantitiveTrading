@@ -51,7 +51,7 @@ public class HomePageServiceImpl implements HomePageService{
      * @param date 日期
      * @return 返回当日的股票数据
      */
-    public StockMarketVO getMarketVO(LocalDate date) throws StockNoneException, StockNotFoundException {
+    public StockMarketVO getMarketVO(LocalDate date) throws StockNoneException {
 
         List<StockPO> polist = stockDao.getPOList(date.toString());
         if(polist == null|| polist.size()==0){

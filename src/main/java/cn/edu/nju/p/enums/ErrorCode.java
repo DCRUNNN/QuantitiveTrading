@@ -11,7 +11,7 @@ public enum ErrorCode {
 
     //Stock Error
     STOCK_NOT_FOUND(20000001),
-
+    STOCK_NONE(20000002),
 
     //User Check Error
     PASSWORD_NOT_MATCH(30000001),

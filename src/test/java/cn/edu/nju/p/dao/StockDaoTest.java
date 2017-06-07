@@ -1,6 +1,8 @@
 package cn.edu.nju.p.dao;
 
 import cn.edu.nju.p.po.StockPO;
+import cn.edu.nju.p.utils.DateHelper;
+import cn.edu.nju.p.utils.StockHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 /**
@@ -23,8 +26,8 @@ public class StockDaoTest {
     @Autowired
 //    提示说没有找到bean??????
     private StockDao stockDao;
-    private LocalDate date = LocalDate.of(2012, 1, 26);
-    private String code = "000001";
+    private LocalDate date = LocalDate.of(2012, 3, 5);
+    private String code = "002166";
     private String name = "深发展A";
 
 
@@ -114,4 +117,13 @@ public class StockDaoTest {
     }
 
 
+    @Test
+    public void get002166Test() throws Exception {
+
+//        List<LocalDate> dates = StockHelper.getAllValidStocksLastTenDay(LocalDate.of(2012, 3, 5));
+        String code = "002166";
+        LocalDate beginDate = LocalDate.of(2012, 3, 5);
+        List<LocalDate> dateList = DateHelper.getBetweenDateAndFilter(beginDate.minusDays(30), beginDate, a -> true);
+        dateList.forEach(date1 -> System.out.println(stockDao.getStockPO(code, date1)));
+    }
 }
