@@ -4,24 +4,46 @@ import cn.edu.nju.p.dao.StockDao;
 import cn.edu.nju.p.exception.StockNoneException;
 import cn.edu.nju.p.exception.StockNotFoundException;
 import cn.edu.nju.p.po.StockPO;
-import cn.edu.nju.p.service.strategy.StockMarketService;
+import cn.edu.nju.p.service.exhibition.HomePageService;
 import cn.edu.nju.p.utils.DateHelper;
 import cn.edu.nju.p.utils.StockHelper;
 import cn.edu.nju.p.vo.StockMarketVO;
+import cn.edu.nju.p.vo.StockVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 获取市场行情的实现类
+ * Created by cyz on 2017/6/6.
  */
 @Service
-public class StockMarketServiceImpl implements StockMarketService {
+public class HomePageServiceImpl implements HomePageService{
 
     @Autowired
     private StockDao stockDao;
+
+
+    /**
+     * 获取当日的所有股票行情
+     *
+     * @param date 日期
+     * @return 返回当日所有股票的信息
+     *
+     */
+    public List<StockVO> getStockVO(LocalDate date){
+        String time=date.toString();
+        List<StockVO> voList = new ArrayList<>();
+        List<StockPO> poList = stockDao.getPOList(time);
+
+        for(int i=0;i<poList.size();i++){
+            voList.add(new StockVO(poList.get(i)));
+        }
+        return  voList;
+    }
+
 
     /**
      * 获取当天的股票行情

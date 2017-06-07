@@ -1,15 +1,10 @@
 package cn.edu.nju.p.filter;
 
 
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Component;
-
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * a filter to handle cross domain request
