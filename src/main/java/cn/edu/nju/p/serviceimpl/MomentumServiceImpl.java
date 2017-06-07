@@ -62,11 +62,18 @@ public class MomentumServiceImpl implements MomentumService {
         //持有的股票
         List<String> stockToHold;
 
+        int primaryMoney = 100000;
+        int totalMoney = 100000;
+
         LocalDate beginValidDate = betweenDates.get(0);
         LocalDate virBeginDate = DateHelper.getIntervalEffectiveDate(beginValidDate, formativeDayNum);
         stockToHold = getWinnerStock(virBeginDate, DateHelper.getLastDate(beginValidDate, a -> true),stockPool);
         double beginClose = StockHelper.calculateTotalClose(stockToHold, beginValidDate); //初始总收盘价
-        double lastClose = beginClose;
+        int moneyPer100 = new BigDecimal(100 * beginClose).intValue();
+
+        int nums = primaryMoney / moneyPer100;
+        int leftMoney = primaryMoney - nums * moneyPer100;
+        int lastMoney = primaryMoney;
 
         //计算策略收益率
         for (int i = 1; i < betweenDates.size(); i++) {
@@ -75,11 +82,18 @@ public class MomentumServiceImpl implements MomentumService {
                 //整除 重新选择股票
                 virBeginDate = DateHelper.getIntervalEffectiveDate(currentDate, formativeDayNum);
                 stockToHold = getWinnerStock(virBeginDate, DateHelper.getLastDate(currentDate, a -> true),stockPool);
+                beginClose = StockHelper.calculateTotalClose(stockToHold, betweenDates.get(i - 1));
+                moneyPer100 = new BigDecimal(100 * beginClose).intValue();
+                nums = lastMoney / moneyPer100;
+                leftMoney = lastMoney - nums * moneyPer100;
             }
+
             double totalClose = StockHelper.calculateTotalClose(stockToHold, currentDate);
-            fieldRate.put(currentDate, DoubleUtils.formatDouble((totalClose - beginClose) / beginClose, 4));
-            dailyFieldRate.put(currentDate, DoubleUtils.formatDouble((totalClose - lastClose) / lastClose, 4));
-            lastClose = totalClose;
+            totalMoney = new BigDecimal(totalClose * 100).intValue() * nums + leftMoney; //当前总资产
+
+            fieldRate.put(currentDate, DoubleUtils.formatDouble((double) (totalMoney - primaryMoney) / primaryMoney, 4));
+            dailyFieldRate.put(currentDate, DoubleUtils.formatDouble((double) (totalMoney - lastMoney) / lastMoney, 4));
+            lastMoney = totalMoney;
         }
 
         //基准收益率 取股票池中所有股票的平均收益

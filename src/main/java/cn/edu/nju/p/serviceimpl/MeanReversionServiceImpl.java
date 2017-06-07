@@ -49,22 +49,38 @@ public class MeanReversionServiceImpl implements MeanReversionService {
         Map<LocalDate, Double> fieldRates = new LinkedHashMap<>();
         Map<LocalDate, Double> dailyFieldRates = new LinkedHashMap<>();
 
+        int primaryMoney = 100000; //10w 初始资金
+        int totalMoney;
+
         LocalDate beginValidDate = validDates.get(0);
         List<String> stockToHold = getWinner(stockPool, beginValidDate, meanDayNum, holdingNum) ; //每次持有的股票
         double beginClose = StockHelper.calculateTotalClose(stockToHold, beginValidDate);
-        double lastClose = beginClose;
+
+        int moneyPer100 = new BigDecimal(100 * beginClose).intValue();
+        int nums = primaryMoney / moneyPer100; //多少100手
+        int moneyLeft = primaryMoney - moneyPer100 * nums; //剩余的不足100手的金钱
+
+        int lastMoney = primaryMoney;
+
         for (int i = 1; i < validDates.size(); i++) {
             LocalDate currentDate = validDates.get(i);
+
             if (i % holdingDay == 0) {
                 //能够整除，重新选仓
                 stockToHold = getWinner(stockPool, currentDate, meanDayNum, holdingNum);
+                beginClose = StockHelper.calculateTotalClose(stockToHold, validDates.get(i - 1));
+                moneyPer100 = new BigDecimal(100 * beginClose).intValue();
+                nums = lastMoney / moneyPer100;
+                moneyLeft = lastMoney - nums * moneyPer100;
             }
+
             double totalClose = StockHelper.calculateTotalClose(stockToHold, currentDate);
-            System.out.println(currentDate.toString()+"--------->"+(totalClose-beginClose));
+            totalMoney = new BigDecimal(totalClose * 100).intValue() * nums + moneyLeft; //当前总资产
+
             //计算持有股票的每日总收益率
-            fieldRates.put(currentDate, DoubleUtils.formatDouble((totalClose - beginClose) / beginClose, 4));
-            dailyFieldRates.put(currentDate, DoubleUtils.formatDouble((totalClose - lastClose) / lastClose, 4));
-            lastClose = totalClose;
+            fieldRates.put(currentDate, DoubleUtils.formatDouble((double) (totalMoney - primaryMoney) / primaryMoney, 4));
+            dailyFieldRates.put(currentDate, DoubleUtils.formatDouble((double) (totalMoney - lastMoney) / lastMoney, 4));
+            lastMoney = totalMoney;
         }
 
         ArrayList<Map<LocalDate, Double>> primaryRatesMap = StockHelper.getPrimaryRate(stockPool, validDates);

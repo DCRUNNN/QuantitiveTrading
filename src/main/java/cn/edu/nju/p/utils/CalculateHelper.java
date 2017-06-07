@@ -158,15 +158,21 @@ public class CalculateHelper {
     public double getMaxDrawDown(){
 
         List<Double> rateValues = new ArrayList<>(getFieldAdjRates().values());
+        List<Double> adjRate = new ArrayList<>();
+        rateValues.forEach(rate -> adjRate.add(rate + 1));
+
         double peak = -999999999999.0; //收益率最高值
         double maxBack = -999999999999.0;//最大回撤
-        for (double ratePerDay : rateValues) {
+        for (double ratePerDay : adjRate) {
             if (ratePerDay > peak) {
                 peak = ratePerDay;
             }
             double back = (peak - ratePerDay) / peak;
             if (back > maxBack) {
+                System.out.println(peak + "-" + ratePerDay + "/" + peak);
                 maxBack = back;
+                System.out.println(maxBack);
+
             }
         }
         return maxBack;

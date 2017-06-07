@@ -112,7 +112,7 @@ public class StockHelper {
         for (int i = 1; i < validDates.size(); i++) {
             LocalDate currentDate = validDates.get(i);
             double allClose = calculateTotalClose(stockPool, currentDate);
-            System.out.println("Primary Rate: ------------->" + (allClose - totalClose));
+//            System.out.println("Primary Rate: ------------->" + (allClose - totalClose));
             //计算当日和买入日比较的总收益，并且格式化
             primaryRate.put(currentDate, DoubleUtils.formatDouble((allClose - totalClose) / totalClose, 4));
             dailyRates.put(currentDate, DoubleUtils.formatDouble((allClose - lastClose) / lastClose, 4));
