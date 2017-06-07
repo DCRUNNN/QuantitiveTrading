@@ -59,9 +59,9 @@ public class KLineServiceImpl implements KLineService {
             double dea = macdUtils.getDea(9, date, code);
             double macd = (diff - dea) * 2;
 
-            diff = DoubleUtils.formatDouble(diff);
-            dea = DoubleUtils.formatDouble(dea);
-            macd = DoubleUtils.formatDouble(macd);
+            diff = DoubleUtils.formatDouble(diff,2);
+            dea = DoubleUtils.formatDouble(dea,2);
+            macd = DoubleUtils.formatDouble(macd,2);
 
             List<Object> results = new ArrayList<>();
             results.add(date.toString());

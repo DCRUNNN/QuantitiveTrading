@@ -7,6 +7,8 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+
 /**
  * Created by soft on 2017/5/15.
  */
@@ -23,7 +25,9 @@ public class DaoExceptionHandleAop {
     public Object getStockInfo(ProceedingJoinPoint proceedingJoinPoint) throws Throwable{
         Object result = proceedingJoinPoint.proceed();
         if (result == null) {
-            throw new StockNotFoundException(proceedingJoinPoint.getSignature().getName() + " could not find the stock!");
+            String stockCode = (String) proceedingJoinPoint.getArgs()[0];
+            LocalDate date = (LocalDate) proceedingJoinPoint.getArgs()[1];
+            throw new StockNotFoundException(stockCode+" "+date+" "+proceedingJoinPoint.getSignature().getName() + " could not find the stock!");
         }
         return result;
     }

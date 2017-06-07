@@ -35,7 +35,7 @@ public class AverageLineServiceImpl implements AverageLineService {
      * @return 均线数据
      */
     @Override
-    public AverageVO getAverageVOByCode(String code, LocalDate beginDate, LocalDate endDate) throws StockNotFoundException {
+    public AverageVO getAverageVOByCode(String code, LocalDate beginDate, LocalDate endDate) {
 
         List<LocalDate> validDates = DateHelper.getBetweenDateAndFilter(beginDate,endDate, date-> StockHelper.isValidByCode(code,date));
 

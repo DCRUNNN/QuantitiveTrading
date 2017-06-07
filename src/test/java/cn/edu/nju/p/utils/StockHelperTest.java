@@ -8,8 +8,6 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.time.LocalDate;
 
-import static org.junit.Assert.*;
-
 /**
  * Created by xihao on 17-6-5.
  */
@@ -22,7 +20,7 @@ public class StockHelperTest {
     public void getValidStockTest() throws Exception {
 
         LocalDate currentDate = LocalDate.of(2012, 2, 3);
-        System.out.println(StockHelper.getAllValidStocksLastTenDay(currentDate));
+        System.out.println(StockHelper.getAllValidStocksLastThirtyDay(currentDate));
 
     }
 
@@ -38,6 +36,6 @@ public class StockHelperTest {
     @Test
     public void getAllStockTest() {
         LocalDate date = LocalDate.of(2012, 2, 3);
-        System.out.println(StockHelper.getAllValidStocksLastTenDay(date));
+        System.out.println(StockHelper.getAllValidStocksLastThirtyDay(date));
     }
 }

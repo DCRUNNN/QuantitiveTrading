@@ -17,7 +17,7 @@ public class Alpha101 {
     @Autowired
     private StockDao stockDao;
 
-    double getAlpha(String stockCode, LocalDate localDate) {
+    public double getAlpha(String stockCode, LocalDate localDate) {
 
         double high = stockDao.getStockHigh(stockCode, localDate);
         double low = stockDao.getStockLow(stockCode, localDate);

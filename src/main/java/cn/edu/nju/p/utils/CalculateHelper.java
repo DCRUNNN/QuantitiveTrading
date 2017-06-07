@@ -17,8 +17,10 @@ public class CalculateHelper {
 
     private double depositReturn;
 
-        private Map<LocalDate,Double> primaryRates;
-        private Map<LocalDate,Double> fieldRates;
+    private Map<LocalDate, Double> primaryRates;
+    private Map<LocalDate, Double> fieldRates;
+    private Map<LocalDate, Double> totalPrimaryRates;
+    private Map<LocalDate, Double> totalFieldRates;
 
         /**
          * 手动传递基准收益率和策略收益率
@@ -27,7 +29,7 @@ public class CalculateHelper {
          * @param fieldRates 策略收益率
          */
     public CalculateHelper(double depositReturn, Map<LocalDate, Double> primaryRates, Map<LocalDate, Double> fieldRates) {
-            this.depositReturn = depositReturn;
+        this.depositReturn = depositReturn;
         this.primaryRates = primaryRates;
         this.fieldRates = fieldRates;
     }
@@ -58,6 +60,14 @@ public class CalculateHelper {
         this.fieldRates = fieldRates;
     }
 
+    public void setTotalPrimaryRates(Map<LocalDate, Double> totalPrimaryRates) {
+        this.totalPrimaryRates = totalPrimaryRates;
+    }
+
+    public void setTotalFieldRates(Map<LocalDate, Double> totalFieldRates) {
+        this.totalFieldRates = totalFieldRates;
+    }
+
 
     /**
      * 获得beta因子
@@ -69,6 +79,7 @@ public class CalculateHelper {
         double[] fieldRateArray = ArrayUtils.toPrimitive(fieldRates.values().toArray(new Double[fieldRates.size()]));
         Variance variance = new Variance();
         double primaryVariance = variance.evaluate(primaryFieldRateArray);//基准收益率方差
+
         Covariance covariance = new Covariance();
         double covar = covariance.covariance(fieldRateArray,primaryFieldRateArray);//策略收益率和基准收益率的协方差
         return primaryVariance / covar;
@@ -128,10 +139,7 @@ public class CalculateHelper {
      */
     public Map<LocalDate,Double> getPrimaryAdjRates() {
 
-        if (primaryRates.size() == 0) {
-            throw new RuntimeException("使用CalculateHelper的计算之前请先设置基准收益率和策略收益率！");
-        }
-        return adjustRates(primaryRates);
+        return totalPrimaryRates;
     }
 
     /**
@@ -140,28 +148,7 @@ public class CalculateHelper {
      */
     public Map<LocalDate,Double> getFieldAdjRates(){
 
-        if (fieldRates.size() == 0) {
-            throw new RuntimeException("使用CalculateHelper的计算之前请先设置基准收益率和策略收益率！");
-        }
-
-        return adjustRates(fieldRates);
-    }
-    /**
-     * 调整日收益率为累加收益
-     * @param rates 日收益
-     * @return 调整之后的渐加收益
-     */
-    private Map<LocalDate, Double> adjustRates(Map<LocalDate, Double> rates) {
-
-        List<Map.Entry<LocalDate, Double>> rateList = new ArrayList<>(rates.entrySet());
-        double totalNum = 0.0;
-        Map<LocalDate, Double> resultMap = new LinkedHashMap<>();
-        //累加
-        for (Map.Entry<LocalDate, Double> localDateDoubleEntry : rateList) {
-            totalNum+=localDateDoubleEntry.getValue();
-            resultMap.put(localDateDoubleEntry.getKey(), totalNum);
-        }
-        return resultMap;
+        return totalFieldRates;
     }
 
     /**
@@ -171,9 +158,9 @@ public class CalculateHelper {
     public double getMaxDrawDown(){
 
         List<Double> rateValues = new ArrayList<>(getFieldAdjRates().values());
-        double peak = -9999; //收益率最高值
-        double maxBack = -9999;//最大回撤
-        for (Double ratePerDay : rateValues) {
+        double peak = -999999999999.0; //收益率最高值
+        double maxBack = -999999999999.0;//最大回撤
+        for (double ratePerDay : rateValues) {
             if (ratePerDay > peak) {
                 peak = ratePerDay;
             }
@@ -184,6 +171,7 @@ public class CalculateHelper {
         }
         return maxBack;
     }
+
 
     /**
      * 计算收益率频率

@@ -4,6 +4,7 @@ import cn.edu.nju.p.dao.StockDao;
 import cn.edu.nju.p.service.strategy.MomentumService;
 import cn.edu.nju.p.utils.CalculateHelper;
 import cn.edu.nju.p.utils.DateHelper;
+import cn.edu.nju.p.utils.DoubleUtils;
 import cn.edu.nju.p.utils.StockHelper;
 import cn.edu.nju.p.vo.MomentumResultVO;
 import cn.edu.nju.p.vo.MomentumVO;
@@ -57,26 +58,37 @@ public class MomentumServiceImpl implements MomentumService {
         List<LocalDate> betweenDates = DateHelper.getBetweenDateAndFilter(beginDate, endDate, a -> true);
 
         Map<LocalDate,Double> fieldRate = new LinkedHashMap<>();//策略收益率
-
+        Map<LocalDate, Double> dailyFieldRate = new LinkedHashMap<>();
         //持有的股票
-        List<String> stockToHold = null;
+        List<String> stockToHold;
+
+        LocalDate beginValidDate = betweenDates.get(0);
+        LocalDate virBeginDate = DateHelper.getIntervalEffectiveDate(beginValidDate, formativeDayNum);
+        stockToHold = getWinnerStock(virBeginDate, DateHelper.getLastDate(beginValidDate, a -> true),stockPool);
+        double beginClose = StockHelper.calculateTotalClose(stockToHold, beginValidDate); //初始总收盘价
+        double lastClose = beginClose;
 
         //计算策略收益率
-        for (int i = 0; i < betweenDates.size(); i++) {
+        for (int i = 1; i < betweenDates.size(); i++) {
             LocalDate currentDate = betweenDates.get(i);
             if (i % holdingDayNum == 0) {
                 //整除 重新选择股票
-                LocalDate virBeginDate = DateHelper.getIntervalEffectiveDate(currentDate, formativeDayNum);
+                virBeginDate = DateHelper.getIntervalEffectiveDate(currentDate, formativeDayNum);
                 stockToHold = getWinnerStock(virBeginDate, DateHelper.getLastDate(currentDate, a -> true),stockPool);
             }
-            fieldRate.put(currentDate, StockHelper.countAllStockRate(stockToHold, currentDate));
+            double totalClose = StockHelper.calculateTotalClose(stockToHold, currentDate);
+            fieldRate.put(currentDate, DoubleUtils.formatDouble((totalClose - beginClose) / beginClose, 4));
+            dailyFieldRate.put(currentDate, DoubleUtils.formatDouble((totalClose - lastClose) / lastClose, 4));
+            lastClose = totalClose;
         }
 
         //基准收益率 取股票池中所有股票的平均收益
-        Map<LocalDate, Double> primaryRate = StockHelper.getPrimaryRate(stockPool, betweenDates);
+        ArrayList<Map<LocalDate, Double>> maps = StockHelper.getPrimaryRate(stockPool, betweenDates);
 
-        helper.setFieldRates(fieldRate);
-        helper.setPrimaryRates(primaryRate);
+        helper.setFieldRates(dailyFieldRate);
+        helper.setTotalFieldRates(fieldRate);
+        helper.setPrimaryRates(maps.get(0));
+        helper.setTotalPrimaryRates(maps.get(1));
 
         Map<LocalDate, Double> fieldRate_adj = helper.getFieldAdjRates();
         Map<LocalDate, Double> primaryRate_adj = helper.getPrimaryAdjRates();
@@ -114,11 +126,11 @@ public class MomentumServiceImpl implements MomentumService {
 
         //对收益率进行排序
         List<Map.Entry<String, Double>> rateList = new ArrayList<>(fieldRates.entrySet());
-        rateList.sort((rate1, rate2) -> -new BigDecimal(rate2.getValue()).compareTo(new BigDecimal(rate1.getValue())));
+        rateList.sort((rate1, rate2) -> new BigDecimal(rate2.getValue()).compareTo(new BigDecimal(rate1.getValue())));
 
         int winnerNum = rateList.size()/5;
         return rateList.subList(0,winnerNum)
-                .stream()
+                .parallelStream()
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
     }

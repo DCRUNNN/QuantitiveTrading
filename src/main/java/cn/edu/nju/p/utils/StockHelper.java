@@ -7,6 +7,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -31,7 +32,8 @@ public class StockHelper {
 
         try {
             Double close = stockDao.getStockClose(stockCode, date);
-            return close != null;
+            Double adjClose = stockDao.getStockAdjClose(stockCode, date);
+            return close != null && adjClose != null;
         } catch (StockNotFoundException | NullPointerException e) {
             return false;
         }
@@ -52,6 +54,12 @@ public class StockHelper {
         //存在无效日期就返回true
 
         for (LocalDate date:betweenDates) {
+
+            if (!isValidByCode(stockCode, date)) {
+                //没有收盘数据也是停牌
+                return true;
+            }
+
             //有效日期并且成交量为０就是停牌
             if(isValidByCode(stockCode,date) && stockDao.getStockVolume(stockCode,date) == 0){
                 //System.out.println(date.toString()+" "+stockCode);
@@ -71,7 +79,7 @@ public class StockHelper {
     public static List<String> filterStockPool(List<String> stockPool,LocalDate beginDate,LocalDate endDate){
 
         return stockPool
-                .stream()
+                .parallelStream()
                 .filter(stockCode -> !hasStopped(stockCode,beginDate,endDate))
                 .collect(Collectors.toList());
     }
@@ -86,34 +94,50 @@ public class StockHelper {
         return null;
     }
 
-    /**
-     * 计算所有股票当天的总收益
-     * @param stockHolding 持有的股票
-     * @param date 日期
-     * @return 持有的股票的单日收益率平均值
-     */
-    public static double countAllStockRate(List<String> stockHolding, LocalDate date){
-
-        LocalDate lastDate = DateHelper.getLastDate(date, a->true);
-        return stockHolding
-                .stream()
-                .map(code -> (stockDao.getStockAdjClose(code, date) - stockDao.getStockAdjClose(code, lastDate)) / stockDao.getStockAdjClose(code, lastDate))
-                .reduce(0.0,(a,b)->a + b) / stockHolding.size();
-    }
 
     /**
      * 获取股票池的基准收益率
      * @param stockPool 股票池
      * @param validDates 所有的有效日期
-     * @return 返回基准收益率(不是累加的)
+     * @return 返回基准收益率(累加的)
      */
-    public static Map<LocalDate,Double> getPrimaryRate(List<String> stockPool, List<LocalDate> validDates){
+    public static ArrayList<Map<LocalDate, Double>> getPrimaryRate(List<String> stockPool, List<LocalDate> validDates){
 
         Map<LocalDate, Double> primaryRate = new LinkedHashMap<>();
-        validDates.forEach(aDate -> primaryRate.put(aDate,countAllStockRate(stockPool,aDate)));
-        return primaryRate;
+        Map<LocalDate, Double> dailyRates = new LinkedHashMap<>();
+
+        double totalClose = calculateTotalClose(stockPool, validDates.get(0)); //买入时的总收盘价
+        double lastClose = totalClose;
+
+        for (int i = 1; i < validDates.size(); i++) {
+            LocalDate currentDate = validDates.get(i);
+            double allClose = calculateTotalClose(stockPool, currentDate);
+            System.out.println("Primary Rate: ------------->" + (allClose - totalClose));
+            //计算当日和买入日比较的总收益，并且格式化
+            primaryRate.put(currentDate, DoubleUtils.formatDouble((allClose - totalClose) / totalClose, 4));
+            dailyRates.put(currentDate, DoubleUtils.formatDouble((allClose - lastClose) / lastClose, 4));
+            lastClose = allClose;
+        }
+
+        ArrayList<Map<LocalDate, Double>> maps = new ArrayList<>();
+        maps.add(dailyRates);
+        maps.add(primaryRate);
+        return maps;
     }
 
+    /**
+     * 计算所有股票当日的总收盘价
+     * @param stockPool 股票池
+     * @param date 日期
+     * @return 总收盘价
+     */
+    public static double calculateTotalClose(List<String> stockPool, LocalDate date) {
+        double totalClose = 0.0;
+        for (String code : stockPool) {
+            totalClose += stockDao.getStockAdjClose(code, date);
+        }
+        return totalClose;
+    }
     /**
      * to check if the stock exists
      * @param stockCode stock code
@@ -124,7 +148,7 @@ public class StockHelper {
         return codes.contains(stockCode);
     }
 
-    public static List<String> getAllValidStocksLastTenDay(LocalDate date) {
+    public static List<String> getAllValidStocksLastThirtyDay(LocalDate date) {
 
         LocalDate lastDate = date.minusDays(30);
         List<String> allStocks = stockDao.getAllStocks();
@@ -133,10 +157,11 @@ public class StockHelper {
 
         List<String> results = new ArrayList<>();
 
+        VacationDates vacationDates = new VacationDates();
         for (String stock : allStocks) {
             boolean hasStopped = false;
             for (LocalDate localDate : betweenDates) {
-                boolean isValidAndNoVolume = isValidByCode(stock, localDate) && stockDao.getStockVolume(stock, localDate) == 0;
+                boolean isValidAndNoVolume = !vacationDates.isVacation(localDate) && isValidByCode(stock, localDate) && stockDao.getStockVolume(stock, localDate) == 0;
                 if (isValidAndNoVolume) {
                     hasStopped = true;
                     break;

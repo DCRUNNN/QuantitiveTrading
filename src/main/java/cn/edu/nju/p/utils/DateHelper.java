@@ -65,6 +65,7 @@ public class DateHelper {
         //直接在此处对dateList进行过滤
         return dateList.parallelStream()
                 .filter(notWeekend.and(predicate).and(notVacation))
+                .sorted()
                 .collect(Collectors.toList());
     }
 

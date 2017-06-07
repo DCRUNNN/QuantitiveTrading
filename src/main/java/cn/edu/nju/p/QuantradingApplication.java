@@ -26,7 +26,7 @@ public class QuantradingApplication {
 	@Bean
 	public CalculateHelper calculateHelper() {
 
-		return new CalculateHelper(0.00023);
+		return new CalculateHelper(0.0023);
 	}
 
 }

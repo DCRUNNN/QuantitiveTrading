@@ -4,6 +4,7 @@ import cn.edu.nju.p.dao.StockDao;
 import cn.edu.nju.p.service.exhibition.MeanReversionService;
 import cn.edu.nju.p.utils.CalculateHelper;
 import cn.edu.nju.p.utils.DateHelper;
+import cn.edu.nju.p.utils.DoubleUtils;
 import cn.edu.nju.p.utils.StockHelper;
 import cn.edu.nju.p.vo.MeanReversionParamVO;
 import cn.edu.nju.p.vo.MeanReversionResultVO;
@@ -30,8 +31,6 @@ public class MeanReversionServiceImpl implements MeanReversionService {
     @Override
     public MeanReversionResultVO getResult(MeanReversionParamVO paramVO) {
 
-        int primaryMoney = 10000000; //1千万是默认的初始金额
-
         LocalDate beginDate = paramVO.getBeginDate();
         LocalDate endDate = paramVO.getEndDate();
         int holdingDay = paramVO.getHoldingDay(); //持仓期长度
@@ -45,25 +44,34 @@ public class MeanReversionServiceImpl implements MeanReversionService {
         List<LocalDate> validDates = DateHelper.getBetweenDateAndFilter(beginDate, endDate, a -> true); //去除周末的有效日期
 
         //先计算股票池的所有股票的平均收益率，获得每日的基准收益
-        Map<LocalDate,Double> primaryRates = StockHelper.getPrimaryRate(stockPool,validDates);
 
         //计算策略的每日收益
         Map<LocalDate, Double> fieldRates = new LinkedHashMap<>();
-        List<String> stockToHold = null ; //每次持有的股票
-       // System.out.println(holdingDay);
-        for (int i = 0; i < validDates.size(); i++) {
+        Map<LocalDate, Double> dailyFieldRates = new LinkedHashMap<>();
+
+        LocalDate beginValidDate = validDates.get(0);
+        List<String> stockToHold = getWinner(stockPool, beginValidDate, meanDayNum, holdingNum) ; //每次持有的股票
+        double beginClose = StockHelper.calculateTotalClose(stockToHold, beginValidDate);
+        double lastClose = beginClose;
+        for (int i = 1; i < validDates.size(); i++) {
             LocalDate currentDate = validDates.get(i);
             if (i % holdingDay == 0) {
-            	
                 //能够整除，重新选仓
                 stockToHold = getWinner(stockPool, currentDate, meanDayNum, holdingNum);
             }
+            double totalClose = StockHelper.calculateTotalClose(stockToHold, currentDate);
+            System.out.println(currentDate.toString()+"--------->"+(totalClose-beginClose));
             //计算持有股票的每日总收益率
-            fieldRates.put(currentDate, StockHelper.countAllStockRate(stockToHold, currentDate));
+            fieldRates.put(currentDate, DoubleUtils.formatDouble((totalClose - beginClose) / beginClose, 4));
+            dailyFieldRates.put(currentDate, DoubleUtils.formatDouble((totalClose - lastClose) / lastClose, 4));
+            lastClose = totalClose;
         }
 
-        helper.setPrimaryRates(primaryRates);
-        helper.setFieldRates(fieldRates);
+        ArrayList<Map<LocalDate, Double>> primaryRatesMap = StockHelper.getPrimaryRate(stockPool, validDates);
+        helper.setTotalPrimaryRates(primaryRatesMap.get(1));
+        helper.setTotalFieldRates(fieldRates);
+        helper.setFieldRates(dailyFieldRates);
+        helper.setPrimaryRates(primaryRatesMap.get(0));
 
         Map<LocalDate, Double> fieldRate_adj = helper.getFieldAdjRates();
         Map<LocalDate, Double> primaryRate_adj = helper.getPrimaryAdjRates();
@@ -120,7 +128,7 @@ public class MeanReversionServiceImpl implements MeanReversionService {
         rateList.sort(Comparator.comparing(rate -> new BigDecimal(- rate.getValue())));
 
         return rateList.subList(0, holdingNum)
-                .stream()
+                .parallelStream()
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
     }

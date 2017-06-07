@@ -17,7 +17,7 @@ import java.util.List;
  * get the 12th alpha factor of a stock of an exact date
  */
 @Component
-public class Alpha12 {
+public class Alpha2 {
 
     @Autowired
     private StockDao stockDao;
@@ -28,7 +28,7 @@ public class Alpha12 {
      * @param date the date
      * @return
      */
-    double getAlpha(String stockCode, LocalDate date) {
+    public double getAlpha(String stockCode, LocalDate date) {
 
         double[] xArray = new double[6];
         double[] yArray = new double[6];
@@ -60,20 +60,25 @@ public class Alpha12 {
         dayBeforeYes = DateHelper.getLastDate(dayBeforeYes, curDate -> StockHelper.isValidByCode(stockCode, curDate));
 
         int volume = stockDao.getStockVolume(stockCode, dayBeforeYes);
+        double logVolume;
         if (volume == 0) {
             System.out.println(stockCode+" "+date.toString());
-            return -999999999.0;
+            return 0;
         }
-        return Math.log(volume);
+        logVolume = Math.log(volume);
+
+        //确保传入的日期是有效日期
+        int curVolume = stockDao.getStockVolume(stockCode, date);
+        return Math.log(curVolume) - logVolume;
     }
 
     private double getMaxLogVolume(LocalDate date) {
 
-        List<String> allCodes = StockHelper.getAllValidStocksLastTenDay(date);
+        List<String> allCodes = StockHelper.getAllValidStocksLastThirtyDay(date);
         List<Double> allLogVolumes = new ArrayList<>();
         allCodes.forEach(code -> allLogVolumes.add(getLogVolume(code, date)));
 
-        Double maxVolume = -999999999999.0;
+        Double maxVolume = Double.MIN_NORMAL;
         for (Double d : allLogVolumes) {
             if (d > maxVolume) {
                 maxVolume = d;
@@ -91,7 +96,7 @@ public class Alpha12 {
 
     private double getMaxAnother(LocalDate date) {
 
-        List<String> allCodes = StockHelper.getAllValidStocksLastTenDay(date);
+        List<String> allCodes = StockHelper.getAllValidStocksLastThirtyDay(date);
         List<Double> allValue = new ArrayList<>();
         allCodes.forEach(code -> {
             double open = stockDao.getStockOpen(code, date);
@@ -109,8 +114,12 @@ public class Alpha12 {
 
     private double divide(double a, double b) {
 
-        BigDecimal bigDecimal_a = new BigDecimal(a);
-        BigDecimal bigDecimal_b = new BigDecimal(b);
-        return bigDecimal_a.divide(bigDecimal_b, RoundingMode.HALF_UP).doubleValue();
+        try {
+            BigDecimal bigDecimal_a = new BigDecimal(a);
+            BigDecimal bigDecimal_b = new BigDecimal(b);
+            return bigDecimal_a.divide(bigDecimal_b, RoundingMode.HALF_UP).doubleValue();
+        } catch (NumberFormatException ne) {
+            return 0;
+        }
     }
 }
