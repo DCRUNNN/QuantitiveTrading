@@ -54,7 +54,7 @@ public class StockVO {
 		this.market=po.getMarket();
 		this.time = po.getTime();
 		this.currentPrice = po.getCurrentPrice();
-		this.quote_change = po.getQuoteChange();
+		this.quote_change = po.getQuote_change();
 	}
 
 	public String getDate() {
