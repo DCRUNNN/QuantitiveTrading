@@ -12,11 +12,45 @@ public class GetDataFromSinaUtil {
     //增加了股票诊断功能，从新浪获取实时数据的方法，公司新闻公告的方法
 
     private static final String SINA_FINACE_URL="http://hq.sinajs.cn/list=";
+    private static final String SINA_FINACE_MARKET_URL="http://hq.sinajs.cn/list=s_";
     private static final GetDataFromSinaUtil dataHelper = new GetDataFromSinaUtil();
 
     public static GetDataFromSinaUtil getInstance(){
         return dataHelper;
     }//通过调用static方法来获得GetDataFromSinaUtil实例
+
+    public String getQuoteChange(String code,String market){
+        String url = SINA_FINACE_MARKET_URL + market + code;
+        String quoteChange = "";
+        try {
+            URL u = new URL(url);
+            byte[] b = new byte[256];
+            InputStream in = null;
+            ByteArrayOutputStream bo = new ByteArrayOutputStream();
+//            while (true) {
+            try {
+                in = u.openStream();
+                int i;
+                while ((i = in.read(b)) != -1) {
+                    bo.write(b, 0, i);
+                }
+                String result = new String(bo.toByteArray(),"gbk");
+                String data=result.substring(23,result.length()-1);
+                quoteChange = data.split(",")[3];
+                bo.reset();
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            } finally {
+                if (in != null) {
+                    in.close();
+                }
+            }
+//            }
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+        return quoteChange;
+    }
 
     //获取股票实时数据
     public StockPO getStockCurrentData(String code,String market){
@@ -66,6 +100,7 @@ public class GetDataFromSinaUtil {
                     String turnover = datas[9];//成交金额
                     String date = datas[30];//日期
                     String time = datas[31];//时间
+                    String quoteChange = GetDataFromSinaUtil.getInstance().getQuoteChange(code, market);
 
                     //写入数据库
                     StockPO stockPO = new StockPO();
@@ -83,7 +118,7 @@ public class GetDataFromSinaUtil {
                     stockPO.setMarket(market);
                     stockPO.setName(name);
                     stockPO.setTime(time);
-                    stockPO.setQuote_change("0");
+                    stockPO.setQuote_change(quoteChange);
 
                     return stockPO;
                 }
@@ -100,6 +135,10 @@ public class GetDataFromSinaUtil {
             System.out.println(ex.getMessage());
         }
         return null;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(GetDataFromSinaUtil.getInstance().getQuoteChange("000026", "sz"));
     }
 
 
