@@ -43,7 +43,7 @@ public class KLineServiceImpl implements KLineService {
 //        使用lambda表达式过滤没有数据的日期
         List<LocalDate> dateList = DateHelper.getBetweenDateAndFilter(beginDate,endDate, date-> StockHelper.isValidByCode(code,date));
 
-        List<List<Object>> finalResult = new ArrayList<>();
+        List<List<Object>> finalResult = new ArrayList<>(300);
         String stockName = stockDao.getStockName(code);
 
         dateList.parallelStream().forEach(date -> {
