@@ -11,13 +11,13 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class FilterConfig {
 
-    @Bean
+   /* @Bean
     public FilterRegistrationBean corsFilter(){
 
         FilterRegistrationBean corsFilterReg = new FilterRegistrationBean();
         corsFilterReg.setFilter(new CorsFilter());
-        corsFilterReg.addUrlPatterns("/*");
+        corsFilterReg.addUrlPatterns("*//*");
         corsFilterReg.setName("corsFilter");
         return corsFilterReg;
-    }
+    }*/
 }
