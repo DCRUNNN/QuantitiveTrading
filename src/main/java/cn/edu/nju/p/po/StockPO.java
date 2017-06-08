@@ -37,31 +37,45 @@ public class StockPO {
     private String time;
     private double currentPrice;
     private String quote_change;
+    private String turnover;
 
-    public String getQuoteChange() {
-        return quote_change;
-    }
-
-    public void setQuoteChange(String quoteChange) {
-        this.quote_change = quoteChange;
-    }
-    /*  public StockPO(String date,double open,double high,double low,
-                   double close,int volume,double adjClose,String code,String name,String market,String time,double currentPrice){
-//		this.serial=serial;
+    public StockPO(String date, double open, double high, double low, double close, int volume, double adj_close, String code, String name, String market, String time, double currentPrice, String quote_change, String turnover) {
         this.date = date;
         this.open = open;
         this.high = high;
         this.low = low;
         this.close = close;
         this.volume = volume;
-        this.adjClose = adjClose;
+        this.adj_close = adj_close;
         this.code = code;
         this.name = name;
         this.market = market;
         this.time = time;
         this.currentPrice = currentPrice;
+        this.quote_change = quote_change;
+        this.turnover = turnover;
     }
-*/
+
+    public StockPO() {
+    }
+
+    public String getQuote_change() {
+        return quote_change;
+    }
+
+    public void setQuote_change(String quote_change) {
+        this.quote_change = quote_change;
+    }
+
+    public String getTurnover() {
+        return turnover;
+    }
+
+    public void setTurnover(String turnover) {
+        this.turnover = turnover;
+    }
+
+
 
 //	public int getSerial(){
 //		return serial;
@@ -179,6 +193,7 @@ public class StockPO {
                 ", time='" + time + '\'' +
                 ", currentPrice=" + currentPrice +
                 ", quote_change='" + quote_change + '\'' +
+                ", turnover='" + turnover + '\'' +
                 '}';
     }
 }

@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by dell- on 2017/5/17.
+ * Created by dc on 2017/5/17.
  */
 @Repository
 public class CompanyDaoImpl implements CompanyDao {
@@ -130,7 +130,7 @@ public class CompanyDaoImpl implements CompanyDao {
 
     public static void main(String[] args) {
         CompanyDaoImpl test = new CompanyDaoImpl();
-        System.out.println(test.getCompanyInfoVO("000001").toString());
+        System.out.println(test.getCompanyInfoVO("000505").toString());
         List<CompanyAnnouncementVO> list = test.getCompanyAnnouncementVOList("000001");
         for (int i=0;i<list.size();i++) {
             System.out.println(list.get(i).toString());

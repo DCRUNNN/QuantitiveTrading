@@ -2,6 +2,9 @@ package cn.edu.nju.p.controller.exhibition;
 
 import cn.edu.nju.p.baseresult.BaseResult;
 import cn.edu.nju.p.dao.CompanyDao;
+import cn.edu.nju.p.dao.daoutils.GetDataFromSinaUtil;
+import cn.edu.nju.p.po.StockPO;
+import cn.edu.nju.p.vo.CompanyAnnouncementVO;
 import cn.edu.nju.p.vo.CompanyInfoVO;
 import cn.edu.nju.p.vo.CompanyNewsVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +22,7 @@ public class CompanyController {
     @Autowired
     private CompanyDao companyDao;
 
+
     @GetMapping("/info/{code}")
     public BaseResult getCompanyInfo(@PathVariable String code) {
         CompanyInfoVO infoVO =  companyDao.getCompanyInfoVO(code);
@@ -30,4 +34,18 @@ public class CompanyController {
         List<CompanyNewsVO> newsVOS = companyDao.getCompanyNewsVOList(code);
         return new BaseResult<>(0, newsVOS);
     }
+
+    @GetMapping("/details/{code}")
+    public BaseResult getStockDetails(@PathVariable String code) {
+        StockPO po = GetDataFromSinaUtil.getInstance().getStockCurrentData(code, "sz");
+        return new BaseResult<>(0, po);
+    }
+
+    @GetMapping("/announcement/{code}")
+    public BaseResult getStockAnnouncement(@PathVariable String code) {
+        List<CompanyAnnouncementVO> announcementVOS = companyDao.getCompanyAnnouncementVOList(code);
+        return new BaseResult<>(0, announcementVOS);
+    }
+
+
 }

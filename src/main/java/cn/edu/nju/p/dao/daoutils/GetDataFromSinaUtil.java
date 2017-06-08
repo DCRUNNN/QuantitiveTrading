@@ -6,9 +6,10 @@ import java.io.*;
 import java.net.URL;
 
 /**
- * Created by dell- on 2017/5/12.
+ * Created by dc on 2017/5/12.
  */
 public class GetDataFromSinaUtil {
+    //增加了股票诊断功能，从新浪获取实时数据的方法，公司新闻公告的方法
 
     private static final String SINA_FINACE_URL="http://hq.sinajs.cn/list=";
     private static final GetDataFromSinaUtil dataHelper = new GetDataFromSinaUtil();
@@ -62,7 +63,7 @@ public class GetDataFromSinaUtil {
                     double high = Double.valueOf(datas[4]);//今日最高价（截至目前）
                     double low = Double.valueOf(datas[5]);//今日最低价
                     int volume = Integer.valueOf(datas[8]);//成交量
-                    double turnover = Double.valueOf(datas[9]);//成交金额
+                    String turnover = datas[9];//成交金额
                     String date = datas[30];//日期
                     String time = datas[31];//时间
 
@@ -77,10 +78,12 @@ public class GetDataFromSinaUtil {
                     stockPO.setHigh(high);
                     stockPO.setLow(low);
                     stockPO.setAdj_close(close);
+                    stockPO.setTurnover(turnover);
                     stockPO.setVolume(volume);
                     stockPO.setMarket(market);
                     stockPO.setName(name);
                     stockPO.setTime(time);
+                    stockPO.setQuote_change("0");
 
                     return stockPO;
                 }
