@@ -7,11 +7,13 @@ import cn.edu.nju.p.po.StockPO;
 import cn.edu.nju.p.service.exhibition.HomePageService;
 import cn.edu.nju.p.utils.DateHelper;
 import cn.edu.nju.p.utils.StockHelper;
+import cn.edu.nju.p.utils.VacationDates;
 import cn.edu.nju.p.vo.StockMarketVO;
 import cn.edu.nju.p.vo.StockVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +36,11 @@ public class HomePageServiceImpl implements HomePageService{
      *
      */
     public List<StockVO> getStockVO(LocalDate date){
+
+        if (date.getDayOfWeek() == DayOfWeek.SATURDAY || date.getDayOfWeek() == DayOfWeek.SUNDAY || new VacationDates().isVacation(date)) {
+            //当天休市
+            date = DateHelper.getLastDate(date, a -> true);
+        }
         String time=date.toString();
         List<StockVO> voList = new ArrayList<>();
         List<StockPO> poList = stockDao.getPOList(time);
