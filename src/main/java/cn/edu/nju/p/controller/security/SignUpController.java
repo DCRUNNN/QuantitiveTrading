@@ -2,6 +2,8 @@ package cn.edu.nju.p.controller.security;
 
 import cn.edu.nju.p.baseresult.BaseResult;
 import cn.edu.nju.p.dao.AccountDao;
+import cn.edu.nju.p.dao.ClientDao;
+import cn.edu.nju.p.po.ClientPO;
 import cn.edu.nju.p.po.UserPO;
 import cn.edu.nju.p.utils.EncryptHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,14 +22,17 @@ import javax.validation.Valid;
 public class SignUpController {
 
     @Autowired
-    private AccountDao accountDao;
+    private ClientDao clientDao;
 
     @PostMapping
-    public BaseResult signUp(@RequestBody @Valid UserPO userPO) {
+    public BaseResult signUp(@RequestBody @Valid ClientPO userPO) {
 
         String password = userPO.getPassword();
         password = EncryptHelper.getShaEncryption(password);
-        accountDao.addAccount(userPO.getPhoneNumber(), password);
+        String userName = userPO.getUserName();
+
         return new BaseResult(0, "successfully add a user!");
     }
+
+
 }

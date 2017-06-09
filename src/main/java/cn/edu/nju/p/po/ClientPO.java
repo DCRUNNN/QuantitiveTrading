@@ -6,59 +6,60 @@ import java.time.LocalDate;
  * Created by cyz on 2017/6/6.
  */
 public class ClientPO {
-    private String userId;
+
+    private String userName;
     private String password;
     private String email;
     private String unit;
-    private String phone_number;
+    private String phoneNumber;
     private String place;
 
-
-    public ClientPO(String userId, String password, String email, String unit, String phone_number,String place){
-     this.userId=userId;
-     this.password=password;
-     this.email=email;
-     this.unit=unit;
-     this.phone_number=phone_number;
-     this.place=place;
+    public String getUserName() {
+        return userName;
     }
 
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
-    public String getUserId(){
-        return this.userId;
+    public String getPassword() {
+        return password;
     }
-    public void setUserId(String userId){
-        this.userId=userId;
+
+    public void setPassword(String password) {
+        this.password = password;
     }
-    public String getPassword(){
-        return this.password;
+
+    public String getEmail() {
+        return email;
     }
-    public void setPassword(String password){
-        this.password=password;
+
+    public void setEmail(String email) {
+        this.email = email;
     }
-    public String getEmail(){
-        return this.email;
+
+    public String getUnit() {
+        return unit;
     }
-    public void setEmail(String email){
-        this.email=email;
+
+    public void setUnit(String unit) {
+        this.unit = unit;
     }
-    public String getUnit(){
-        return this.unit;
+
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
-    public void setUnit(String unit){
-        this.unit=unit;
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
-    public String getPhone_number(){
-        return this.phone_number;
+
+    public String getPlace() {
+        return place;
     }
-    public void setPhone_number(String phone_number){
-        this.phone_number=phone_number;
-    }
-    public String getPlace(){
-        return this.place;
-    }
-    public void setPlace(String place){
-        this.place=place;
+
+    public void setPlace(String place) {
+        this.place = place;
     }
 }
 

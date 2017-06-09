@@ -45,8 +45,8 @@ public class HomePageServiceImpl implements HomePageService{
         List<StockVO> voList = new ArrayList<>();
         List<StockPO> poList = stockDao.getPOList(time);
 
-        for(int i=0;i<poList.size();i++){
-            voList.add(new StockVO(poList.get(i)));
+        for (StockPO aPoList : poList) {
+            voList.add(new StockVO(aPoList));
         }
         return  voList;
     }
