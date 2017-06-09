@@ -25,7 +25,9 @@ public class ExhibitionController {
     private AverageLineService averageLineService;
 
     @GetMapping("/kline/{code}")
-    public BaseResult getKLineDataByCode(@PathVariable String code, @RequestParam String beginDate, @RequestParam String endDate) {
+    public BaseResult getKLineDataByCode(@PathVariable String code/*, @CookieValue(value = "phoneNumber", required = false) String phoneNumber
+            */, @RequestParam String beginDate, @RequestParam String endDate) {
+
         LocalDate begin = LocalDate.parse(beginDate);
         LocalDate end = LocalDate.parse(endDate);
         KLineVO kLineVO = kLineService.getKLineVOSByCode(code, begin, end);

@@ -38,7 +38,7 @@ public class CustomStrategyController {
 
         // Compile source code to tomcat real path
 //        String realPath = Thread.currentThread().getContextClassLoader().getResource("").toString();
-        RuntimeCompiler rc = new RuntimeCompiler("-d", ".\\target\\classes");
+        RuntimeCompiler rc = new RuntimeCompiler("-d", "./target/classes");
         boolean success = rc.compile(className, code);
 
         // Create a stream to hold the output

@@ -203,7 +203,7 @@ public class VacationDates {
         //-----------------------------------------------------------------------
     }
 
-    boolean isVacation(LocalDate date) {
+    public boolean isVacation(LocalDate date) {
         int a = Arrays.binarySearch(vacations, date);
         return a >= 0;
     }

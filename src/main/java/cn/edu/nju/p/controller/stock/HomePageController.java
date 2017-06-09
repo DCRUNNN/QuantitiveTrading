@@ -40,7 +40,6 @@ public class HomePageController {
     @GetMapping("/allstock/{date}")
     public BaseResult getAllStock(@PathVariable String date){
         List<StockVO> voList=homePageService.getStockVO(LocalDate.parse(date));
-
         return new BaseResult<>(0, voList);
     }
 }

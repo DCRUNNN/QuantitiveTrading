@@ -70,7 +70,7 @@ public class GetDataFromSinaUtil {
                 String result = new String(bo.toByteArray(),"gbk");
                 String[] stocks = result.split(";");
                 for (String stock : stocks) {
-                    System.out.println(stock);
+//                    System.out.println(stock);
                     String[] datas = stock.substring(21,stock.length()-1).split(",");
                     if(datas.length==0){
                         FileWriter fileWriter=null;
