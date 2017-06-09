@@ -5,9 +5,7 @@ import cn.edu.nju.p.service.Personnel.HistoryService;
 import cn.edu.nju.p.service.Personnel.MyStockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,6 +24,13 @@ public class MyStockController {
     public BaseResult getMyStock(String userId){
         List<String> list = myStockService.getMyStock(userId);
         return new BaseResult<>(0, list);
+    }
+
+    @GetMapping("/addStock")
+    public BaseResult addStock(@RequestParam String userId,@RequestParam String stockCode){
+
+        myStockService.addStock(userId,stockCode);
+        return new BaseResult<>(0, "插入成功！");
     }
 
 }

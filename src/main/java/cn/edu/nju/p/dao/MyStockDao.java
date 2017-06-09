@@ -20,4 +20,5 @@ public interface MyStockDao {
 
     @Select(value="select stock_code from my_stock where userId = #{userId}")
     List<String> getMyStockCode(String userId);
+
 }

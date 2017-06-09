@@ -16,6 +16,11 @@ public interface MyStockService {
 
     List<String> getMyStock(String userId);
 
+    /**
+     * 添加自选股
+     * @param userId
+     * @param stockCode
+     */
     void addStock(String userId, String stockCode);
 
 }
