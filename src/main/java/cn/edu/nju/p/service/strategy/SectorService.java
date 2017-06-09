@@ -20,4 +20,10 @@ public interface SectorService {
      * @return stockinfo list
      */
     List<String> getAllStocks();
+
+    /**
+     *
+     */
+
+    String getStockName(String code);
 }

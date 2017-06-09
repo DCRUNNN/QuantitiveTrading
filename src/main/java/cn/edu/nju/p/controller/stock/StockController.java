@@ -36,5 +36,11 @@ public class StockController {
             return new BaseResult<>(ErrorCode.STOCK_NOT_FOUND.getErrorCode(), code + " not found!");
         }
     }
+
+    @GetMapping("/stockName/{code}")
+    public BaseResult getStockName(@PathVariable String code){
+        String name = sectorService.getStockName(code);
+        return new BaseResult<>(0, name);
+    }
 }
 

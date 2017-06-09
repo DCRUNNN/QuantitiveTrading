@@ -31,4 +31,9 @@ public class SectorServiceImpl implements SectorService {
     public List<String> getAllStocks() {
         return stockDao.getAllStocks();
     }
+
+    @Override
+    public String getStockName(String code){
+        return stockDao.getStockName(code);
+    }
 }
