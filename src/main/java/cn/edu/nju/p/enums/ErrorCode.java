@@ -18,7 +18,10 @@ public enum ErrorCode {
 
     //code error
     NO_CLASS_NAME(40000001),
-    COMPILE_ERROR(40000002)
+    COMPILE_ERROR(40000002),
+
+    //Dao Error
+    MY_STOCK_DUPLI_ERROR(50000001)
     ;
 
     private int errorCode;
