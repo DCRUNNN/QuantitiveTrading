@@ -33,4 +33,10 @@ public class MyStockController {
         return new BaseResult<>(0, "插入成功！");
     }
 
+    @GetMapping("/deleteStock")
+    public BaseResult deleteStock(@RequestParam String phoneNumber, @RequestParam String stockCode) {
+        myStockService.deleteStock(phoneNumber, stockCode);
+        return new BaseResult<>(0, "删除成功!");
+    }
+
 }

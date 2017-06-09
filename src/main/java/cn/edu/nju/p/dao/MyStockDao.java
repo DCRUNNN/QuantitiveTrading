@@ -1,9 +1,6 @@
 package cn.edu.nju.p.dao;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -20,5 +17,8 @@ public interface MyStockDao {
 
     @Select(value="select stock_code from my_stock where userId = #{userId}")
     List<String> getMyStockCode(String userId);
+
+    @Delete("delete from my_stock where userId=#{phoneNumber} and stock_code=#{code}")
+    void deleteStock(@Param("phoneNumber") String phoneNumber, @Param("code") String code);
 
 }
