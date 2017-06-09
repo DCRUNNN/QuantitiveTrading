@@ -21,7 +21,7 @@ public class MyStockController {
     private MyStockService myStockService;
 
     @GetMapping("/mystock/{userId}")
-    public BaseResult getMyStock(String userId){
+    public BaseResult getMyStock(@PathVariable String userId){
         List<String> list = myStockService.getMyStock(userId);
         return new BaseResult<>(0, list);
     }

@@ -60,7 +60,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+//    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public BaseResult handleDuplicateException(DuplicateKeyException de) {
         String message = de.getMessage();
         return new BaseResult(ErrorCode.MY_STOCK_DUPLI_ERROR.getErrorCode(), message);
