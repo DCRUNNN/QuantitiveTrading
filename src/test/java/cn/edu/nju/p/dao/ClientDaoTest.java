@@ -24,9 +24,9 @@ public class ClientDaoTest {
     @Test
     public void addUserTest(){
 
-        String userName = "asdasd嘻哈哦";
+        String userName = "我摘";
         String password = "123";
-        String phoneNumber = "13927200q1qq0311q2";
+        String phoneNumber = "1asasdasd3927200q1qq0311q2";
 
         clientDao.addClient(userName, phoneNumber, password);
     }
