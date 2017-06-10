@@ -2,8 +2,10 @@ package cn.edu.nju.p.controller.exhibition;
 
 import cn.edu.nju.p.baseresult.BaseResult;
 import cn.edu.nju.p.dao.CompanyDao;
+import cn.edu.nju.p.dao.TestStockDao;
 import cn.edu.nju.p.dao.daoutils.GetDataFromSinaUtil;
 import cn.edu.nju.p.po.StockPO;
+import cn.edu.nju.p.po.TestStockPO;
 import cn.edu.nju.p.vo.CompanyAnnouncementVO;
 import cn.edu.nju.p.vo.CompanyInfoVO;
 import cn.edu.nju.p.vo.CompanyNewsVO;
@@ -22,6 +24,8 @@ public class CompanyController {
     @Autowired
     private CompanyDao companyDao;
 
+    @Autowired
+    private TestStockDao testStockDao;
 
     @GetMapping("/info/{code}")
     public BaseResult getCompanyInfo(@PathVariable String code) {
@@ -47,5 +51,9 @@ public class CompanyController {
         return new BaseResult<>(0, announcementVOS);
     }
 
-
+    @GetMapping("/diagnosis/{code}")
+    public BaseResult getStockDiagnosis(@PathVariable String code) {
+        TestStockPO po = testStockDao.getTestStockPO(code);
+        return new BaseResult<>(0, po);
+    }
 }

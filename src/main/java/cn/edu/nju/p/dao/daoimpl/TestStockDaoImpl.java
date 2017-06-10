@@ -7,6 +7,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -14,7 +15,7 @@ import java.io.IOException;
 /**
  * Created by dc on 2017/6/8.
  */
-@Service
+@Repository
 public class TestStockDaoImpl implements TestStockDao {
 
     private static final String THS_URL = "http://stockpage.10jqka.com.cn/";
