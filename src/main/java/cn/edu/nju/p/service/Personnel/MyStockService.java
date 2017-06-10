@@ -24,4 +24,6 @@ public interface MyStockService {
     void addStock(String userId, String stockCode);
 
     void deleteStock(String userId, String code);
+
+    void deleteAllStock(String phoneNumber);
 }

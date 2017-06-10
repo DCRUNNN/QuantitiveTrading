@@ -47,4 +47,10 @@ public class MyStockServiceImpl implements MyStockService{
     public void deleteStock(String userId, String code) {
         myStockDao.deleteStock(userId, code);
     }
+
+
+    @Override
+    public void deleteAllStock(String phoneNumber){
+        myStockDao.deleteAllStock(phoneNumber);
+    }
 }

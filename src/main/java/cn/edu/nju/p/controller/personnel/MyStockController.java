@@ -37,4 +37,10 @@ public class MyStockController {
         return new BaseResult<>(0, "删除成功!");
     }
 
+    @GetMapping("/deleteAllStock/{phoneNumber}")
+    public BaseResult deleteAllStock(@PathVariable String phoneNumber){
+        myStockService.deleteAllStock(phoneNumber);
+        return new BaseResult<>(0, "删除成功!");
+    }
+
 }
