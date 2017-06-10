@@ -2,6 +2,7 @@ package cn.edu.nju.p.dao;
 
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
@@ -20,5 +21,8 @@ public interface MyStockDao {
 
     @Delete("delete from my_stock where userId=#{phoneNumber} and stock_code=#{code}")
     void deleteStock(@Param("phoneNumber") String phoneNumber, @Param("code") String code);
+
+    @Delete("delete from my_stock where userId=#{phoneNumber}")
+    void deleteAllStock(@PathVariable String phoneNumber);
 
 }

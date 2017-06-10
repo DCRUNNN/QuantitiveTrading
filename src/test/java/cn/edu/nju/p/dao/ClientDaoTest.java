@@ -1,6 +1,7 @@
 package cn.edu.nju.p.dao;
 
 import cn.edu.nju.p.po.ClientPO;
+import cn.edu.nju.p.vo.ClientVO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ public class ClientDaoTest {
         String password = "123";
         String phoneNumber = "1asasdasd3927200q1qq0311q2";
 
-        clientDao.addClient(userName, phoneNumber, password);
+        clientDao.addClient(userName, phoneNumber,password);
     }
 
     @Test
@@ -39,16 +40,16 @@ public class ClientDaoTest {
 
     }
 
-    @Test
-    public void updateTest(){
-
-        ClientPO clientPO = new ClientPO();
-        clientPO.setPhoneNumber("13927200q1q0311q" +
-                "2");
-        clientPO.setEmail("asdasdasd");
-        clientPO.setPlace("南京大学");
-        clientPO.setUserName("asdasdasdasdasd");
-        clientDao.updateClient(clientPO);
-
-    }
+//    @Test
+//    public void updateTest(){
+//        ClientPO clientPO = new ClientPO();
+//        ClientVO clientVO = new ClientVO();
+//        clientPO.setPhoneNumber("13927200q1q0311q" +
+//                "2");
+//        clientPO.setEmail("asdasdasd");
+//        clientPO.setPlace("南京大学");
+//        clientPO.setUserName("asdasdasdasdasd");
+//        clientDao.updateClient(clientVO);
+//
+//    }
 }

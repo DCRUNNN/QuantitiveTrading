@@ -13,6 +13,15 @@ public class ClientPO {
     private String unit;
     private String phoneNumber;
     private String place;
+    private String sex;
+
+    public String getSex(){
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
 
     public String getUserName() {
         return userName;
