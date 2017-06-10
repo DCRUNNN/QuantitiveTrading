@@ -30,9 +30,9 @@ public class SignUpController {
         String password = userPO.getPassword();
         password = EncryptHelper.getShaEncryption(password);
         String userName = userPO.getUserName();
-
+        String phoneNumber = userPO.getPhoneNumber();
+        clientDao.addClient(userName, phoneNumber, password);
         return new BaseResult(0, "successfully add a user!");
     }
-
 
 }

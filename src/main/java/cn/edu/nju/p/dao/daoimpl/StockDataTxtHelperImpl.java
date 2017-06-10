@@ -19,7 +19,7 @@ import java.util.*;
  */
 public class StockDataTxtHelperImpl implements StockDataTxtHelper {
 
-    private static final String FILE_PATH = "D://youkuang//";
+    private static final String FILE_PATH = "/home/xihao/文档/youkuang/";
 
     private static StockDataTxtHelperImpl INSTANCE = new StockDataTxtHelperImpl();
 

@@ -3,6 +3,7 @@ package cn.edu.nju.p.controller.security;
 import cn.edu.nju.p.baseresult.BaseResult;
 import cn.edu.nju.p.cache.TokenManager;
 import cn.edu.nju.p.dao.AccountDao;
+import cn.edu.nju.p.dao.ClientDao;
 import cn.edu.nju.p.exception.PasswordNotMatchException;
 import cn.edu.nju.p.utils.EncryptHelper;
 import com.alibaba.fastjson.JSONObject;
@@ -23,7 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 public class LoginController {
 
     @Autowired
-    private AccountDao accountDao;
+    private ClientDao clientDao;
 
     @Autowired
     private TokenManager tokenManager;
@@ -33,7 +34,7 @@ public class LoginController {
 
         String phoneNumber = user.getString("phoneNumber");
         String password = user.getString("password");
-        String actualPassword = accountDao.getPassword(phoneNumber);
+        String actualPassword = clientDao.selectClient(phoneNumber).getPassword();
         if (!EncryptHelper.checkPassword(password, actualPassword)) {
             throw new PasswordNotMatchException(phoneNumber + " login failed!Password not match!");
         }
