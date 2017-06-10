@@ -51,7 +51,7 @@ public class KLineServiceImpl implements KLineService {
             double high = stockDao.getStockHigh(code,date);
             double open = stockDao.getStockOpen(code,date);
             double close = stockDao.getStockClose(code,date);
-            int volume = stockDao.getStockVolume(code,date);
+            long volume = stockDao.getStockVolume(code,date);
             boolean isGoHigh = open<close;
             int targ = isGoHigh ? 1 : 0;
 

@@ -31,7 +31,7 @@ public class StockVO {
 	private double high;
 	private double low;
 	private double close;
-	private int volume;
+	private long volume;
 	private double adj_close;
 	private String code;
 	private String name;
@@ -97,11 +97,11 @@ public class StockVO {
 		this.close = close;
 	}
 
-	public int getVolume() {
+	public long getVolume() {
 		return volume;
 	}
 
-	public void setVolume(int volume) {
+	public void setVolume(long volume) {
 		this.volume = volume;
 	}
 

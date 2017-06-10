@@ -59,7 +59,7 @@ public class Alpha2 {
         LocalDate dayBeforeYes = DateHelper.getLastDate(date, curDate->StockHelper.isValidByCode(stockCode, curDate));
         dayBeforeYes = DateHelper.getLastDate(dayBeforeYes, curDate -> StockHelper.isValidByCode(stockCode, curDate));
 
-        int volume = stockDao.getStockVolume(stockCode, dayBeforeYes);
+        long volume = stockDao.getStockVolume(stockCode, dayBeforeYes);
         double logVolume;
         if (volume == 0) {
             System.out.println(stockCode+" "+date.toString());
@@ -68,7 +68,7 @@ public class Alpha2 {
         logVolume = Math.log(volume);
 
         //确保传入的日期是有效日期
-        int curVolume = stockDao.getStockVolume(stockCode, date);
+        long curVolume = stockDao.getStockVolume(stockCode, date);
         return Math.log(curVolume) - logVolume;
     }
 

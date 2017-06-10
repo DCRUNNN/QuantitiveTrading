@@ -29,7 +29,7 @@ public class StockPO {
     private double high;
     private double low;
     private double close;
-    private int volume;
+    private long volume;
     private double adj_close;
     private String code;
     private String name;
@@ -38,8 +38,11 @@ public class StockPO {
     private double currentPrice;
     private String quote_change;
     private String turnover;
+    private boolean isOpen;
+    private double lastClose;
 
-    public StockPO(String date, double open, double high, double low, double close, int volume, double adj_close, String code, String name, String market, String time, double currentPrice, String quote_change, String turnover) {
+    public StockPO(String date, double open, double high, double low, double close, long volume, double adj_close, String code, String name, String market, String time, double currentPrice, String quote_change, String turnover, boolean isOpen,double lastClose) {
+
         this.date = date;
         this.open = open;
         this.high = high;
@@ -54,9 +57,44 @@ public class StockPO {
         this.currentPrice = currentPrice;
         this.quote_change = quote_change;
         this.turnover = turnover;
+        this.isOpen = isOpen;
+        this.lastClose = lastClose;
+    }
+
+    public StockPO(String date, double open, double high, double low, double close, long volume, double adj_close, String code, String name, String market, String quote_change, boolean isOpen,double lastClose) {
+
+        this.date = date;
+        this.open = open;
+        this.high = high;
+        this.low = low;
+        this.close = close;
+        this.volume = volume;
+        this.adj_close = adj_close;
+        this.code = code;
+        this.name = name;
+        this.market = market;
+        this.quote_change = quote_change;
+        this.isOpen = isOpen;
+        this.lastClose = lastClose;
     }
 
     public StockPO() {
+    }
+
+    public double getLastClose() {
+        return lastClose;
+    }
+
+    public void setLastClose(double lastClose) {
+        this.lastClose = lastClose;
+    }
+
+    public boolean isOpen() {
+        return isOpen;
+    }
+
+    public void setOpen(boolean open) {
+        isOpen = open;
     }
 
     public String getQuote_change() {
@@ -121,11 +159,11 @@ public class StockPO {
         this.close = close;
     }
 
-    public int getVolume() {
+    public long getVolume() {
         return volume;
     }
 
-    public void setVolume(int volume) {
+    public void setVolume(long volume) {
         this.volume = volume;
     }
 
@@ -194,6 +232,8 @@ public class StockPO {
                 ", currentPrice=" + currentPrice +
                 ", quote_change='" + quote_change + '\'' +
                 ", turnover='" + turnover + '\'' +
+                ", isOpen=" + isOpen +
+                ", lastClose=" + lastClose +
                 '}';
     }
 }

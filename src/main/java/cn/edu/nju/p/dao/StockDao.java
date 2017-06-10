@@ -74,7 +74,7 @@ public interface StockDao {
 	 */
 	@Select(value="SELECT volume FROM t_stock_"+"${date.getYear()}"+" WHERE code=#{code} AND date=#{date}")
 	@Cacheable("getVolumes")
-	Integer getStockVolume(@Param("code")String code, @Param("date") LocalDate date);
+	Long getStockVolume(@Param("code")String code, @Param("date") LocalDate date);
 	
 	/**
 	 * 得到该股票当天复盘后的收盘价
@@ -123,7 +123,7 @@ public interface StockDao {
 			@Result(property = "high",column = "high",javaType = Double.class,jdbcType = JdbcType.DOUBLE),
 			@Result(property = "low",column = "low",javaType = Double.class,jdbcType = JdbcType.DOUBLE),
 			@Result(property = "close",column = "close",javaType = Double.class,jdbcType = JdbcType.DOUBLE),
-			@Result(property = "volume",column = " volume",javaType = Integer.class,jdbcType = JdbcType.INTEGER),
+			@Result(property = "volume",column = " volume",javaType = Long.class,jdbcType = JdbcType.BIGINT),
 			@Result(property = "adj_close",column = "adj_close",javaType = Double.class,jdbcType = JdbcType.DOUBLE),
 			@Result(property = "code",column = "code",javaType = String.class,jdbcType = JdbcType.VARCHAR),
 			@Result(property = "name",column = "name",javaType = String.class,jdbcType = JdbcType.VARCHAR),
