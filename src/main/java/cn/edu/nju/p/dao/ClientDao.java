@@ -1,10 +1,8 @@
 package cn.edu.nju.p.dao;
 
-import cn.edu.nju.p.vo.ClientVO;
+import cn.edu.nju.p.po.ClientPO;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 /**
  * Created by pc on 2017/6/6.
@@ -13,22 +11,14 @@ import java.util.List;
 @Repository
 public interface ClientDao {
 
-    @Select(value="select password from client_information where userId=#{userId}")
-    String getPassword(@Param("userId") String userId);
+    @Insert(value = "insert into client_information(phone_number,password,user_name) values (#{phoneNumber},#{password},#{userName})")
+    void addClient(@Param("userName") String userName, @Param("phoneNumber") String phoneNumber, @Param("password") String password);
 
-    @Select(value="select email from client_information where userId=#{userId}")
-    String getEmail(@Param("userId") String userId);
+    @Update(value = "update client_information set password=#{client.password},user_name=#{client.userName},email=#{client.email}," +
+            "unit=#{client.unit},place=#{client.place} where phone_number=#{client.phoneNumber}")
+    void updateClient(@Param("client") ClientPO clientPO);
 
-    @Select(value="select unit from client_information where userId=#{userId}")
-    String getUnit(@Param("userId") String userId);
-
-    @Select(value="select phone_number from client_information where userId=#{userId}")
-    String getPhone_number(@Param("userId") String userId);
-
-    @Select(value="select place from client_information where userId=#{userId}")
-    String getPlace(@Param("userId") String userId);
-
-    @Update("update client_information set password=#{list.get(0)},email=#{list.get(1)},unit=#{list.get(2)},phone_number=#{list.get(3)},place=#{list.get(4)} where userId=#{userId}")
-    void modifyClientMessage(String userId,List<String> list);
+    @Select(value = "select * from client_information where phone_number=#{phoneNumber}")
+    ClientPO selectClient(String phoneNumber);
 
 }

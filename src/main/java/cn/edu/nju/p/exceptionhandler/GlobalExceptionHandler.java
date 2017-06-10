@@ -6,6 +6,7 @@ import cn.edu.nju.p.exception.DateNotOrderedException;
 import cn.edu.nju.p.exception.PasswordNotMatchException;
 import cn.edu.nju.p.exception.StockNoneException;
 import cn.edu.nju.p.exception.StockNotFoundException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -56,5 +57,12 @@ public class GlobalExceptionHandler {
     public BaseResult handleNoneStock(StockNoneException se) {
         String message = se.getMessage();
         return new BaseResult(ErrorCode.STOCK_NONE.getErrorCode(), message);
+    }
+
+    @ExceptionHandler
+//    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public BaseResult handleDuplicateException(DuplicateKeyException de) {
+        String message = de.getMessage();
+        return new BaseResult(ErrorCode.MY_STOCK_DUPLI_ERROR.getErrorCode(), message);
     }
 }

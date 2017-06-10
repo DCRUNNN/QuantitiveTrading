@@ -41,6 +41,10 @@ public class MyStockServiceImpl implements MyStockService{
     public void addStock(String userId, String stockCode) {
 
         myStockDao.addStock(userId, stockCode);
+    }
 
+    @Override
+    public void deleteStock(String userId, String code) {
+        myStockDao.deleteStock(userId, code);
     }
 }
