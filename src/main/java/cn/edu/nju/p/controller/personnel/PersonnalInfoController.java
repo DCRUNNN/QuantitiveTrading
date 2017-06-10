@@ -28,7 +28,7 @@ public class PersonnalInfoController {
     }
 
     @PostMapping("/update")
-    public BaseResult updateClientInfo(JSONObject object) {
+    public BaseResult updateClientInfo(@RequestBody JSONObject object) {
         String phone_number = object.getString("phone_number");
         String user_name= object.getString("user_name");
         String sex = object.getString("sex");
@@ -41,7 +41,7 @@ public class PersonnalInfoController {
 
 
     @PostMapping("/updatePass")
-    public BaseResult updatePass(JSONObject jsonObject){
+    public BaseResult updatePass(@RequestBody JSONObject jsonObject){
         String phone_number = jsonObject.getString("phone_number");
         String password = jsonObject.getString("password");
         personnalInfoService.updatePass(phone_number,password);
