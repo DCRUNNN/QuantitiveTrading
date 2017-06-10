@@ -2,6 +2,7 @@ package cn.edu.nju.p.dao.daoimpl;
 
 import cn.edu.nju.p.dao.StockDataTxtHelper;
 import cn.edu.nju.p.po.StockPO;
+import org.omg.CORBA.IMP_LIMIT;
 import sun.security.jca.GetInstance;
 
 import java.io.BufferedReader;
@@ -66,7 +67,6 @@ public class StockDataTxtHelperImpl implements StockDataTxtHelper {
                 }else{
                     outMap.put(flag, inMap); //把上一支股票插到外层map里
                     flag=code; //现在flag是新的股票的代码
-
                     inMap = new HashMap<>(); //很关键 但是速度减慢了
 
                     //inMap.clear()的话会把outMap里的已有数据清空
@@ -84,6 +84,7 @@ public class StockDataTxtHelperImpl implements StockDataTxtHelper {
                     StockPO po2 = new StockPO(date, open, high, low, close, volume, close, code, name, "SZ", quoteChange, isOpen,lastClose);
                     inMap.put(date, po2);
                 }
+                outMap.put(flag, inMap); //把最后一支股票插到外层map里
                 str = br.readLine();
             }
 
@@ -111,18 +112,18 @@ public class StockDataTxtHelperImpl implements StockDataTxtHelper {
     public static void main(String[] args) {
         StockDataTxtHelperImpl test = new StockDataTxtHelperImpl();
         Map<String, Map<String, StockPO>> map = test.getStockData("2017");
-        System.out.println(map.size());
+
 //        LocalDate date = LocalDate.of(2017, 06, 05);
 //        System.out.println(map.get("000001").get(date));
 //        Set<String> set1 = map.keySet();
 //        for (String str : set1) {
-//            if (str.equals("000001")) {
+//
 //                Map<String, StockPO> inHashMap = map.get(str);
 //                Set<String> set2 = inHashMap.keySet();
 //                for (String key : set2) {
 //                    System.out.println("\t" + key + "：" + inHashMap.get(key));
 //                }
-//            }
+//
 //        }
 //        Map<String, StockPO> in = map.get("000001");
 //        Iterator<Map.Entry<String,StockPO>> iterator = in.entrySet().iterator();

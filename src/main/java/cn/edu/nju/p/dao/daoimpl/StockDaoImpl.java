@@ -230,6 +230,8 @@ public class StockDaoImpl implements StockDao {
             System.out.println(str);
         }
         System.out.println(list.size());
+        System.out.println(impl.getStockName("000001"));
+
 //        System.out.println("初始化耗时 : "+(System.currentTimeMillis()-a)/1000f+" 秒 ");
     }
 }
