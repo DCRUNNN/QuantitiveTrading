@@ -18,6 +18,9 @@ import cn.edu.nju.p.po.StockPO;
  * time 查询时间
  * currentPrice 目前价格
  * quote_change 涨跌幅
+ * turnover 成交金额
+ * isopen 是否开盘
+ * lastClose 昨日收盘价
  *
  * @author dc
  *
@@ -26,7 +29,7 @@ import cn.edu.nju.p.po.StockPO;
 public class StockVO {
 
 //	private int serial;
-	private String date;
+private String date;
 	private double open;
 	private double high;
 	private double low;
@@ -36,9 +39,12 @@ public class StockVO {
 	private String code;
 	private String name;
 	private String market;
-	private double currentPrice;
 	private String time;
-	private String quote_change;//涨跌幅
+	private double currentPrice;
+	private String quote_change;
+	private String turnover;
+	private boolean isOpen;
+	private double lastClose;
 	
 	public StockVO(StockPO po){
 //		this.serial=po.getSerial();
@@ -55,6 +61,9 @@ public class StockVO {
 		this.time = po.getTime();
 		this.currentPrice = po.getCurrentPrice();
 		this.quote_change = po.getQuote_change();
+		this.turnover = po.getTurnover();
+		this.isOpen = po.getIsOpen();
+		this.lastClose = po.getLastClose();
 	}
 
 	public String getDate() {
@@ -71,6 +80,14 @@ public class StockVO {
 
 	public void setOpen(double open) {
 		this.open = open;
+	}
+
+	public String getTime() {
+		return time;
+	}
+
+	public void setTime(String time) {
+		this.time = time;
 	}
 
 	public double getHigh() {
@@ -105,12 +122,12 @@ public class StockVO {
 		this.volume = volume;
 	}
 
-	public double getAdjClose() {
+	public double getAdj_close() {
 		return adj_close;
 	}
 
-	public void setAdjClose(double adjClose) {
-		this.adj_close = adjClose;
+	public void setAdj_close(double adj_close) {
+		this.adj_close = adj_close;
 	}
 
 	public String getCode() {
@@ -137,14 +154,6 @@ public class StockVO {
 		this.market = market;
 	}
 
-	public String getTime() {
-		return time;
-	}
-
-	public void setTime(String time) {
-		this.time = time;
-	}
-
 	public double getCurrentPrice() {
 		return currentPrice;
 	}
@@ -153,12 +162,36 @@ public class StockVO {
 		this.currentPrice = currentPrice;
 	}
 
-	public String getQuoteChange() {
+	public String getQuote_change() {
 		return quote_change;
 	}
 
-	public void setQuoteChange(String quoteChange) {
-		this.quote_change = quoteChange;
+	public void setQuote_change(String quote_change) {
+		this.quote_change = quote_change;
+	}
+
+	public String getTurnover() {
+		return turnover;
+	}
+
+	public void setTurnover(String turnover) {
+		this.turnover = turnover;
+	}
+
+	public boolean getIsOpen() {
+		return isOpen;
+	}
+
+	public void setIsOpen(boolean isOpen) {
+		this.isOpen = isOpen;
+	}
+
+	public double getLastClose() {
+		return lastClose;
+	}
+
+	public void setLastClose(double lastClose) {
+		this.lastClose = lastClose;
 	}
 
 	@Override
@@ -174,9 +207,12 @@ public class StockVO {
 				", code='" + code + '\'' +
 				", name='" + name + '\'' +
 				", market='" + market + '\'' +
-				", currentPrice=" + currentPrice +
 				", time='" + time + '\'' +
+				", currentPrice=" + currentPrice +
 				", quote_change='" + quote_change + '\'' +
+				", turnover='" + turnover + '\'' +
+				", isOpen=" + isOpen +
+				", lastClose=" + lastClose +
 				'}';
 	}
 }

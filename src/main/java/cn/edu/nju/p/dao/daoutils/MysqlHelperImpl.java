@@ -15,7 +15,7 @@ import java.text.DecimalFormat;
 @Component
 public class MysqlHelperImpl implements MysqlHelper {
 
-    private static final String PATH="d:\\\\StockData_";
+    private static final String PATH="D://youkuang";
 //    private static final MysqlHelperImpl helper=new MysqlHelperImpl(); //单例模式
 
 //    public static MysqlHelperImpl getInstance() {

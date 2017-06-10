@@ -111,7 +111,7 @@ public class StockDataTxtHelperImpl implements StockDataTxtHelper {
     public static void main(String[] args) {
         StockDataTxtHelperImpl test = new StockDataTxtHelperImpl();
         Map<String, Map<String, StockPO>> map = test.getStockData("2017");
-        System.out.println(map);
+        System.out.println(map.size());
 //        LocalDate date = LocalDate.of(2017, 06, 05);
 //        System.out.println(map.get("000001").get(date));
 //        Set<String> set1 = map.keySet();

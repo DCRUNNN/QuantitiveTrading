@@ -65,7 +65,7 @@ public class StockDaoImpl implements StockDao {
             case 2006:
                 return map2006;
             case 2007:
-                return  map2007;
+                return map2007;
             case 2008:
                 return map2008;
             case 2009:
@@ -135,6 +135,24 @@ public class StockDaoImpl implements StockDao {
     }
 
     @Override
+    public Boolean getStockIsOpen(@Param("code") String code, @Param("date") LocalDate date) {
+        Map<String, Map<String, StockPO>> map = StockDaoImpl.getMap(date);
+        return map.get(code).get(date.toString()).getIsOpen();
+    }
+
+    @Override
+    public String getStockQuoteChange(@Param("code") String code, @Param("date") LocalDate date) {
+        Map<String, Map<String, StockPO>> map = StockDaoImpl.getMap(date);
+        return map.get(code).get(date.toString()).getQuote_change();
+    }
+
+    @Override
+    public Double getStockLastClose(@Param("code") String code, @Param("date") LocalDate date) {
+        Map<String, Map<String, StockPO>> map = StockDaoImpl.getMap(date);
+        return map.get(code).get(date.toString()).getLastClose();
+    }
+
+    @Override
     public String getStockName(String code) {
         LocalDate date = LocalDate.of(2017, 06, 01);
         return map2017.get(code).get(date.toString()).getName();
@@ -179,29 +197,22 @@ public class StockDaoImpl implements StockDao {
     }
 
     @Override
-    public String getStockSector(String code) {
-        String sector="";
-        if(code.startsWith("600")||code.startsWith("601")
-                ||code.startsWith("000")||code.startsWith("001")){
-            sector="主板";
-        }
-        else if(code.startsWith("002")){
-            sector="中小板";
-        }else if(code.startsWith("300")){
-            sector="创业板";
-        }else{
-            sector="没有找到对应板块";
-        }
-        return sector;
+    public List<String> getAllStocks() {
+        LocalDate date = LocalDate.of(2017, 06, 01);
+        Map<String, Map<String, StockPO>> map = StockDaoImpl.getMap(date);
+        Set<String> codeSet = map.keySet();
+        List<String> codeList = new ArrayList<>(codeSet);
+        return codeList;
+
     }
 
     @Override
-    public List<String> getStockBySector(String sector) {
+    public String getStockSector(String code) {
         return null;
     }
 
     @Override
-    public List<String> getAllStocks() {
+    public List<String> getStockBySector(String sector) {
         return null;
     }
 
@@ -211,8 +222,14 @@ public class StockDaoImpl implements StockDao {
     }
 
     public static void main(String[] args) {
-        LocalDate date = LocalDate.of(2015, 9, 25);
+//        long a=System.currentTimeMillis();
+//        LocalDate date = LocalDate.of(2015, 9, 25);
         StockDaoImpl impl=new StockDaoImpl();
-        System.out.println(impl.getStockHigh("002006", date));
+        List<String> list = impl.getAllStocks();
+        for (String str : list) {
+            System.out.println(str);
+        }
+        System.out.println(list.size());
+//        System.out.println("初始化耗时 : "+(System.currentTimeMillis()-a)/1000f+" 秒 ");
     }
 }

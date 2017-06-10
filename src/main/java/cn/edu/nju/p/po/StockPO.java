@@ -15,6 +15,9 @@ package cn.edu.nju.p.po;
  * time 查询时间
  * currentPrice 目前价格
  * quote_change 涨跌幅
+ * turnover 成交金额
+ * isopen 是否开盘
+ * lastClose 昨日收盘价
  *
  * @author dc
  *
@@ -41,8 +44,7 @@ public class StockPO {
     private boolean isOpen;
     private double lastClose;
 
-    public StockPO(String date, double open, double high, double low, double close, long volume, double adj_close, String code, String name, String market, String time, double currentPrice, String quote_change, String turnover, boolean isOpen,double lastClose) {
-
+    public StockPO(String date, double open, double high, double low, double close, long volume, double adj_close, String code, String name, String market, String time, double currentPrice, String quote_change, String turnover, boolean isOpen, double lastClose) {
         this.date = date;
         this.open = open;
         this.high = high;
@@ -61,7 +63,7 @@ public class StockPO {
         this.lastClose = lastClose;
     }
 
-    public StockPO(String date, double open, double high, double low, double close, long volume, double adj_close, String code, String name, String market, String quote_change, boolean isOpen,double lastClose) {
+    public StockPO(String date, double open, double high, double low, double close, long volume, double adj_close, String code, String name, String market, String quote_change, boolean isOpen, double lastClose) {
 
         this.date = date;
         this.open = open;
@@ -81,43 +83,13 @@ public class StockPO {
     public StockPO() {
     }
 
-    public double getLastClose() {
-        return lastClose;
+    public String getTime() {
+        return time;
     }
 
-    public void setLastClose(double lastClose) {
-        this.lastClose = lastClose;
+    public void setTime(String time) {
+        this.time = time;
     }
-
-    public boolean isOpen() {
-        return isOpen;
-    }
-
-    public void setOpen(boolean open) {
-        isOpen = open;
-    }
-
-    public String getQuote_change() {
-        return quote_change;
-    }
-
-    public void setQuote_change(String quote_change) {
-        this.quote_change = quote_change;
-    }
-
-    public String getTurnover() {
-        return turnover;
-    }
-
-    public void setTurnover(String turnover) {
-        this.turnover = turnover;
-    }
-
-
-
-//	public int getSerial(){
-//		return serial;
-//	}
 
     public String getDate() {
         return date;
@@ -199,20 +171,44 @@ public class StockPO {
         this.market = market;
     }
 
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
-    }
-
     public double getCurrentPrice() {
         return currentPrice;
     }
 
     public void setCurrentPrice(double currentPrice) {
         this.currentPrice = currentPrice;
+    }
+
+    public String getQuote_change() {
+        return quote_change;
+    }
+
+    public void setQuote_change(String quote_change) {
+        this.quote_change = quote_change;
+    }
+
+    public String getTurnover() {
+        return turnover;
+    }
+
+    public void setTurnover(String turnover) {
+        this.turnover = turnover;
+    }
+
+    public boolean getIsOpen() {
+        return isOpen;
+    }
+
+    public void setIsOpen(boolean isOpen) {
+        this.isOpen = isOpen;
+    }
+
+    public double getLastClose() {
+        return lastClose;
+    }
+
+    public void setLastClose(double lastClose) {
+        this.lastClose = lastClose;
     }
 
     @Override
