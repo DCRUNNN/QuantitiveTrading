@@ -5,6 +5,7 @@ import cn.edu.nju.p.dao.ClientDao;
 import cn.edu.nju.p.po.ClientPO;
 import cn.edu.nju.p.service.Personnel.PersonnalInfoService;
 import cn.edu.nju.p.vo.ClientVO;
+import com.alibaba.fastjson.JSONObject;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -27,19 +28,22 @@ public class PersonnalInfoController {
     }
 
     @PostMapping("/update")
-    public BaseResult updateClientInfo(@RequestParam String phone_number,@RequestParam String user_name,@RequestParam String sex,@RequestParam String email,@RequestParam String unit,@RequestParam String place) {
-        personnalInfoService.updateClient(phone_number,user_name,sex,email,unit,place);
+    public BaseResult updateClientInfo(JSONObject object) {
+        String phone_number = object.getString("phone_number");
+        String user_name= object.getString("user_name");
+        String sex = object.getString("sex");
+        String email = object.getString("email");
+        String unit = object.getString("unit");
+        String place = object.getString("place");
+        personnalInfoService.updateClient(phone_number, user_name, sex, email, unit, place);
         return new BaseResult(0, "update client info successfully!");
     }
 
-    @PostMapping("/addClient")
-    public BaseResult addClient(@RequestParam String phoneNumber, @RequestParam String userName ,@RequestParam String password){
-       personnalInfoService.addClient(userName,phoneNumber,password);
-        return new BaseResult(0, "add client info successfully!");
-    }
 
     @PostMapping("/updatePass")
-    public BaseResult updatePass(@RequestParam String phone_number,@RequestParam String password){
+    public BaseResult updatePass(JSONObject jsonObject){
+        String phone_number = jsonObject.getString("phone_number");
+        String password = jsonObject.getString("password");
         personnalInfoService.updatePass(phone_number,password);
         return new BaseResult(0,"update password successfully!");
     }
