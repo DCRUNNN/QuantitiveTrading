@@ -3,6 +3,8 @@ package cn.edu.nju.p.dao.daoimpl;
 import cn.edu.nju.p.dao.StockDao;
 import cn.edu.nju.p.po.StockPO;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import sun.security.jca.GetInstance;
 
 import java.sql.SQLException;
@@ -17,7 +19,11 @@ import java.util.Set;
 /**
  * Created by dell- on 2017/6/9.
  */
+@Component
 public class StockDaoImpl implements StockDao {
+
+    @Autowired
+    StockDao stockDao;
 
     /**
      * 外层的String是股票代码 000001
@@ -190,7 +196,9 @@ public class StockDaoImpl implements StockDao {
             Map<String,StockPO> inMap=set.getValue();
             Set<Map.Entry<String, StockPO>> inSet = inMap.entrySet();
             for(Map.Entry<String, StockPO> set2 : inSet) {
-                poList.add(set2.getValue());
+                if (set2.getKey().equals(date)) {
+                    poList.add(set2.getValue());
+                }
             }
         }
         return poList;
@@ -218,19 +226,25 @@ public class StockDaoImpl implements StockDao {
 
     @Override
     public void insertIntoStockDatabase(@Param("year") String year, @Param("StockPO") StockPO po) throws SQLException {
-
+        int count=1;
+        try {
+            stockDao.insertIntoStockDatabase(year,po);
+            System.out.println(po.getName() + "已经写入数据库");
+                    count++;
+//                    System.out.println(count);
+        } catch (SQLException ex) {
+            System.out.println(po.getName()+" "+po.getCode()+" 没有写入数据库");
+        }
+        System.out.println(count);
     }
+
+
 
     public static void main(String[] args) {
 //        long a=System.currentTimeMillis();
 //        LocalDate date = LocalDate.of(2015, 9, 25);
         StockDaoImpl impl=new StockDaoImpl();
-        List<String> list = impl.getAllStocks();
-        for (String str : list) {
-            System.out.println(str);
-        }
-        System.out.println(list.size());
-        System.out.println(impl.getStockName("000001"));
+
 
 //        System.out.println("初始化耗时 : "+(System.currentTimeMillis()-a)/1000f+" 秒 ");
     }
