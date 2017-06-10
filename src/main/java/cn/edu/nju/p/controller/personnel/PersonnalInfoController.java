@@ -26,7 +26,7 @@ public class PersonnalInfoController {
         return new BaseResult<>(0,personnalInfoService.getClientInfo(phoneNumber));
     }
 
-    @PostMapping("update")
+    @PostMapping("/update")
     public BaseResult updateClientInfo(@RequestParam String phone_number,@RequestParam String user_name,@RequestParam String sex,@RequestParam String email,@RequestParam String unit,@RequestParam String place) {
         personnalInfoService.updateClient(phone_number,user_name,sex,email,unit,place);
         return new BaseResult(0, "update client info successfully!");

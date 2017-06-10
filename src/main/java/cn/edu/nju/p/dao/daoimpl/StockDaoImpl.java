@@ -19,7 +19,7 @@ import java.util.Set;
 /**
  * Created by dell- on 2017/6/9.
  */
-@Component
+
 public class StockDaoImpl implements StockDao {
 
     @Autowired
