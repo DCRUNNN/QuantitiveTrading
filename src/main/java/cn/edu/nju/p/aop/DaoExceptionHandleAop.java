@@ -1,6 +1,7 @@
 package cn.edu.nju.p.aop;
 
 import cn.edu.nju.p.exception.StockNotFoundException;
+import cn.edu.nju.p.po.StockPO;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -34,8 +35,11 @@ public class DaoExceptionHandleAop {
                 if (args[1] instanceof LocalDate) {
                     LocalDate date = (LocalDate) proceedingJoinPoint.getArgs()[1];
                     throw new StockNotFoundException(stockCode+" "+date+" "+proceedingJoinPoint.getSignature().getName() + " could not find the stock!");
-                }else {
-                    throw new StockNotFoundException(proceedingJoinPoint.getSignature().getName() + " could not find the stock!");                }
+                } else if (args[1] instanceof StockPO) {
+                    return result;
+                } else {
+                    throw new StockNotFoundException(proceedingJoinPoint.getSignature().getName() + " could not find the stock!");
+                }
             }else {
                 throw new StockNotFoundException(proceedingJoinPoint.getSignature().getName() + " could not find the stock!");
             }

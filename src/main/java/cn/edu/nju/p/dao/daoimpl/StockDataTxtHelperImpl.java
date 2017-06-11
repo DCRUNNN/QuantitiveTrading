@@ -19,7 +19,7 @@ import java.util.*;
  */
 public class StockDataTxtHelperImpl implements StockDataTxtHelper {
 
-    private static final String FILE_PATH = "/home/xihao/文档/youkuang/";
+    private static final String FILE_PATH = "E://youkuang//";
 
     private static StockDataTxtHelperImpl INSTANCE = new StockDataTxtHelperImpl();
 
@@ -81,7 +81,7 @@ public class StockDataTxtHelperImpl implements StockDataTxtHelper {
                     long volume = Long.parseLong(data[8]); //成交量
                     String quoteChange = df.format(Double.parseDouble(data[9])); //涨跌幅
                     boolean isOpen = Integer.parseInt(data[10]) == 1; //是否开盘
-                    StockPO po2 = new StockPO(date, open, high, low, close, volume, close, code, name, "SZ", quoteChange, isOpen,lastClose);
+                    StockPO po2 = new StockPO(date, open, high, low, close, volume, close, code, name, "深圳", quoteChange, isOpen,lastClose);
                     inMap.put(date, po2);
                 }
                 outMap.put(flag, inMap); //把最后一支股票插到外层map里
