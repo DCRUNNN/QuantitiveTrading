@@ -63,7 +63,7 @@ public class StockDaoImpl implements StockDao {
         System.out.println("初始化耗时 : "+(System.currentTimeMillis()-a)/1000f+" 秒 ");
     }
 
-    private static Map<String, Map<String, StockPO>> getMap(LocalDate date) {
+    public static Map<String, Map<String, StockPO>> getMap(LocalDate date) {
         int year = date.getYear();
         switch (year) {
             case 2005:

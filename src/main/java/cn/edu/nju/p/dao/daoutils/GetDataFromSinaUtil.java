@@ -115,7 +115,7 @@ public class GetDataFromSinaUtil {
                     stockPO.setAdj_close(close);
                     stockPO.setTurnover(turnover);
                     stockPO.setVolume(volume);
-                    stockPO.setMarket(market);
+                    stockPO.setMarket("深圳");
                     stockPO.setName(name);
                     stockPO.setTime(time);
                     stockPO.setQuote_change(quoteChange);
