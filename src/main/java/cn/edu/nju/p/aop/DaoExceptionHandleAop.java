@@ -27,9 +27,15 @@ public class DaoExceptionHandleAop {
         if (result == null) {
             Object[] args = proceedingJoinPoint.getArgs();
             if (args.length >= 2) {
-                String stockCode = (String) proceedingJoinPoint.getArgs()[0];
-                LocalDate date = (LocalDate) proceedingJoinPoint.getArgs()[1];
-                throw new StockNotFoundException(stockCode+" "+date+" "+proceedingJoinPoint.getSignature().getName() + " could not find the stock!");
+                String stockCode = "";
+                if (args[0] instanceof String) {
+                    stockCode = (String) proceedingJoinPoint.getArgs()[0];
+                }
+                if (args[1] instanceof LocalDate) {
+                    LocalDate date = (LocalDate) proceedingJoinPoint.getArgs()[1];
+                    throw new StockNotFoundException(stockCode+" "+date+" "+proceedingJoinPoint.getSignature().getName() + " could not find the stock!");
+                }else {
+                    throw new StockNotFoundException(proceedingJoinPoint.getSignature().getName() + " could not find the stock!");                }
             }else {
                 throw new StockNotFoundException(proceedingJoinPoint.getSignature().getName() + " could not find the stock!");
             }
