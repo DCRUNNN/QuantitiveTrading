@@ -36,8 +36,6 @@ public class DaoExceptionHandleAop {
                     throw new StockNotFoundException(stockCode+" "+date+" "+proceedingJoinPoint.getSignature().getName() + " could not find the stock!");
                 }else {
                     throw new StockNotFoundException(proceedingJoinPoint.getSignature().getName() + " could not find the stock!");                }
-            }else {
-                throw new StockNotFoundException(proceedingJoinPoint.getSignature().getName() + " could not find the stock!");
             }
         }
         return result;
