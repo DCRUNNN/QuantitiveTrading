@@ -66,7 +66,7 @@ public class StockDaoTest {
 
     @Test
     public void getStockVolume() throws Exception {
-        assertEquals(stockDao.getStockVolume("00001", date), 156909800, 0.0);
+        System.out.println(stockDao.getStockVolume(code, date));
     }
 
     @Test
