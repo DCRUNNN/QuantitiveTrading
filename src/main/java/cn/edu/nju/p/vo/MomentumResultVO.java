@@ -1,7 +1,10 @@
 package cn.edu.nju.p.vo;
 
+import cn.edu.nju.p.utils.DoubleUtils;
+
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +27,9 @@ public class MomentumResultVO implements Serializable{
     private double yearYield;
     private double primaryYearYield;
 
+    private List<Double> winRates;
+    private List<Integer> rateNums;
+
     public MomentumResultVO(List<Double> primaryRates, List<Double> yieldRates, List<String> dateList, Map<Double, Integer> rateFrequency, double beta, double alpha, double shapeRatio, double maxDrawnDown, double yearYield, double primaryYearYield) {
         this.primaryRates = primaryRates;
         this.yieldRates = yieldRates;
@@ -35,10 +41,12 @@ public class MomentumResultVO implements Serializable{
         this.maxDrawnDown = maxDrawnDown;
         this.yearYield = yearYield;
         this.primaryYearYield = primaryYearYield;
+        this.winRates = new ArrayList<>(rateFrequency.keySet());
+        this.rateNums = new ArrayList<>(rateFrequency.values());
     }
 
     public List<Double> getPrimaryRates() {
-        return primaryRates;
+        return DoubleUtils.adjDoubleList(primaryRates);
     }
 
     public void setPrimaryRates(List<Double> primaryRates) {
@@ -46,7 +54,7 @@ public class MomentumResultVO implements Serializable{
     }
 
     public List<Double> getYieldRates() {
-        return yieldRates;
+        return DoubleUtils.adjDoubleList(yieldRates);
     }
 
     public void setYieldRates(List<Double> yieldRates) {

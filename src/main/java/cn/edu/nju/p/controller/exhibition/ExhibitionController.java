@@ -8,7 +8,9 @@ import cn.edu.nju.p.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,17 +41,28 @@ public class ExhibitionController {
     }
 
     @GetMapping("/momentumStrategy")
-    public BaseResult runMomentumStrategy(@RequestParam int dayNumFormative, @RequestParam int dayNumHolding, @RequestParam String beginDate, @RequestParam String endDate, @RequestParam(value = "stockPool[]", required = false) List<String> stockPool) {
+    public BaseResult runMomentumStrategy(@RequestParam int dayNumFormative, @RequestParam int dayNumHolding, @RequestParam String dateRange, @RequestParam(value = "stockPool[]", required = false) List<String> stockPool) {
 
-        MomentumVO momentumVO = new MomentumVO(dayNumFormative, dayNumHolding, LocalDate.parse(beginDate), LocalDate.parse(endDate), stockPool);
+        String beginDate = dateRange.split(" - ")[0];
+        String endDate = dateRange.split(" - ")[1];
+
+        String pattern = "MM/dd/yyyy";
+
+        MomentumVO momentumVO = new MomentumVO(dayNumFormative, dayNumHolding, LocalDate.parse(beginDate,DateTimeFormatter.ofPattern(pattern)), LocalDate.parse(endDate,DateTimeFormatter.ofPattern(pattern)), stockPool);
         MomentumResultVO resultVO = momentumService.getResult(momentumVO);
         return new BaseResult<>(0, resultVO);
     }
 
     @GetMapping("/meanReversionStrategy")
-    public BaseResult runMeanReversionStrategy(@RequestParam int meanDayNum, @RequestParam int holdingDayNum, @RequestParam int holdingStockNum, @RequestParam String beginDate, @RequestParam String endDate, @RequestParam(value = "stockPool[]", required = false) List<String> stockPool) {
+    public BaseResult runMeanReversionStrategy(@RequestParam int meanDayNum, @RequestParam int holdingDayNum, @RequestParam int holdingStockNum, @RequestParam String dateRange, @RequestParam(value = "stockPool[]", required = false) List<String> stockPool) {
 
-        MeanReversionParamVO meanReversionParamVO = new MeanReversionParamVO(stockPool, holdingDayNum, holdingStockNum, LocalDate.parse(beginDate), LocalDate.parse(endDate), meanDayNum);
+        System.out.println(stockPool);
+
+        String beginDate = dateRange.split(" - ")[0];
+        String endDate = dateRange.split(" - ")[1];
+        String pattern = "MM/dd/yyyy";
+
+        MeanReversionParamVO meanReversionParamVO = new MeanReversionParamVO(stockPool, holdingDayNum, holdingStockNum, LocalDate.parse(beginDate,DateTimeFormatter.ofPattern(pattern)), LocalDate.parse(endDate,DateTimeFormatter.ofPattern(pattern)), meanDayNum);
         MeanReversionResultVO reversionResultVO = meanReversionService.getResult(meanReversionParamVO);
         return new BaseResult<>(0, reversionResultVO);
     }

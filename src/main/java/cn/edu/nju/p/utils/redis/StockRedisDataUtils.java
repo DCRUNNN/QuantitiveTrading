@@ -50,17 +50,9 @@ public class StockRedisDataUtils {
 //        初始化　allStocks Map
 //        initSomeStocksMap();
 
-//        deleteCacheWithPattern("getMomentumResult*");
+//        deleteCacheWithPattern("getStockVolumeFromRedis*");
     }
 
-    /*private void initStopDay() {
-
-        LocalDate beginDate = LocalDate.of(2014, 1, 1);
-        LocalDate endDate = LocalDate.of(2017, 6, 10);
-        List<String> allStopDays = new ArrayList<>();
-        List<String> allStocks =
-    }
-*/
     private void deleteCacheWithPattern(String pattern) {
         System.out.println("deleting keys with pattern .. " + pattern);
         Set<String> keys = stringRedisTemplate.keys(pattern);
@@ -115,7 +107,6 @@ public class StockRedisDataUtils {
         }
         Map<String, String> map = new HashMap<>();
         pos.forEach(po -> map.put(po.getCode(), JSON.toJSONString(po))); //获得当日的map
-//        System.out.println(JSON.toJSONString(map,true));
 
         redisCache.putCache(date.toString(), JSON.toJSONString(map));
     }
@@ -179,8 +170,9 @@ public class StockRedisDataUtils {
 
     @Cacheable("getStockVolumeFromRedis")
     public long getStockVolume(String code, LocalDate date) {
-        StockPO stockPO = getStockPO(code, date);
-        return stockPO.getVolume();
+//        StockPO stockPO = getStockPO(code, date);
+//        return stockPO.getVolume();
+        return stockDao.getStockVolume(code, date);
     }
 
     @Cacheable("getStockNameFromRedis")
@@ -202,6 +194,7 @@ public class StockRedisDataUtils {
      * @param date　日期
      * @return
      */
+    @Cacheable("getStockPoFromRedis")
     public StockPO getStockPO(String code, LocalDate date) {
         Map<String, String> stockDataMap = getStockDataOfDateMap(date);
         String jsonOfStock = stockDataMap.get(code);

@@ -1,5 +1,7 @@
 package cn.edu.nju.p.po;
 
+import java.io.Serializable;
+
 /**
  * serial 记录编号
  * date 日期（月/日/年）
@@ -24,7 +26,7 @@ package cn.edu.nju.p.po;
  */
 
 
-public class StockPO {
+public class StockPO implements Serializable{
 
     //	private int serial;
     private String date;

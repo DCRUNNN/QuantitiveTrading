@@ -113,6 +113,7 @@ public class MeanReversionServiceImpl implements MeanReversionService {
         double shapeRatio = helper.getShapeRatio();
         double maxDrawDown = helper.getMaxDrawDown();
 
+        validDates.remove(0);
         List<String> dateList = validDates.parallelStream().map(LocalDate::toString).sorted().collect(Collectors.toList());
 
         return new MeanReversionResultVO(primaryRatesMap.get(1), accumulationYieldRates, dateList, rateFrequency, beta, alpha, shapeRatio, maxDrawDown, yearYield, primaryYearYield);
@@ -132,11 +133,11 @@ public class MeanReversionServiceImpl implements MeanReversionService {
      * @param stockPool 股票池
      * @param currentDate 当前的日期
      */
-    @Cacheable("getWinner")
+//    @Cacheable("getWinner")
     public List<String> getWinner(List<String> stockPool,LocalDate currentDate,int meanDayNum,int holdingNum) {
 
         Map<String, Double> rates = new LinkedHashMap<>();
-        stockPool.forEach(code -> rates.put(code, getOffsetRate(currentDate, code, meanDayNum))); //计算所有股票的偏移
+        stockPool.parallelStream().forEach(code -> rates.put(code, getOffsetRate(currentDate, code, meanDayNum))); //计算所有股票的偏移
 
         //对偏移量进行排序
         List<Map.Entry<String, Double>> rateList = new ArrayList<>(rates.entrySet());
@@ -172,14 +173,14 @@ public class MeanReversionServiceImpl implements MeanReversionService {
             try {
                 StockPO stockPO = redisDataUtils.getStockPO(stockCode, currentDate);
                 total += stockPO.getLastClose();
-                currentDate = currentDate.minusDays(1);
+                currentDate = holidays.getLastValidDate(currentDate);
             } catch (NullPointerException ne) {
                 return -999;
             }
         }
 
         double average = total / meanDayNum;
-        return (average - total) / average;
+        return (average - close) / average;
     }
 
 }

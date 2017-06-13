@@ -1,7 +1,12 @@
 package cn.edu.nju.p.vo;
 
+import cn.edu.nju.p.utils.DoubleUtils;
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
+
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +21,9 @@ public class MeanReversionResultVO implements Serializable{
     private List<String> dateList;
 
     private Map<Double,Integer> rateFrequency; //收益率频数
+
+    private List<Double> winRates;
+    private List<Integer> rateNums;
 
     private double beta ;
     private double alpha;
@@ -35,10 +43,14 @@ public class MeanReversionResultVO implements Serializable{
         this.maxDrawnDown = maxDrawnDown;
         this.yearYield = yearYield;
         this.primaryYearYield = primaryYearYield;
+
+        this.winRates = new ArrayList<>(rateFrequency.keySet());
+        this.rateNums = new ArrayList<>(rateFrequency.values());
     }
 
-    public List<Double> getPrimaryRates() {
-        return primaryRates;
+    public List<Double> getPrimaryRates()
+    {
+        return DoubleUtils.adjDoubleList(primaryRates);
     }
 
     public void setPrimaryRates(List<Double> primaryRates) {
@@ -46,7 +58,8 @@ public class MeanReversionResultVO implements Serializable{
     }
 
     public List<Double> getYieldRates() {
-        return yieldRates;
+
+        return DoubleUtils.adjDoubleList(yieldRates);
     }
 
     public void setYieldRates(List<Double> yieldRates) {
@@ -116,6 +129,22 @@ public class MeanReversionResultVO implements Serializable{
     public void setPrimaryYearYield(double primaryYearYield) {
 
         this.primaryYearYield = primaryYearYield;
+    }
+
+    public List<Double> getWinRates() {
+        return winRates;
+    }
+
+    public void setWinRates(List<Double> winRates) {
+        this.winRates = winRates;
+    }
+
+    public List<Integer> getRateNums() {
+        return rateNums;
+    }
+
+    public void setRateNums(List<Integer> rateNums) {
+        this.rateNums = rateNums;
     }
 
     @Override
