@@ -35,12 +35,12 @@ public class MomentumStrategyImpl implements Strategy {
     }
 
     @Override
-    public List<String> stockPool() {
+    public List<String> setStockPool() {
         return stockHelper.getRecommendStock();
     }
 
     @Override
-    public List<String> getWinner(LocalDate beginDate, LocalDate endDate, List<String> stockPool) {
+    public List<String> setWinner(LocalDate beginDate, LocalDate endDate, List<String> stockPool) {
 
         Map<String, Double> fieldRates = new LinkedHashMap<>();
         stockPool.forEach(stockCode -> fieldRates.put(stockCode,countRate(beginDate,endDate,stockCode)));

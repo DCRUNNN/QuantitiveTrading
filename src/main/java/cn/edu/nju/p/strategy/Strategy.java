@@ -8,9 +8,9 @@ import java.util.List;
  */
 public interface Strategy {
 
-    List<String> stockPool();
+    List<String> setStockPool();
 
-    List<String> getWinner(LocalDate beginDate, LocalDate endDate, List<String> stockPool);
+    List<String> setWinner(LocalDate beginDate, LocalDate endDate, List<String> stockPool);
 
     LocalDate setBeginDate();
 
