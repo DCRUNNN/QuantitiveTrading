@@ -2,14 +2,13 @@ package cn.edu.nju.p.serviceimpl;
 
 import cn.edu.nju.p.dao.StockDao;
 import cn.edu.nju.p.service.strategy.ChooseBestDayService;
-import cn.edu.nju.p.service.exhibition.MeanReversionService;
+import cn.edu.nju.p.service.strategy.MeanReversionService;
 import cn.edu.nju.p.service.strategy.MomentumService;
 import cn.edu.nju.p.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -140,11 +139,9 @@ public class ChooseBestDayServiceImpl implements ChooseBestDayService {
                     new MomentumVO(i, dayNum, beginDate, endDate, stockPool);
             MomentumResultVO momentumResultVO = momentumService.getResult(momentumVO);
 
-            Map<LocalDate, Double> fieldRates = momentumResultVO.getFieldRate(); //策略的每日累加收益率
-            List<Double> fieldRateValues = new ArrayList<>(fieldRates.values());
+            List<Double> fieldRateValues = momentumResultVO.getYieldRates();
 
-            Map<LocalDate, Double> primaryRates = momentumResultVO.getPrimaryRate(); //基准收益率
-            List<Double> primaryRateValues = new ArrayList<>(primaryRates.values());
+            List<Double> primaryRateValues = momentumResultVO.getPrimaryRates();
 
             if (isFormative) {
                 //把持有期天数作为参数传递计算
@@ -215,8 +212,8 @@ public class ChooseBestDayServiceImpl implements ChooseBestDayService {
         for (int i = 1; i <50; i++) {
             MeanReversionParamVO paramVO = new MeanReversionParamVO(stockPool, i, holdingStockNum, beginDate, endDate, meanDayNum);
             MeanReversionResultVO reversionResultVO = meanReversionService.getResult(paramVO);
-            List<Double> primaryRates = new ArrayList<>(reversionResultVO.getPrimaryRate().values());
-            List<Double> fieldRates = new ArrayList<>(reversionResultVO.getFieldRate().values());
+            List<Double> primaryRates = reversionResultVO.getPrimaryRates();
+            List<Double> fieldRates = reversionResultVO.getYieldRates();
 
             result.put(i, calFieldWinRate(fieldRates, primaryRates, i));
         }

@@ -1,11 +1,11 @@
 package cn.edu.nju.p.serviceimpl;
 
 import cn.edu.nju.p.dao.StockDao;
-import cn.edu.nju.p.service.exhibition.MeanReversionService;
+import cn.edu.nju.p.service.strategy.MeanReversionService;
 import cn.edu.nju.p.utils.CalculateHelper;
-import cn.edu.nju.p.utils.DateHelper;
 import cn.edu.nju.p.utils.DoubleUtils;
 import cn.edu.nju.p.utils.StockHelper;
+import cn.edu.nju.p.utils.holiday.Holidays;
 import cn.edu.nju.p.vo.MeanReversionParamVO;
 import cn.edu.nju.p.vo.MeanReversionResultVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +28,9 @@ public class MeanReversionServiceImpl implements MeanReversionService {
     @Autowired
     private CalculateHelper helper;
 
+    @Autowired
+    private Holidays holidays;
+
     @Override
     public MeanReversionResultVO getResult(MeanReversionParamVO paramVO) {
 
@@ -37,17 +40,17 @@ public class MeanReversionServiceImpl implements MeanReversionService {
         int holdingNum = paramVO.getHoldingStockNum(); //持仓数目
         int meanDayNum = paramVO.getMeanDayNum(); //几日均线
 
-        LocalDate virBeginDate = DateHelper.getIntervalEffectiveDate(beginDate, holdingDay); //实际开始日期，（因为在beginDate时候需要前面的持有期长度的日期都是有效日期）
+        LocalDate virBeginDate = holidays.getIntervalEffectiveDate(beginDate, holdingDay); //实际开始日期，（因为在beginDate时候需要前面的持有期长度的日期都是有效日期）
         List<String> stockPool = paramVO.getStockPool() == null ? getRecommendPool() : paramVO.getStockPool();
         stockPool = StockHelper.filterStockPool(stockPool, virBeginDate, endDate); //对股票池进行过滤，筛选掉停牌的股票
 
-        List<LocalDate> validDates = DateHelper.getBetweenDateAndFilter(beginDate, endDate, a -> true); //去除周末的有效日期
+        List<LocalDate> validDates = holidays.getBetweenDatesAndFilter(beginDate, endDate, a -> true); //去除周末的有效日期
 
         //先计算股票池的所有股票的平均收益率，获得每日的基准收益
 
         //计算策略的每日收益
-        Map<LocalDate, Double> fieldRates = new LinkedHashMap<>();
-        Map<LocalDate, Double> dailyFieldRates = new LinkedHashMap<>();
+        List<Double> dailyYieldRates = new ArrayList<>();
+        List<Double> accumulationYieldRates = new ArrayList<>();
 
         int primaryMoney = 100000; //10w 初始资金
         int totalMoney;
@@ -78,19 +81,18 @@ public class MeanReversionServiceImpl implements MeanReversionService {
             totalMoney = new BigDecimal(totalClose * 100).intValue() * nums + moneyLeft; //当前总资产
 
             //计算持有股票的每日总收益率
-            fieldRates.put(currentDate, DoubleUtils.formatDouble((double) (totalMoney - primaryMoney) / primaryMoney, 4));
-            dailyFieldRates.put(currentDate, DoubleUtils.formatDouble((double) (totalMoney - lastMoney) / lastMoney, 4));
+            dailyYieldRates.add(DoubleUtils.formatDouble((double) (totalMoney - lastMoney) / lastMoney, 4));
+            accumulationYieldRates.add(DoubleUtils.formatDouble((double) (totalMoney - primaryMoney) / primaryMoney, 4));
             lastMoney = totalMoney;
         }
 
-        ArrayList<Map<LocalDate, Double>> primaryRatesMap = StockHelper.getPrimaryRate(stockPool, validDates);
-        helper.setTotalPrimaryRates(primaryRatesMap.get(1));
-        helper.setTotalFieldRates(fieldRates);
-        helper.setFieldRates(dailyFieldRates);
-        helper.setPrimaryRates(primaryRatesMap.get(0));
+        ArrayList<List<Double>> primaryRatesMap = StockHelper.getPrimaryRate(stockPool, validDates);
 
-        Map<LocalDate, Double> fieldRate_adj = helper.getFieldAdjRates();
-        Map<LocalDate, Double> primaryRate_adj = helper.getPrimaryAdjRates();
+        helper.setDailyPrimaryRates(primaryRatesMap.get(0));
+        helper.setAccumulationPrimaryRates(primaryRatesMap.get(1));
+        helper.setDailyYieldRates(dailyYieldRates);
+        helper.setAccumulationYieldRates(accumulationYieldRates);
+
         Map<Double, Integer> rateFrequency = helper.getRateFrequency(holdingDay);
         double beta = helper.getBeta();
         double alpha = helper.getAlpha();
@@ -99,7 +101,9 @@ public class MeanReversionServiceImpl implements MeanReversionService {
         double shapeRatio = helper.getShapeRatio();
         double maxDrawDown = helper.getMaxDrawDown();
 
-        return new MeanReversionResultVO(fieldRate_adj,primaryRate_adj,rateFrequency,beta,alpha,shapeRatio,maxDrawDown,yearYield,primaryYearYield);
+        List<String> dateList = validDates.parallelStream().map(LocalDate::toString).sorted().collect(Collectors.toList());
+
+        return new MeanReversionResultVO(primaryRatesMap.get(1), accumulationYieldRates, dateList, rateFrequency, beta, alpha, shapeRatio, maxDrawDown, yearYield, primaryYearYield);
     }
 
     /**
@@ -118,12 +122,12 @@ public class MeanReversionServiceImpl implements MeanReversionService {
      * @param stockCode 股票代码
      * @return 均线的股票价格
      */
-    public double getAverage(int meanDayNum, LocalDate currentDate, String stockCode) {
+    private double getAverage(int meanDayNum, LocalDate currentDate, String stockCode) {
 
         double total = 0;
         for (int i = 0; i < meanDayNum; i++) {
             total += stockDao.getStockAdjClose(stockCode, currentDate);
-            currentDate = DateHelper.getLastDate(currentDate, a -> true);
+            currentDate = holidays.getLastValidDate(currentDate);
         }
 
         return total / meanDayNum;

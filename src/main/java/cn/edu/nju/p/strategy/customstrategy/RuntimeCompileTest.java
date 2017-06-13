@@ -1,7 +1,7 @@
-package cn.edu.nju.p.customstrategy;
+package cn.edu.nju.p.strategy.customstrategy;
 
-import cn.edu.nju.p.customstrategy.javacompile.core.RuntimeCompiler;
-import cn.edu.nju.p.customstrategy.javacompile.util.RunCompileUtil;
+import cn.edu.nju.p.strategy.customstrategy.javacompile.core.RuntimeCompiler;
+import cn.edu.nju.p.strategy.customstrategy.javacompile.util.RunCompileUtil;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;

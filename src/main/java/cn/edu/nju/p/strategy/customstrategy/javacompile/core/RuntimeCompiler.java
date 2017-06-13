@@ -1,4 +1,4 @@
-package cn.edu.nju.p.customstrategy.javacompile.core;
+package cn.edu.nju.p.strategy.customstrategy.javacompile.core;
 
 import java.util.Arrays;
 import java.util.List;

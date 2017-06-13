@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -20,6 +21,8 @@ public class StockHelper {
 
     private static StockDao stockDao;
 
+    private static final String VERTIFICATION = "000002";
+    
     /**
      * 根据股票代码判断这个日期是否存在数据
      *
@@ -30,14 +33,53 @@ public class StockHelper {
     @Cacheable("checkValid")
     public static boolean isValidByCode(String stockCode, LocalDate date) {
 
-        try {
-            Double close = stockDao.getStockClose(stockCode, date);
-            Double adjClose = stockDao.getStockAdjClose(stockCode, date);
-            return close != null && adjClose != null;
-        } catch (StockNotFoundException | NullPointerException e) {
-            return false;
-        }
+        return !(isHoliday(date) || !stockDao.getStockIsOpen(stockCode, date));
     }
+
+    /**
+     * 获得包括当前日期在内的　第一个有效日期，当前日期无效的话找到上一个有效日期
+     * @param stockCode
+     * @param date
+     * @return
+     */
+    public static LocalDate getFirstValidDate(String stockCode, LocalDate date) {
+        while (!isValidByCode(stockCode, date)) {
+            date = date.minusDays(1);
+        }
+        return date;
+    }
+
+    /**
+     * 获取两个日期之间的所有有效日期，并且按条件进行过滤
+     * @param beginDate begin date
+     * @param endDate end date
+     * @param filterCondition filter condition
+     * @return
+     */
+    public static List<LocalDate> getBetweenValidDatesAndFilter(LocalDate beginDate, LocalDate endDate, Predicate<LocalDate> filterCondition) {
+
+        List<LocalDate> dateList = new ArrayList<>();
+        while (beginDate.isBefore(endDate)) {
+            dateList.add(beginDate);
+            beginDate = beginDate.plusDays(1);
+        }
+        dateList.add(endDate);
+
+        Predicate<LocalDate> notHoliday = localDate -> !isHoliday(localDate);
+
+        dateList = dateList.parallelStream()
+                .filter(notHoliday.and(filterCondition))
+                .sorted()
+                .collect(Collectors.toList());
+
+        return dateList;
+    }
+
+    public static boolean isHoliday(LocalDate localDate) {
+
+        return stockDao.getStockPO(VERTIFICATION, localDate) == null;
+    }
+
 
     /**
      * 判断股票在指定日期之内是否存在停牌状况
@@ -48,21 +90,9 @@ public class StockHelper {
      */
     public static boolean hasStopped(String stockCode, LocalDate beginDate, LocalDate endDate) {
 
-        List<LocalDate> betweenDates;//获取去除周末的日期
-        betweenDates = DateHelper.getBetweenDateAndFilter(beginDate, endDate, a -> true);
-
-        //存在无效日期就返回true
-
-        for (LocalDate date:betweenDates) {
-
-            if (!isValidByCode(stockCode, date)) {
-                //没有收盘数据也是停牌
-                return true;
-            }
-
-            //有效日期并且成交量为０就是停牌
-            if(isValidByCode(stockCode,date) && stockDao.getStockVolume(stockCode,date) == 0){
-                //System.out.println(date.toString()+" "+stockCode);
+        List<LocalDate> betweenDates = getBetweenValidDatesAndFilter(beginDate, endDate, a -> true);
+        for (LocalDate date : betweenDates) {
+            if (stockDao.getStockPO(stockCode, date) == null || !stockDao.getStockIsOpen(stockCode, date)) {
                 return true;
             }
         }
@@ -86,12 +116,11 @@ public class StockHelper {
 
     /**
      * 根据当前日期获取推荐的股票
-     * @param currentDate
      * @return
      */
-    public static List<String> getRecommendStock(LocalDate currentDate) {
+    public static List<String> getRecommendStock() {
 
-        return null;
+        return stockDao.getAllStocks();
     }
 
 
@@ -101,10 +130,10 @@ public class StockHelper {
      * @param validDates 所有的有效日期
      * @return 返回基准收益率(累加的)
      */
-    public static ArrayList<Map<LocalDate, Double>> getPrimaryRate(List<String> stockPool, List<LocalDate> validDates){
+    public static ArrayList<List<Double>> getPrimaryRate(List<String> stockPool, List<LocalDate> validDates){
 
-        Map<LocalDate, Double> primaryRate = new LinkedHashMap<>();
-        Map<LocalDate, Double> dailyRates = new LinkedHashMap<>();
+        List<Double> dailyPrimaryRates = new ArrayList<>();
+        List<Double> accumulationPrimaryRates = new ArrayList<>();
 
         double totalClose = calculateTotalClose(stockPool, validDates.get(0)); //买入时的总收盘价
         double lastClose = totalClose;
@@ -112,17 +141,17 @@ public class StockHelper {
         for (int i = 1; i < validDates.size(); i++) {
             LocalDate currentDate = validDates.get(i);
             double allClose = calculateTotalClose(stockPool, currentDate);
-//            System.out.println("Primary Rate: ------------->" + (allClose - totalClose));
             //计算当日和买入日比较的总收益，并且格式化
-            primaryRate.put(currentDate, DoubleUtils.formatDouble((allClose - totalClose) / totalClose, 4));
-            dailyRates.put(currentDate, DoubleUtils.formatDouble((allClose - lastClose) / lastClose, 4));
+            accumulationPrimaryRates.add(DoubleUtils.formatDouble((allClose - totalClose) / totalClose, 4));
+            dailyPrimaryRates.add(DoubleUtils.formatDouble((allClose - lastClose) / lastClose, 4));
             lastClose = allClose;
         }
 
-        ArrayList<Map<LocalDate, Double>> maps = new ArrayList<>();
-        maps.add(dailyRates);
-        maps.add(primaryRate);
-        return maps;
+        ArrayList<List<Double>> twoRates = new ArrayList<>();
+        twoRates.add(dailyPrimaryRates);
+        twoRates.add(accumulationPrimaryRates);
+        return twoRates;
+
     }
 
     /**
@@ -138,6 +167,7 @@ public class StockHelper {
         }
         return totalClose;
     }
+
     /**
      * to check if the stock exists
      * @param stockCode stock code
@@ -148,37 +178,9 @@ public class StockHelper {
         return codes.contains(stockCode);
     }
 
-    public static List<String> getAllValidStocksLastThirtyDay(LocalDate date) {
-
-        LocalDate lastDate = date.minusDays(30);
-        List<String> allStocks = stockDao.getAllStocks();
-
-        List<LocalDate> betweenDates = DateHelper.getBetweenDateAndFilter(lastDate, date, a -> true);
-
-        List<String> results = new ArrayList<>();
-
-        VacationDates vacationDates = new VacationDates();
-        for (String stock : allStocks) {
-            boolean hasStopped = false;
-            for (LocalDate localDate : betweenDates) {
-                boolean isValidAndNoVolume = !vacationDates.isVacation(localDate) && isValidByCode(stock, localDate) && stockDao.getStockVolume(stock, localDate) == 0;
-                if (isValidAndNoVolume) {
-                    hasStopped = true;
-                    break;
-                }
-            }
-            if (!hasStopped) {
-                results.add(stock);
-            }
-        }
-
-        return results;
-    }
-
     @Autowired
     public void setStockDao(StockDao dao) {
         stockDao = dao;
     }
-
 
 }

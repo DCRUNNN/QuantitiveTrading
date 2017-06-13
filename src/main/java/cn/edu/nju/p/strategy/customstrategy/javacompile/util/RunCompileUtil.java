@@ -1,4 +1,4 @@
-package cn.edu.nju.p.customstrategy.javacompile.util;
+package cn.edu.nju.p.strategy.customstrategy.javacompile.util;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

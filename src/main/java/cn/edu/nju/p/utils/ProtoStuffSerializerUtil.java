@@ -24,7 +24,7 @@ public class ProtoStuffSerializerUtil {
         }
 
         Schema<T> schema = (Schema<T>) RuntimeSchema.getSchema(obj.getClass());
-        LinkedBuffer linkedBuffer = LinkedBuffer.allocate(1204 * 1024);
+        LinkedBuffer linkedBuffer = LinkedBuffer.allocate(2048 * 2048);
         byte[] protoStuff = ProtostuffIOUtil.toByteArray(obj, schema, linkedBuffer);
         linkedBuffer.clear();
         return protoStuff;

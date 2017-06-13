@@ -17,14 +17,6 @@ import java.time.LocalDate;
 public class StockHelperTest {
 
     @Test
-    public void getValidStockTest() throws Exception {
-
-        LocalDate currentDate = LocalDate.of(2012, 2, 3);
-        System.out.println(StockHelper.getAllValidStocksLastThirtyDay(currentDate));
-
-    }
-
-    @Test
     public void hasStoppedTest() {
 
         String code = "000010";
@@ -33,9 +25,5 @@ public class StockHelperTest {
         System.out.println(StockHelper.hasStopped(code,endDate,beginDate));
     }
 
-    @Test
-    public void getAllStockTest() {
-        LocalDate date = LocalDate.of(2012, 2, 3);
-        System.out.println(StockHelper.getAllValidStocksLastThirtyDay(date));
-    }
+
 }

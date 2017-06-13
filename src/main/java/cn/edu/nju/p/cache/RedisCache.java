@@ -28,7 +28,7 @@ public class RedisCache {
      * @param <T> 键值的泛型
      * @return
      */
-    <T> void putCache(String key, T obj) {
+    public <T> void putCache(String key, T obj) {
 
         final byte[] bKey = key.getBytes();
         final byte[] bValue = ProtoStuffSerializerUtil.serialize(obj);
@@ -83,7 +83,7 @@ public class RedisCache {
      * @param pattern key的模板
      *
      */
-    void deleteCacheWithPattern(String pattern) {
+    public void deleteCacheWithPattern(String pattern) {
 
         Set<String> keys = redisTemplate.keys(pattern);
         keys.forEach(key-> redisTemplate.execute((RedisCallback<Object>) redisConnection -> redisConnection.del(key.getBytes())));

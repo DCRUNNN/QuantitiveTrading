@@ -1,5 +1,6 @@
 package cn.edu.nju.p.utils;
 
+import cn.edu.nju.p.utils.holiday.VacationDates;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,8 +9,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.time.LocalDate;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by xihao on 17-6-5.

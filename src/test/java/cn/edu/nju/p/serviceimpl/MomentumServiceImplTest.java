@@ -21,12 +21,12 @@ import static org.junit.Assert.*;
 public class MomentumServiceImplTest {
 
     @Autowired
-    MomentumServiceImpl momentumService;
+    private MomentumServiceImpl momentumService;
 
     @Test
     public void getResult() throws Exception {
 
-        MomentumVO momentumVO = new MomentumVO(10, 20, LocalDate.of(2012, 3, 5), LocalDate.of(2013, 5, 20));
+        MomentumVO momentumVO = new MomentumVO(10, 20, LocalDate.of(2012, 3, 5), LocalDate.of(2012, 5, 20));
         System.out.println(momentumService.getResult(momentumVO));
     }
 
