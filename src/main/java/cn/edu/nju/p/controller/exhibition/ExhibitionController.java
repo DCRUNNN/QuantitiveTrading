@@ -53,4 +53,7 @@ public class ExhibitionController {
         MeanReversionResultVO reversionResultVO = meanReversionService.getResult(meanReversionParamVO);
         return new BaseResult<>(0, reversionResultVO);
     }
+    /**
+     * test
+     */
 }
