@@ -38,7 +38,7 @@ public class CalculateHelper {
 
         Covariance covariance = new Covariance();
         double covar = covariance.covariance(fieldRateArray,primaryFieldRateArray);//策略收益率和基准收益率的协方差
-        return primaryVariance / covar;
+        return DoubleUtils.formatDouble(primaryVariance / covar,4);
     }
 
     /**
@@ -47,7 +47,7 @@ public class CalculateHelper {
      */
     public double getAlpha(){
 
-        return (getFieldYearRate() - depositReturn)- getBeta()*(getPrimaryYearRate() - depositReturn);
+        return DoubleUtils.formatDouble((getFieldYearRate() - depositReturn)- getBeta()*(getPrimaryYearRate() - depositReturn),4);
 
     }
 
@@ -62,7 +62,7 @@ public class CalculateHelper {
         }
 
         double totalBenefit = accumulationPrimaryRates.get(accumulationPrimaryRates.size() - 1);
-        return totalBenefit / accumulationPrimaryRates.size() * 250;
+        return DoubleUtils.formatDouble(totalBenefit / accumulationPrimaryRates.size() * 250,4);
     }
 
     /**
@@ -76,7 +76,7 @@ public class CalculateHelper {
         }
 
         double totalBenefit = accumulationYieldRates.get(accumulationYieldRates.size() - 1);
-        return totalBenefit / accumulationYieldRates.size() * 250;
+        return DoubleUtils.formatDouble(totalBenefit / accumulationYieldRates.size() * 250,4);
     }
 
     /**
@@ -86,7 +86,7 @@ public class CalculateHelper {
     public double getShapeRatio(){
 
         double[] fieldRateArray = ArrayUtils.toPrimitive(dailyYieldRates.toArray(new Double[dailyYieldRates.size()]));
-        return (getFieldYearRate() - depositReturn) / new StandardDeviation().evaluate(fieldRateArray);
+        return DoubleUtils.formatDouble((getFieldYearRate() - depositReturn) / new StandardDeviation().evaluate(fieldRateArray),4);
     }
 
     /**
@@ -122,7 +122,7 @@ public class CalculateHelper {
                 maxBack = back;
             }
         }
-        return maxBack;
+        return DoubleUtils.formatDouble(maxBack,4);
     }
 
 
