@@ -4,10 +4,8 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.math3.stat.correlation.Covariance;
 import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
 import org.apache.commons.math3.stat.descriptive.moment.Variance;
-import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.*;
 
 /**
@@ -17,57 +15,15 @@ public class CalculateHelper {
 
     private double depositReturn;
 
-    private Map<LocalDate, Double> primaryRates;
-    private Map<LocalDate, Double> fieldRates;
-    private Map<LocalDate, Double> totalPrimaryRates;
-    private Map<LocalDate, Double> totalFieldRates;
+    private List<Double> dailyPrimaryRates;
+    private List<Double> accumulationPrimaryRates;
+    private List<Double> dailyYieldRates;
+    private List<Double> accumulationYieldRates;
 
-        /**
-         * 手动传递基准收益率和策略收益率
-         * @param depositReturn 存储年收益
-         * @param primaryRates 基准收益率
-         * @param fieldRates 策略收益率
-         */
-    public CalculateHelper(double depositReturn, Map<LocalDate, Double> primaryRates, Map<LocalDate, Double> fieldRates) {
-        this.depositReturn = depositReturn;
-        this.primaryRates = primaryRates;
-        this.fieldRates = fieldRates;
-    }
 
-    /**
-     * 默认使用的构造方法，其中的primaryRates,fieldRates都是size为0的
-     * @param depositReturn 存储收益
-     */
     public CalculateHelper(double depositReturn) {
         this.depositReturn = depositReturn;
-        primaryRates = new LinkedHashMap<>();
-        fieldRates = new LinkedHashMap<>();
     }
-
-    /**
-     * 设置基准收益率
-     * @param primaryRates
-     */
-    public void setPrimaryRates(Map<LocalDate, Double> primaryRates) {
-        this.primaryRates = primaryRates;
-    }
-
-    /**
-     * 设置策略收益率
-     * @param fieldRates
-     */
-    public void setFieldRates(Map<LocalDate, Double> fieldRates) {
-        this.fieldRates = fieldRates;
-    }
-
-    public void setTotalPrimaryRates(Map<LocalDate, Double> totalPrimaryRates) {
-        this.totalPrimaryRates = totalPrimaryRates;
-    }
-
-    public void setTotalFieldRates(Map<LocalDate, Double> totalFieldRates) {
-        this.totalFieldRates = totalFieldRates;
-    }
-
 
     /**
      * 获得beta因子
@@ -75,8 +31,8 @@ public class CalculateHelper {
      */
     public double getBeta() {
 
-        double[] primaryFieldRateArray = ArrayUtils.toPrimitive(primaryRates.values().toArray(new Double[primaryRates.size()]));
-        double[] fieldRateArray = ArrayUtils.toPrimitive(fieldRates.values().toArray(new Double[fieldRates.size()]));
+        double[] primaryFieldRateArray = ArrayUtils.toPrimitive(dailyPrimaryRates.toArray(new Double[dailyPrimaryRates.size()]));
+        double[] fieldRateArray = ArrayUtils.toPrimitive(dailyYieldRates.toArray(new Double[dailyYieldRates.size()]));
         Variance variance = new Variance();
         double primaryVariance = variance.evaluate(primaryFieldRateArray);//基准收益率方差
 
@@ -101,12 +57,12 @@ public class CalculateHelper {
      */
     public double getPrimaryYearRate(){
 
-        if (primaryRates.size() == 0) {
+        if (accumulationPrimaryRates.size() == 0) {
             throw new RuntimeException("使用CalculateHelper的计算之前请先设置基准收益率和策略收益率！");
         }
-        List<Double> values = new ArrayList<>(getPrimaryAdjRates().values());
-        double totalBenefit = values.get(values.size() - 1);
-        return totalBenefit / values.size() * 250;
+
+        double totalBenefit = accumulationPrimaryRates.get(accumulationPrimaryRates.size() - 1);
+        return totalBenefit / accumulationPrimaryRates.size() * 250;
     }
 
     /**
@@ -115,12 +71,12 @@ public class CalculateHelper {
      */
     public double getFieldYearRate(){
 
-        if (fieldRates.size() == 0) {
+        if (accumulationPrimaryRates.size() == 0) {
             throw new RuntimeException("使用CalculateHelper的计算之前请先设置基准收益率和策略收益率！");
         }
-        List<Double> values = new ArrayList<>(getFieldAdjRates().values());
-        double totalBenefit = values.get(values.size() - 1);
-        return totalBenefit / values.size() * 250;
+
+        double totalBenefit = accumulationYieldRates.get(accumulationYieldRates.size() - 1);
+        return totalBenefit / accumulationYieldRates.size() * 250;
     }
 
     /**
@@ -129,7 +85,7 @@ public class CalculateHelper {
      */
     public double getShapeRatio(){
 
-        double[] fieldRateArray = ArrayUtils.toPrimitive(fieldRates.values().toArray(new Double[fieldRates.size()]));
+        double[] fieldRateArray = ArrayUtils.toPrimitive(dailyYieldRates.toArray(new Double[dailyYieldRates.size()]));
         return (getFieldYearRate() - depositReturn) / new StandardDeviation().evaluate(fieldRateArray);
     }
 
@@ -137,18 +93,13 @@ public class CalculateHelper {
      * 获得调整之后的渐加收益率
      * @return 累加的基准收益
      */
-    public Map<LocalDate,Double> getPrimaryAdjRates() {
+    public List<Double> getAccumulationPrimaryRates() {
 
-        return totalPrimaryRates;
+        return accumulationPrimaryRates;
     }
 
-    /**
-     * 获得调整之后的渐加收益
-     * @return 累加的策略收益
-     */
-    public Map<LocalDate,Double> getFieldAdjRates(){
-
-        return totalFieldRates;
+    public List<Double> getAccumulationYieldRates(){
+        return accumulationYieldRates;
     }
 
     /**
@@ -157,9 +108,9 @@ public class CalculateHelper {
      */
     public double getMaxDrawDown(){
 
-        List<Double> rateValues = new ArrayList<>(getFieldAdjRates().values());
+
         List<Double> adjRate = new ArrayList<>();
-        rateValues.forEach(rate -> adjRate.add(rate + 1));
+        accumulationYieldRates.forEach(rate -> adjRate.add(rate + 1));
 
         double peak = -999999999999.0; //收益率最高值
         double maxBack = -999999999999.0;//最大回撤
@@ -188,12 +139,9 @@ public class CalculateHelper {
 
         Map<Double, Integer> result = new LinkedHashMap<>();
 
-        double rateAPeriod = 0.0;
-
-        List<Map.Entry<LocalDate, Double>> rateList = new ArrayList<>(fieldRates.entrySet());
-        for (int i = 0; i < rateList.size(); i++) {
-            rateAPeriod += rateList.get(i).getValue();
-            if ((i+1) % holdingDayNum == 0) {
+        for (int i = 1; i < accumulationYieldRates.size(); i++) {
+            if (i % holdingDayNum == 0) {
+                double rateAPeriod = accumulationYieldRates.get(i) - accumulationYieldRates.get(i - holdingDayNum);
                 if(result.containsKey(rateAPeriod)){
                     //如果重复的话 就替代
                     int num = result.get(rateAPeriod)+1;
@@ -201,11 +149,12 @@ public class CalculateHelper {
                 }else {
                     result.put(rateAPeriod, 1);
                 }
-                rateAPeriod = 0.0;
             }
         }
 
-        if (fieldRates.size() % holdingDayNum != 0) {
+        if (accumulationYieldRates.size() % holdingDayNum != 0) {
+            int beginIndex = (accumulationYieldRates.size() / holdingDayNum) * holdingDayNum;
+            double rateAPeriod = accumulationYieldRates.get(accumulationYieldRates.size() - 1) - accumulationYieldRates.get(beginIndex);
             //不能整除的话 把最后的不足够一个周期的加入结果
             if (result.containsKey(rateAPeriod)) {
                 int num = result.get(rateAPeriod);
@@ -221,5 +170,21 @@ public class CalculateHelper {
         Map<Double, Integer> finalResult = new LinkedHashMap<>(); //将结果重新整合
         resultList.forEach(a -> finalResult.put(a.getKey(), a.getValue()));
         return finalResult;
+    }
+
+    public void setDailyPrimaryRates(List<Double> dailyPrimaryRates) {
+        this.dailyPrimaryRates = dailyPrimaryRates;
+    }
+
+    public void setAccumulationPrimaryRates(List<Double> accumulationPrimaryRates) {
+        this.accumulationPrimaryRates = accumulationPrimaryRates;
+    }
+
+    public void setDailyYieldRates(List<Double> dailyYieldRates) {
+        this.dailyYieldRates = dailyYieldRates;
+    }
+
+    public void setAccumulationYieldRates(List<Double> accumulationYieldRates) {
+        this.accumulationYieldRates = accumulationYieldRates;
     }
 }

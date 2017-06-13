@@ -2,12 +2,11 @@ package cn.edu.nju.p.serviceimpl;
 
 import cn.edu.nju.p.dao.StockDao;
 import cn.edu.nju.p.exception.StockNoneException;
-import cn.edu.nju.p.exception.StockNotFoundException;
 import cn.edu.nju.p.po.StockPO;
 import cn.edu.nju.p.service.exhibition.HomePageService;
 import cn.edu.nju.p.utils.DateHelper;
 import cn.edu.nju.p.utils.StockHelper;
-import cn.edu.nju.p.utils.VacationDates;
+import cn.edu.nju.p.utils.holiday.VacationDates;
 import cn.edu.nju.p.vo.StockMarketVO;
 import cn.edu.nju.p.vo.StockVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +59,10 @@ public class HomePageServiceImpl implements HomePageService{
      */
     public StockMarketVO getMarketVO(LocalDate date) throws StockNoneException {
 
+        while (StockHelper.isHoliday(date)) {
+            date = date.minusDays(1);
+        }
+
         List<StockPO> polist = stockDao.getPOList(date.toString());
         if(polist == null|| polist.size()==0){
             throw new StockNoneException("输入日期当日没有股票成交！");
@@ -77,9 +80,7 @@ public class HomePageServiceImpl implements HomePageService{
             volume += po.getVolume();
 
             //使用lambda表达式输入过滤条件（有效日期）作为参数
-            LocalDate lastDate = DateHelper.getLastDate(date, checkDate -> StockHelper.isValidByCode(po.getCode(), checkDate));
-
-            double lastClose = stockDao.getStockAdjClose(po.getCode(), lastDate);//昨天收盘指数
+            double lastClose = po.getLastClose();
             double currentClose = po.getAdj_close();
 
             if (lastClose < currentClose) {

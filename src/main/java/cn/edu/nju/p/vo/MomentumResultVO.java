@@ -1,6 +1,7 @@
 package cn.edu.nju.p.vo;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 
 
@@ -9,9 +10,9 @@ import java.util.Map;
  */
 public class MomentumResultVO {
 
-    private Map<LocalDate,Double> fieldRate; //策略的累计收益率
-
-    private Map<LocalDate,Double> primaryRate; //策略的基准收益率
+    private List<Double> primaryRates;
+    private List<Double> yieldRates;
+    private List<String> dateList;
 
     private Map<Double,Integer> rateFrequency; //收益率频数
 
@@ -22,9 +23,10 @@ public class MomentumResultVO {
     private double yearYield;
     private double primaryYearYield;
 
-    public MomentumResultVO(Map<LocalDate, Double> fieldRate, Map<LocalDate, Double> primaryRate, Map<Double, Integer> rateFrequency, double beta, double alpha, double shapeRatio, double maxDrawnDown, double yearYield, double primaryYearYield) {
-    	this.fieldRate = fieldRate;
-        this.primaryRate = primaryRate;
+    public MomentumResultVO(List<Double> primaryRates, List<Double> yieldRates, List<String> dateList, Map<Double, Integer> rateFrequency, double beta, double alpha, double shapeRatio, double maxDrawnDown, double yearYield, double primaryYearYield) {
+        this.primaryRates = primaryRates;
+        this.yieldRates = yieldRates;
+        this.dateList = dateList;
         this.rateFrequency = rateFrequency;
         this.beta = beta;
         this.alpha = alpha;
@@ -34,20 +36,28 @@ public class MomentumResultVO {
         this.primaryYearYield = primaryYearYield;
     }
 
-    public Map<LocalDate, Double> getFieldRate() {
-        return fieldRate;
+    public List<Double> getPrimaryRates() {
+        return primaryRates;
     }
 
-    public void setFieldRate(Map<LocalDate, Double> fieldRate) {
-        this.fieldRate = fieldRate;
+    public void setPrimaryRates(List<Double> primaryRates) {
+        this.primaryRates = primaryRates;
     }
 
-    public Map<LocalDate, Double> getPrimaryRate() {
-        return primaryRate;
+    public List<Double> getYieldRates() {
+        return yieldRates;
     }
 
-    public void setPrimaryRate(Map<LocalDate, Double> primaryRate) {
-        this.primaryRate = primaryRate;
+    public void setYieldRates(List<Double> yieldRates) {
+        this.yieldRates = yieldRates;
+    }
+
+    public List<String> getDateList() {
+        return dateList;
+    }
+
+    public void setDateList(List<String> dateList) {
+        this.dateList = dateList;
     }
 
     public Map<Double, Integer> getRateFrequency() {
@@ -104,20 +114,5 @@ public class MomentumResultVO {
 
     public void setPrimaryYearYield(double primaryYearYield) {
         this.primaryYearYield = primaryYearYield;
-    }
-
-    @Override
-    public String toString() {
-        return "MomentumResultVO{" +
-                "fieldRate=" + fieldRate +
-                ", primaryRate=" + primaryRate +
-                ", rateFrequency=" + rateFrequency +
-                ", beta=" + beta +
-                ", alpha=" + alpha +
-                ", shapeRatio=" + shapeRatio +
-                ", maxDrawnDown=" + maxDrawnDown +
-                ", yearYield=" + yearYield +
-                ", primaryYearYield=" + primaryYearYield +
-                '}';
     }
 }

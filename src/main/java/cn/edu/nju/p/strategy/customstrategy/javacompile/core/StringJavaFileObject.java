@@ -1,4 +1,4 @@
-package cn.edu.nju.p.customstrategy.javacompile.core;
+package cn.edu.nju.p.strategy.customstrategy.javacompile.core;
 
 
 import java.net.URI;

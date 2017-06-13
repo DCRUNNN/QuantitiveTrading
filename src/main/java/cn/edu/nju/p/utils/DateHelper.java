@@ -2,17 +2,11 @@ package cn.edu.nju.p.utils;
 
 
 import cn.edu.nju.p.exception.DateNotOrderedException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.stereotype.Component;
+import cn.edu.nju.p.utils.holiday.VacationDates;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.*;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 /**
  * 日期辅助类
@@ -35,39 +29,6 @@ public class DateHelper {
         throw new RuntimeException(dateNotOrderedException);
     }
 
-
-    /**
-     * @param beginDate 开始日期
-     * @param endDate 结束日期
-     * @param predicate 手动输入的对去掉周末之后和节假日日期的筛选条件
-     * @return 返回去掉周末的日期列表
-     */
-    public static List<LocalDate> getBetweenDateAndFilter(LocalDate beginDate, LocalDate endDate,Predicate<LocalDate> predicate) {
-
-        List<LocalDate> dateList = new ArrayList<>();
-
-        //获得输入日期之间的所有日期
-        if(isOkDate(beginDate,endDate)){
-            while (beginDate.isBefore(endDate)) {
-                dateList.add(beginDate);
-                beginDate = beginDate.plusDays(1);
-            }
-            dateList.add(endDate);
-        }
-
-        //过滤周末日期
-        Predicate<LocalDate> notWeekend = localDate -> !(localDate.getDayOfWeek() == DayOfWeek.SATURDAY || localDate.getDayOfWeek() == DayOfWeek.SUNDAY);
-
-        //过滤节假日
-        VacationDates vacationDates = new VacationDates();
-        Predicate<LocalDate> notVacation = localDate -> !vacationDates.isVacation(localDate);
-
-        //直接在此处对dateList进行过滤
-        return dateList.parallelStream()
-                .filter(notWeekend.and(predicate).and(notVacation))
-                .sorted()
-                .collect(Collectors.toList());
-    }
 
     /**
      * 返回当前日期的上一个日期

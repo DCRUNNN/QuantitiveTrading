@@ -116,14 +116,18 @@ public class StockDaoTest {
 
     }
 
+    @Test
+    public void testIsOpen() throws Exception {
+
+        String code = "000001";
+        LocalDate date = LocalDate.of(2008, 1, 2);
+        System.out.println(stockDao.getStockIsOpen(code,date));
+    }
 
     @Test
-    public void get002166Test() throws Exception {
-
-//        List<LocalDate> dates = StockHelper.getAllValidStocksLastTenDay(LocalDate.of(2012, 3, 5));
-        String code = "002166";
-        LocalDate beginDate = LocalDate.of(2012, 3, 5);
-        List<LocalDate> dateList = DateHelper.getBetweenDateAndFilter(beginDate.minusDays(30), beginDate, a -> true);
-        dateList.forEach(date1 -> System.out.println(stockDao.getStockPO(code, date1)));
+    public void getIsOpenTest2() throws Exception {
+        String code = "000001";
+        LocalDate date = LocalDate.of(2008, 6, 12);
+        System.out.println(stockDao.getStockIsOpen(code, date));
     }
 }

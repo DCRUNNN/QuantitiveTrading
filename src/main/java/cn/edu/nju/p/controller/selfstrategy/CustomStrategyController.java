@@ -1,8 +1,8 @@
 package cn.edu.nju.p.controller.selfstrategy;
 
 import cn.edu.nju.p.baseresult.BaseResult;
-import cn.edu.nju.p.customstrategy.javacompile.core.RuntimeCompiler;
-import cn.edu.nju.p.customstrategy.javacompile.util.RunCompileUtil;
+import cn.edu.nju.p.strategy.customstrategy.javacompile.core.RuntimeCompiler;
+import cn.edu.nju.p.strategy.customstrategy.javacompile.util.RunCompileUtil;
 import cn.edu.nju.p.enums.ErrorCode;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

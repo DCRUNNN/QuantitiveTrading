@@ -27,8 +27,8 @@ public class KLineServiceImplTest {
     @Test
     public void getKLineVOSByCode() throws Exception {
 
-        LocalDate beginDate = LocalDate.of(2012, 10, 20);
-        LocalDate endDate = LocalDate.of(2012, 10, 30);
+        LocalDate beginDate = LocalDate.of(2006, 2, 3);
+        LocalDate endDate = LocalDate.of(2006, 5, 30);
         String stockCode = "000001";
         System.out.println(kLineService.getKLineVOSByCode(stockCode, beginDate, endDate));
     }

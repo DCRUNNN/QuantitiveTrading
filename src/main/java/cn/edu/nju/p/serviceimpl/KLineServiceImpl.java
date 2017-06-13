@@ -1,17 +1,14 @@
 package cn.edu.nju.p.serviceimpl;
 
-import cn.edu.nju.p.dao.StockDao;
-import cn.edu.nju.p.exception.StockNotFoundException;
 import cn.edu.nju.p.service.exhibition.KLineService;
-import cn.edu.nju.p.utils.DateHelper;
 import cn.edu.nju.p.utils.DoubleUtils;
 import cn.edu.nju.p.utils.StockHelper;
 import cn.edu.nju.p.utils.ema.MACDUtils;
+import cn.edu.nju.p.utils.redis.StockRedisDataUtils;
 import cn.edu.nju.p.vo.KLineVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -25,7 +22,7 @@ import java.util.stream.Collectors;
 public class KLineServiceImpl implements KLineService {
 
     @Autowired
-    private StockDao stockDao;
+    private StockRedisDataUtils stockRedisDataUtils;
 
     @Autowired
     private MACDUtils macdUtils;
@@ -41,17 +38,17 @@ public class KLineServiceImpl implements KLineService {
     public KLineVO getKLineVOSByCode(String code, LocalDate beginDate, LocalDate endDate) {
 
 //        使用lambda表达式过滤没有数据的日期
-        List<LocalDate> dateList = DateHelper.getBetweenDateAndFilter(beginDate,endDate, date-> StockHelper.isValidByCode(code,date));
+        List<LocalDate> dateList = StockHelper.getBetweenValidDatesAndFilter(beginDate, endDate, aDate -> stockRedisDataUtils.getStockIsOpen(code, aDate));
 
         List<List<Object>> finalResult = new ArrayList<>(300);
-        String stockName = stockDao.getStockName(code);
+        String stockName = stockRedisDataUtils.getStockName(code);
 
         dateList.parallelStream().forEach(date -> {
-            double low = stockDao.getStockLow(code,date);
-            double high = stockDao.getStockHigh(code,date);
-            double open = stockDao.getStockOpen(code,date);
-            double close = stockDao.getStockClose(code,date);
-            long volume = stockDao.getStockVolume(code,date);
+            double low = stockRedisDataUtils.getStockLow(code,date);
+            double high = stockRedisDataUtils.getStockHigh(code,date);
+            double open = stockRedisDataUtils.getStockOpen(code,date);
+            double close = stockRedisDataUtils.getStockClose(code,date);
+            long volume = stockRedisDataUtils.getStockVolume(code,date);
             boolean isGoHigh = open<close;
             int targ = isGoHigh ? 1 : 0;
 
@@ -81,19 +78,6 @@ public class KLineServiceImpl implements KLineService {
                 .parallelStream()
                 .sorted(Comparator.comparing(a -> a.get(0).toString()))
                 .collect(Collectors.toList()));
-    }
-
-    /**
-     * 通过股票名称获取k线数据
-     * @param name 股票名称
-     * @param beginDate 开始日期
-     * @param endDate 结束日期
-     * @return 有效日期的k线数据
-     */
-    public KLineVO getKLineVOSByName(String name, LocalDate beginDate, LocalDate endDate) throws  StockNotFoundException {
-
-        String code = stockDao.getStockCode(name);
-        return getKLineVOSByCode(code, beginDate, endDate);
     }
 
 }

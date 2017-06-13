@@ -1,4 +1,4 @@
-package cn.edu.nju.p.service.exhibition;
+package cn.edu.nju.p.service.strategy;
 
 
 import cn.edu.nju.p.vo.MeanReversionParamVO;
