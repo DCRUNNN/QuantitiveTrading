@@ -4,6 +4,7 @@ import cn.edu.nju.p.dao.StockDao;
 import cn.edu.nju.p.service.strategy.ChooseBestDayService;
 import cn.edu.nju.p.service.strategy.MeanReversionService;
 import cn.edu.nju.p.service.strategy.MomentumService;
+import cn.edu.nju.p.utils.StockHelper;
 import cn.edu.nju.p.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,9 @@ public class ChooseBestDayServiceImpl implements ChooseBestDayService {
     @Autowired
     private StockDao stockDao;
 
+    @Autowired
+    private StockHelper stockHelper;
+
     /**
      * 获得动量策略的超额收益率和策略收益率和形成期（持有期）的关系
      *
@@ -41,7 +45,7 @@ public class ChooseBestDayServiceImpl implements ChooseBestDayService {
         LocalDate endDate = momentumParamVO.getEndDate();
         boolean isFormative = momentumParamVO.isFormativeDay();
         int dayNum = momentumParamVO.getDayNum();
-        List<String> stockPool = momentumParamVO.getStockCodes() == null? stockDao.getAllStocks(): momentumParamVO.getStockCodes() ;
+        List<String> stockPool = momentumParamVO.getStockCodes() == null? stockHelper.getRecommendStock(): momentumParamVO.getStockCodes() ;
 
         Map<Integer,Double> abnormalReturnsMap = getAbnormalReturns(isFormative, dayNum, beginDate, endDate, stockPool);
         Map<Integer,Double> fieldWinRateMap = getFieldWins(isFormative, dayNum, beginDate, endDate, stockPool);

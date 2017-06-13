@@ -1,14 +1,18 @@
 package cn.edu.nju.p.serviceimpl;
 
 import cn.edu.nju.p.dao.StockDao;
+import cn.edu.nju.p.po.StockPO;
 import cn.edu.nju.p.service.strategy.MeanReversionService;
 import cn.edu.nju.p.utils.CalculateHelper;
 import cn.edu.nju.p.utils.DoubleUtils;
 import cn.edu.nju.p.utils.StockHelper;
 import cn.edu.nju.p.utils.holiday.Holidays;
+import cn.edu.nju.p.utils.redis.StockRedisDataUtils;
 import cn.edu.nju.p.vo.MeanReversionParamVO;
 import cn.edu.nju.p.vo.MeanReversionResultVO;
+import org.apache.ibatis.jdbc.Null;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -31,7 +35,14 @@ public class MeanReversionServiceImpl implements MeanReversionService {
     @Autowired
     private Holidays holidays;
 
+    @Autowired
+    private StockRedisDataUtils redisDataUtils;
+
+    @Autowired
+    private StockHelper stockHelper;
+
     @Override
+    @Cacheable("getMeanResult")
     public MeanReversionResultVO getResult(MeanReversionParamVO paramVO) {
 
         LocalDate beginDate = paramVO.getBeginDate();
@@ -40,9 +51,9 @@ public class MeanReversionServiceImpl implements MeanReversionService {
         int holdingNum = paramVO.getHoldingStockNum(); //持仓数目
         int meanDayNum = paramVO.getMeanDayNum(); //几日均线
 
-        LocalDate virBeginDate = holidays.getIntervalEffectiveDate(beginDate, holdingDay); //实际开始日期，（因为在beginDate时候需要前面的持有期长度的日期都是有效日期）
+        LocalDate virBeginDate = holidays.getIntervalEffectiveDate(beginDate, meanDayNum); //实际开始日期，（因为在beginDate时候需要前面的持有期长度的日期都是有效日期）
         List<String> stockPool = paramVO.getStockPool() == null ? getRecommendPool() : paramVO.getStockPool();
-        stockPool = StockHelper.filterStockPool(stockPool, virBeginDate, endDate); //对股票池进行过滤，筛选掉停牌的股票
+//        stockPool = stockHelper.filterStockPool(stockPool, virBeginDate, endDate); //对股票池进行过滤，筛选掉停牌的股票
 
         List<LocalDate> validDates = holidays.getBetweenDatesAndFilter(beginDate, endDate, a -> true); //去除周末的有效日期
 
@@ -57,7 +68,7 @@ public class MeanReversionServiceImpl implements MeanReversionService {
 
         LocalDate beginValidDate = validDates.get(0);
         List<String> stockToHold = getWinner(stockPool, beginValidDate, meanDayNum, holdingNum) ; //每次持有的股票
-        double beginClose = StockHelper.calculateTotalClose(stockToHold, beginValidDate);
+        double beginClose = stockHelper.calculateTotalClose(stockToHold, beginValidDate);
 
         int moneyPer100 = new BigDecimal(100 * beginClose).intValue();
         int nums = primaryMoney / moneyPer100; //多少100手
@@ -71,13 +82,14 @@ public class MeanReversionServiceImpl implements MeanReversionService {
             if (i % holdingDay == 0) {
                 //能够整除，重新选仓
                 stockToHold = getWinner(stockPool, currentDate, meanDayNum, holdingNum);
-                beginClose = StockHelper.calculateTotalClose(stockToHold, validDates.get(i - 1));
+                System.out.println("winner --> " +stockToHold);
+                beginClose = stockHelper.calculateTotalClose(stockToHold, validDates.get(i - 1));
                 moneyPer100 = new BigDecimal(100 * beginClose).intValue();
                 nums = lastMoney / moneyPer100;
                 moneyLeft = lastMoney - nums * moneyPer100;
             }
 
-            double totalClose = StockHelper.calculateTotalClose(stockToHold, currentDate);
+            double totalClose = stockHelper.calculateTotalClose(stockToHold, currentDate);
             totalMoney = new BigDecimal(totalClose * 100).intValue() * nums + moneyLeft; //当前总资产
 
             //计算持有股票的每日总收益率
@@ -86,7 +98,7 @@ public class MeanReversionServiceImpl implements MeanReversionService {
             lastMoney = totalMoney;
         }
 
-        ArrayList<List<Double>> primaryRatesMap = StockHelper.getPrimaryRate(stockPool, validDates);
+        ArrayList<List<Double>> primaryRatesMap = stockHelper.getPrimaryRate(stockPool, validDates);
 
         helper.setDailyPrimaryRates(primaryRatesMap.get(0));
         helper.setAccumulationPrimaryRates(primaryRatesMap.get(1));
@@ -112,25 +124,7 @@ public class MeanReversionServiceImpl implements MeanReversionService {
      */
     private List<String> getRecommendPool() {
 
-        return stockDao.getAllStocks();
-    }
-
-    /**
-     * 获得某日股票的某个均线的数据(使用复盘价)
-     * @param meanDayNum 几日均线
-     * @param currentDate 日期(需要传递有效的日期)
-     * @param stockCode 股票代码
-     * @return 均线的股票价格
-     */
-    private double getAverage(int meanDayNum, LocalDate currentDate, String stockCode) {
-
-        double total = 0;
-        for (int i = 0; i < meanDayNum; i++) {
-            total += stockDao.getStockAdjClose(stockCode, currentDate);
-            currentDate = holidays.getLastValidDate(currentDate);
-        }
-
-        return total / meanDayNum;
+        return stockHelper.getRecommendStock();
     }
 
     /**
@@ -138,6 +132,7 @@ public class MeanReversionServiceImpl implements MeanReversionService {
      * @param stockPool 股票池
      * @param currentDate 当前的日期
      */
+    @Cacheable("getWinner")
     public List<String> getWinner(List<String> stockPool,LocalDate currentDate,int meanDayNum,int holdingNum) {
 
         Map<String, Double> rates = new LinkedHashMap<>();
@@ -162,8 +157,29 @@ public class MeanReversionServiceImpl implements MeanReversionService {
      */
     public double getOffsetRate(LocalDate currentDate, String stockCode, int meanDayNum) {
 
-        double average = getAverage(meanDayNum, currentDate, stockCode);
-        return (average - stockDao.getStockAdjClose(stockCode, currentDate)) / average;
+        System.out.println("calculating the " + stockCode + currentDate.toString());
+
+        double total = 0;
+        double close ;
+
+        try {
+            close = redisDataUtils.getStockClose(stockCode, currentDate);
+        } catch (NullPointerException ne) {
+            return -999;
+        }
+
+        for (int i = 0; i < meanDayNum; i++) {
+            try {
+                StockPO stockPO = redisDataUtils.getStockPO(stockCode, currentDate);
+                total += stockPO.getLastClose();
+                currentDate = currentDate.minusDays(1);
+            } catch (NullPointerException ne) {
+                return -999;
+            }
+        }
+
+        double average = total / meanDayNum;
+        return (average - total) / average;
     }
 
 }

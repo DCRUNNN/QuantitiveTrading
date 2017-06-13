@@ -28,6 +28,9 @@ public class StockController {
     @Autowired
     private StockDao stockDao;
 
+    @Autowired
+    private StockHelper stockHelper;
+
     @GetMapping("/stock")
     public BaseResult getSectorStocks(@RequestParam String sector) {
         List<String> stocks = sectorService.getStocks(sector);
@@ -36,7 +39,7 @@ public class StockController {
 
     @GetMapping("/check/{code}")
     public BaseResult checkStock(@PathVariable String code) {
-        if (StockHelper.codeExists(code)) {
+        if (stockHelper.codeExists(code)) {
             return new BaseResult<>(0, true);
         } else {
             return new BaseResult<>(ErrorCode.STOCK_NOT_FOUND.getErrorCode(), code + " not found!");

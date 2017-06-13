@@ -4,6 +4,7 @@ import cn.edu.nju.p.service.exhibition.KLineService;
 import cn.edu.nju.p.utils.DoubleUtils;
 import cn.edu.nju.p.utils.StockHelper;
 import cn.edu.nju.p.utils.ema.MACDUtils;
+import cn.edu.nju.p.utils.holiday.Holidays;
 import cn.edu.nju.p.utils.redis.StockRedisDataUtils;
 import cn.edu.nju.p.vo.KLineVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,9 @@ public class KLineServiceImpl implements KLineService {
     @Autowired
     private MACDUtils macdUtils;
 
+    @Autowired
+    private Holidays holidays;
+
     /**
      * 通过股票代码获得KLine需要的所有VO
      *
@@ -38,7 +42,7 @@ public class KLineServiceImpl implements KLineService {
     public KLineVO getKLineVOSByCode(String code, LocalDate beginDate, LocalDate endDate) {
 
 //        使用lambda表达式过滤没有数据的日期
-        List<LocalDate> dateList = StockHelper.getBetweenValidDatesAndFilter(beginDate, endDate, aDate -> stockRedisDataUtils.getStockIsOpen(code, aDate));
+        List<LocalDate> dateList = holidays.getBetweenDatesAndFilter(beginDate, endDate, aDate -> stockRedisDataUtils.getStockIsOpen(code, aDate));
 
         List<List<Object>> finalResult = new ArrayList<>(300);
         String stockName = stockRedisDataUtils.getStockName(code);

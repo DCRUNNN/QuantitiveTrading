@@ -13,10 +13,13 @@ import java.util.List;
  */
 public class MomentumStrategyImpl implements Strategy {
 
+    @Autowired
+    private StockHelper stockHelper;
+
     @Override
     public List<String> stockPool() {
 
-        return StockHelper.getRecommendStock();
+        return stockHelper.getRecommendStock();
     }
 
     @Override
@@ -35,6 +38,7 @@ public class MomentumStrategyImpl implements Strategy {
      */
     @Override
     public void initParam(LocalDate beginDate, LocalDate endDate, int holdingDay) {
+
 
     }
 }

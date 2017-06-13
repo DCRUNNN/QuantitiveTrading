@@ -1,5 +1,6 @@
 package cn.edu.nju.p.vo;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -7,7 +8,7 @@ import java.util.Map;
 /**
  * 均线策略的收益结果
  */
-public class MeanReversionResultVO {
+public class MeanReversionResultVO implements Serializable{
 
     private List<Double> primaryRates;
     private List<Double> yieldRates;
@@ -113,6 +114,23 @@ public class MeanReversionResultVO {
     }
 
     public void setPrimaryYearYield(double primaryYearYield) {
+
         this.primaryYearYield = primaryYearYield;
+    }
+
+    @Override
+    public String toString() {
+        return "MeanReversionResultVO{" +
+                "primaryRates=" + primaryRates +
+                ", yieldRates=" + yieldRates +
+                ", dateList=" + dateList +
+                ", rateFrequency=" + rateFrequency +
+                ", beta=" + beta +
+                ", alpha=" + alpha +
+                ", shapeRatio=" + shapeRatio +
+                ", maxDrawnDown=" + maxDrawnDown +
+                ", yearYield=" + yearYield +
+                ", primaryYearYield=" + primaryYearYield +
+                '}';
     }
 }

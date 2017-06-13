@@ -1,5 +1,6 @@
 package cn.edu.nju.p.vo;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -8,7 +9,7 @@ import java.util.Map;
 /**
  * Created by xihao on 17-3-30.
  */
-public class MomentumResultVO {
+public class MomentumResultVO implements Serializable{
 
     private List<Double> primaryRates;
     private List<Double> yieldRates;
@@ -114,5 +115,21 @@ public class MomentumResultVO {
 
     public void setPrimaryYearYield(double primaryYearYield) {
         this.primaryYearYield = primaryYearYield;
+    }
+
+    @Override
+    public String toString() {
+        return "MomentumResultVO{" +
+                "primaryRates=" + primaryRates +
+                ", yieldRates=" + yieldRates +
+                ", dateList=" + dateList +
+                ", rateFrequency=" + rateFrequency +
+                ", beta=" + beta +
+                ", alpha=" + alpha +
+                ", shapeRatio=" + shapeRatio +
+                ", maxDrawnDown=" + maxDrawnDown +
+                ", yearYield=" + yearYield +
+                ", primaryYearYield=" + primaryYearYield +
+                '}';
     }
 }
