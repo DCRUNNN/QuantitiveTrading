@@ -1,10 +1,7 @@
 package cn.edu.nju.p.dao;
 
 import cn.edu.nju.p.po.StrategyCodePO;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -30,5 +27,8 @@ public interface StrategySquareDao {
 
     @Insert("insert into strategy_square (code) values(#{phoneNumber},#{strategyName},#{strategyName})")
     void setCode(@Param("phoneNumber") String phoneNumber, @Param("strategyName") String strategyName);
+
+    @Delete("delete from strategy_square where phone_number=#{phoneNumber} and strategy_name=#{strategyName}")
+    void deleteStrategy(@Param("phoneNumber") String phoneNumber, @Param("strategyName") String strategyName);
 
 }

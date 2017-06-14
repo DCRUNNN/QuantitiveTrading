@@ -40,4 +40,9 @@ public class StrategySquareController {
         return new BaseResult<>(0, codePOS);
     }
 
+    @PostMapping("/deleteStrategy")
+    public BaseResult deleteStock(@RequestParam String phoneNumber, @RequestParam String strategyName) {
+        squareDao.deleteStrategy(phoneNumber, strategyName);
+        return new BaseResult<>(0, "删除成功!");
+    }
 }

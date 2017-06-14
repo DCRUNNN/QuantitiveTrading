@@ -1,10 +1,7 @@
 package cn.edu.nju.p.dao;
 
 import cn.edu.nju.p.po.StrategyCodePO;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -29,4 +26,7 @@ public interface MyStrategyDao {
 
     @Select("select code from my_strategy where phone_number=#{phoneNumber} and locate(strategy_name,#{strategyName}) > 0")
     String getCode(@Param("phoneNumber") String phoneNumber, @Param("strategyName") String strategyName);
+
+    @Delete("delete from my_strategy where phone_number=#{phoneNumber} and strategy_name=#{strategyName}")
+    void deleteStrategy(@Param("phoneNumber") String phoneNumber, @Param("strategyName") String strategyName);
 }
