@@ -1,12 +1,13 @@
 package cn.edu.nju.p.vo;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
 /**
  * Created by xihao on 17-4-6.
  */
-public class MeanReversionParamVO {
+public class MeanReversionParamVO implements Serializable{
 
     private List<String> stockPool;
 

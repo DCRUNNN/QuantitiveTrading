@@ -3,6 +3,7 @@ package cn.edu.nju.p.dao;
 import cn.edu.nju.p.po.StockPO;
 import cn.edu.nju.p.utils.DateHelper;
 import cn.edu.nju.p.utils.StockHelper;
+import org.apache.tomcat.jni.Local;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ public class StockDaoTest {
     @Autowired
 //    提示说没有找到bean??????
     private StockDao stockDao;
-    private LocalDate date = LocalDate.of(2012, 3, 5);
+    private LocalDate date = LocalDate.of(2017, 6, 13);
     private String code = "002166";
     private String name = "深发展A";
 
@@ -91,7 +92,10 @@ public class StockDaoTest {
 
     @Test
     public void getPOList() throws Exception {
-        System.out.println(stockDao.getPOList(date.toString()));
+        List<StockPO> poList = stockDao.getPOList(date.toString());
+        for (int i=0;i<1000;i++) {
+            System.out.println(poList.get(i).getVolume());
+        }
     }
 
 
@@ -129,5 +133,25 @@ public class StockDaoTest {
         String code = "000001";
         LocalDate date = LocalDate.of(2008, 6, 12);
         System.out.println(stockDao.getStockIsOpen(code, date));
+    }
+
+    @Test
+    public void testUpdate() throws Exception {
+        StockPO po = new StockPO();
+        po.setName("测试");
+        po.setDate("2017-06-14");
+        po.setCode("000001");
+        po.setOpen(-1);
+        po.setHigh(-2);
+        po.setLow(-3);
+        po.setClose(-4);
+        po.setAdj_close(-4);
+        po.setLastClose(-5);
+        po.setVolume(666);
+        po.setQuote_change("quo");
+        po.setMarket("深圳呀");
+        po.setIsOpen(true);
+
+        stockDao.updateStockDatabase("2017", po);
     }
 }

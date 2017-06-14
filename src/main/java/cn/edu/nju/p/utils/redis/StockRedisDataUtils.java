@@ -3,6 +3,7 @@ package cn.edu.nju.p.utils.redis;
 import cn.edu.nju.p.cache.RedisCache;
 import cn.edu.nju.p.dao.StockDao;
 import cn.edu.nju.p.po.StockPO;
+import cn.edu.nju.p.utils.holiday.Holidays;
 import com.alibaba.fastjson.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -10,10 +11,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by xihao on 17-6-13.
@@ -27,18 +25,22 @@ public class StockRedisDataUtils {
 
     private StringRedisTemplate stringRedisTemplate;
 
+    private Holidays holidays;
+
     /**
      * 所有的股票数据,<date,jsonStock>形式存储到内存中
      */
     private Map<String, String> allStocks;
 
     @Autowired
-    public StockRedisDataUtils(RedisCache redisCache, StockDao stockDao, StringRedisTemplate stringRedisTemplate) {
+    public StockRedisDataUtils(RedisCache redisCache, StockDao stockDao, StringRedisTemplate stringRedisTemplate, Holidays holidays) {
 
         this.redisCache = redisCache;
         this.stockDao = stockDao;
         this.stringRedisTemplate = stringRedisTemplate;
+        this.holidays = holidays;
         allStocks = new HashMap<>();
+
 
 //        deleteAllStockDataCache();
 //        把所有的股票数据加载到redis之中
@@ -46,7 +48,25 @@ public class StockRedisDataUtils {
 //        initAllRedisStockData();
 
 //        初始化　allStocks Map
-//        initAllStocksMap();
+//        initSomeStocksMap();
+
+//        deleteCacheWithPattern("getMomentumResult*");
+    }
+
+    /*private void initStopDay() {
+
+        LocalDate beginDate = LocalDate.of(2014, 1, 1);
+        LocalDate endDate = LocalDate.of(2017, 6, 10);
+        List<String> allStopDays = new ArrayList<>();
+        List<String> allStocks =
+    }
+*/
+    private void deleteCacheWithPattern(String pattern) {
+        System.out.println("deleting keys with pattern .. " + pattern);
+        Set<String> keys = stringRedisTemplate.keys(pattern);
+        for (String key : keys) {
+            stringRedisTemplate.delete(key);
+        }
     }
 
     /**
@@ -63,11 +83,18 @@ public class StockRedisDataUtils {
     /**
      * 初始化allStock Map
      * 把redis 中的股票数据全部读取到HashMap中
+     * !!!OutOfMemoryError
      */
-    private void initAllStocksMap() {
+    private void initSomeStocksMap() {
         System.out.println("开始读取股票数据...");
-        String jsonOfValidDates = redisCache.getCache("validDates", String.class);
-        List<String> allValidDates = JSON.parseArray(jsonOfValidDates, String.class);
+        List<String> allValidDates = new ArrayList<>();
+
+        for (LocalDate beginDate = LocalDate.of(2015,1,1),endDate = LocalDate.of(2017,6,1);beginDate.isBefore(endDate);beginDate = beginDate.plusDays(1)) {
+            if (!holidays.isHoliday(beginDate)) {
+                allValidDates.add(beginDate.toString());
+            }
+        }
+
         for (String validDate : allValidDates) {
 //            System.out.println("获取"+validDate+"的数据...");
             String jsonOfStockDataMap = redisCache.getCache(validDate,String.class);
@@ -98,7 +125,7 @@ public class StockRedisDataUtils {
      * 初始化redis中的所有股票数据
      */
     private void initAllRedisStockData() {
-        LocalDate beginDate = LocalDate.of(2006, 1, 1);
+        LocalDate beginDate = LocalDate.of(2016, 5, 24);
         LocalDate endDate = LocalDate.of(2017, 6, 12);
         while (beginDate.isBefore(endDate)) {
             initRedis(beginDate);
@@ -115,6 +142,7 @@ public class StockRedisDataUtils {
      */
     @Cacheable("getStockCloseFromRedis")
     public double getStockClose(String code, LocalDate date) {
+
         StockPO stockPO = getStockPO(code, date);
         return stockPO.getClose();
     }
@@ -185,9 +213,15 @@ public class StockRedisDataUtils {
      * @param date 日期
      * @return
      */
-    private Map<String, String> getStockDataOfDateMap(LocalDate date) {
+    public Map<String, String> getStockDataOfDateMap(LocalDate date) {
 
-        String jsonStockOfDate = allStocks.get(date.toString()); //是一个map的json string
+        String jsonStockOfDate;
+        jsonStockOfDate = redisCache.getCache(date.toString(), String.class);
+        /*if (allStocks.containsKey(date.toString())) {
+            jsonStockOfDate = allStocks.get(date.toString());
+        } else {
+            jsonStockOfDate = redisCache.getCache(date.toString(), String.class);
+        }*/
 //        System.out.println(jsonStockOfDate);
         /*
         * 获取当日的map

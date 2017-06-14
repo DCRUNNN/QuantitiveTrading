@@ -102,6 +102,7 @@ public class Holidays {
     public List<LocalDate> getBetweenDatesAndFilter(LocalDate beginDate, LocalDate endDate, Predicate<LocalDate> filterCondition) {
 
         List<LocalDate> dateList = new ArrayList<>();
+
         while (beginDate.isBefore(endDate)) {
             dateList.add(beginDate);
             beginDate = beginDate.plusDays(1);
@@ -126,9 +127,9 @@ public class Holidays {
      */
     public LocalDate getIntervalEffectiveDate(LocalDate date, int dayNum) {
 
-        LocalDate lastDate = null;
+        LocalDate lastDate = date;
         for (int i = 0; i < dayNum; i++) {
-            lastDate = date.minusDays(1);
+            lastDate = lastDate.minusDays(1);
             while (holidays.contains(lastDate)) {
                 lastDate = lastDate.minusDays(1);
             }

@@ -1,6 +1,7 @@
 package cn.edu.nju.p.serviceimpl;
 
 import cn.edu.nju.p.dao.StockDao;
+import cn.edu.nju.p.po.StockPO;
 import cn.edu.nju.p.service.strategy.MomentumService;
 import cn.edu.nju.p.utils.CalculateHelper;
 import cn.edu.nju.p.utils.DateHelper;
@@ -11,6 +12,7 @@ import cn.edu.nju.p.utils.redis.StockRedisDataUtils;
 import cn.edu.nju.p.vo.MomentumResultVO;
 import cn.edu.nju.p.vo.MomentumVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -36,12 +38,20 @@ public class MomentumServiceImpl implements MomentumService {
     @Autowired
     private Holidays holidays;
 
+    @Autowired
+    private StockHelper stockHelper;
+
+    @Autowired
+    private StockRedisDataUtils redisDataUtils;
+
+
     /**
      * 获取基本的数据
      * @param momentumVO 数据输入
      * @return 返回显示结果的vo
      */
     @Override
+    @Cacheable("getMomentumResult")
     public MomentumResultVO getResult(MomentumVO momentumVO) {
 
         LocalDate beginDate = momentumVO.getBeginDate();
@@ -56,7 +66,7 @@ public class MomentumServiceImpl implements MomentumService {
         LocalDate virtualBeginDate = holidays.getIntervalEffectiveDate(beginDate,formativeDayNum);
 
         //过滤股票池
-        stockPool = StockHelper.filterStockPool(stockPool,virtualBeginDate,endDate);
+//        stockPool = stockHelper.filterStockPool(stockPool,virtualBeginDate,endDate);
 
         //开始日期和结束日期之间的有效日期
         List<LocalDate> betweenDates = holidays.getBetweenDatesAndFilter(beginDate, endDate, a -> true);
@@ -74,7 +84,7 @@ public class MomentumServiceImpl implements MomentumService {
         LocalDate virBeginDate = holidays.getIntervalEffectiveDate(beginValidDate, formativeDayNum);
         stockToHold = getWinnerStock(virBeginDate, holidays.getLastValidDate(beginValidDate), stockPool);
 
-        double beginClose = StockHelper.calculateTotalClose(stockToHold, beginValidDate); //初始总收盘价
+        double beginClose = stockHelper.calculateTotalClose(stockToHold, beginValidDate); //初始总收盘价
         int moneyPer100 = new BigDecimal(100 * beginClose).intValue();
 
         int nums = primaryMoney / moneyPer100;
@@ -88,13 +98,13 @@ public class MomentumServiceImpl implements MomentumService {
                 //整除 重新选择股票
                 virBeginDate = holidays.getIntervalEffectiveDate(currentDate, formativeDayNum);
                 stockToHold = getWinnerStock(virBeginDate, holidays.getLastValidDate(currentDate), stockPool);
-                beginClose = StockHelper.calculateTotalClose(stockToHold, betweenDates.get(i - 1));
+                beginClose = stockHelper.calculateTotalClose(stockToHold, betweenDates.get(i - 1));
                 moneyPer100 = new BigDecimal(100 * beginClose).intValue();
                 nums = lastMoney / moneyPer100;
                 leftMoney = lastMoney - nums * moneyPer100;
             }
 
-            double totalClose = StockHelper.calculateTotalClose(stockToHold, currentDate);
+            double totalClose = stockHelper.calculateTotalClose(stockToHold, currentDate);
             totalMoney = new BigDecimal(totalClose * 100).intValue() * nums + leftMoney; //当前总资产
 
             dailyFiledRates.add(DoubleUtils.formatDouble((double) (totalMoney - lastMoney) / lastMoney, 4));
@@ -103,7 +113,7 @@ public class MomentumServiceImpl implements MomentumService {
         }
 
         //基准收益率 取股票池中所有股票的平均收益
-        ArrayList<List<Double>> maps = StockHelper.getPrimaryRate(stockPool, betweenDates);
+        ArrayList<List<Double>> maps = stockHelper.getPrimaryRate(stockPool, betweenDates);
 
         helper.setDailyYieldRates(dailyFiledRates);
         helper.setAccumulationYieldRates(accumulationFiledRates);
@@ -130,7 +140,7 @@ public class MomentumServiceImpl implements MomentumService {
      */
     private List<String> getRecommendPool() {
 
-        return stockDao.getAllStocks();
+        return stockHelper.getRecommendStock();
     }
 
     /**
@@ -149,7 +159,7 @@ public class MomentumServiceImpl implements MomentumService {
         List<Map.Entry<String, Double>> rateList = new ArrayList<>(fieldRates.entrySet());
         rateList.sort((rate1, rate2) -> new BigDecimal(rate2.getValue()).compareTo(new BigDecimal(rate1.getValue())));
 
-        int winnerNum = rateList.size()/5;
+        int winnerNum = rateList.size() / 5;
         return rateList.subList(0,winnerNum)
                 .parallelStream()
                 .map(Map.Entry::getKey)
@@ -165,14 +175,15 @@ public class MomentumServiceImpl implements MomentumService {
      */
     public double countRate(LocalDate beginDate,LocalDate endDate,String stockCode){
 
-//        LocalDate beginDate_last = DateHelper.getLastDate(beginDate, a -> true);
-//        double beginClose = stockDao.getStockAdjClose(stockCode,beginDate_last);
-//        double endClose = stockDao.getStockAdjClose(stockCode,endDate);
-//        double beginClose = redisDataUtils.getLastClose(stockCode, beginDate);
-//        double endClose = redisDataUtils.getStockClose(stockCode, endDate);
-        double beginClose = stockDao.getStockLastClose(stockCode, beginDate);
-        double endClose = stockDao.getStockClose(stockCode, endDate);
-        return (endClose-beginClose)/beginClose;
+        try {
+            StockPO beginPo = redisDataUtils.getStockPO(stockCode, beginDate);
+            StockPO endPo = redisDataUtils.getStockPO(stockCode, endDate);
+            double beginClose = beginPo.getClose();
+            double endClose = endPo.getClose();
+            return (endClose - beginClose) / beginClose;
+        } catch (NullPointerException ne) {
+            return -99;
+        }
     }
 
 

@@ -28,12 +28,25 @@ public class MeanReversionServiceImplTest {
     @Test
     public void getResult() throws Exception {
 
-        System.out.println(meanReversionService.getResult(new MeanReversionParamVO(10,10, LocalDate.of(2012,10,20),LocalDate.of(2013,10,20),10)));
+        System.out.println(meanReversionService.getResult(new MeanReversionParamVO(10,10, LocalDate.of(2015,10,20),LocalDate.of(2016,10,20),10)));
     }
 
     @Test
     public void shortTest() throws Exception {
 
-        System.out.println(meanReversionService.getResult(new MeanReversionParamVO(10,10, LocalDate.of(2012,10,20),LocalDate.of(2013,1,20),10)));
+        System.out.println(meanReversionService.getResult(new MeanReversionParamVO(10,10, LocalDate.of(2015,10,20),LocalDate.of(2016,1,20),10)));
+    }
+
+    @Test
+    public void shortTest2() throws Exception {
+
+        System.out.println(meanReversionService.getResult(new MeanReversionParamVO(10,10, LocalDate.of(2014,10,20),LocalDate.of(2015,1,20),10)));
+    }
+
+    @Test
+    public void shortTest3() throws Exception {
+
+        System.out.println(meanReversionService.getResult(new MeanReversionParamVO(10,10, LocalDate.of(2016,10,20),LocalDate.of(2017,1,20),10)));
+
     }
 }

@@ -158,7 +158,7 @@ public interface StockDao {
 					@Result(property = "high", column = "high", javaType = Double.class, jdbcType = JdbcType.DOUBLE),
 					@Result(property = "low", column = "low", javaType = Double.class, jdbcType = JdbcType.DOUBLE),
 					@Result(property = "close", column = "close", javaType = Double.class, jdbcType = JdbcType.DOUBLE),
-					@Result(property = "volume", column = " volume", javaType = Long.class, jdbcType = JdbcType.BIGINT),
+					@Result(property = "volume", column = "volume", javaType = Long.class, jdbcType = JdbcType.BIGINT),
 					@Result(property = "adj_close", column = "adj_close", javaType = Double.class, jdbcType = JdbcType.DOUBLE),
 					@Result(property = "lastClose", column = "lastClose", javaType = Double.class, jdbcType = JdbcType.DOUBLE),
 					@Result(property = "market", column = "market", javaType = String.class, jdbcType = JdbcType.VARCHAR),
@@ -190,6 +190,10 @@ public interface StockDao {
 	 * @return 该板块内的股票 以list返回
 	 */
 	List<String> getStockBySector(String sector);
+
+	@Update("Update t_stock_"+"${year}"+" SET open=#{StockPO.open},high=#{StockPO.high},low=#{StockPO.low},close=#{StockPO.close},volume=#{StockPO.volume},adj_close=#{StockPO.adj_close},quote_change=#{StockPO.quote_change},isOpen=#{StockPO.isOpen}"+" WHERE code=#{StockPO.code} AND date=#{StockPO.date}")
+	void updateStockDatabase(@Param("year") String year, @Param("StockPO") StockPO po)throws SQLException;
+
 
 	@Insert("INSERT INTO t_stock_"+"${year}"+"(date,code,name,open,high,low,close,volume,adj_close,lastClose,market,quote_change,isOpen)" +
 			" VALUES(#{StockPO.date},#{StockPO.code},#{StockPO.name},#{StockPO.open},#{StockPO.high},#{StockPO.low},#{StockPO.close},#{StockPO.volume},#{StockPO.adj_close},#{StockPO.lastClose},#{StockPO.market},#{StockPO.quote_change},#{StockPO.isOpen})")

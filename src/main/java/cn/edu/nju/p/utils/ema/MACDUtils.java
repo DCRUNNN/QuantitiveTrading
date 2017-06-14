@@ -20,10 +20,13 @@ public class MACDUtils {
     @Autowired
     private StockRedisDataUtils stockRedisDataUtils;
 
+    @Autowired
+    private StockHelper stockHelper;
+
     @Cacheable(value = "emaValue")
     public double getEmaValue(int emaValue,LocalDate currentDate,String stockCode) {
 
-        currentDate = StockHelper.getFirstValidDate(stockCode, currentDate);
+        currentDate = stockHelper.getFirstValidDate(stockCode, currentDate);
 
         double close = stockRedisDataUtils.getStockClose(stockCode, currentDate); //当日收盘价
 
@@ -34,7 +37,7 @@ public class MACDUtils {
 
         return (2 * close +
                 (emaValue - 1) * getEmaValue(emaValue - 1
-                        , StockHelper.getFirstValidDate(stockCode,currentDate.minusDays(1))
+                        , stockHelper.getFirstValidDate(stockCode,currentDate.minusDays(1))
                         , stockCode))
                 / (emaValue + 1);
     }
@@ -43,7 +46,7 @@ public class MACDUtils {
     @Cacheable("deaValue")
     public double getDea(int deaValue, LocalDate currentDate, String stockCode) {
 
-        currentDate = StockHelper.getFirstValidDate(stockCode, currentDate);
+        currentDate = stockHelper.getFirstValidDate(stockCode, currentDate);
 
         double diff = getEmaValue(12, currentDate, stockCode) - getEmaValue(26, currentDate, stockCode);
 
@@ -52,7 +55,7 @@ public class MACDUtils {
         }
 
         return (2 * diff + (deaValue - 1) * getDea(deaValue - 1
-                , StockHelper.getFirstValidDate(stockCode,currentDate.minusDays(1))
+                , stockHelper.getFirstValidDate(stockCode,currentDate.minusDays(1))
                 , stockCode))
                 / (deaValue + 1);
     }

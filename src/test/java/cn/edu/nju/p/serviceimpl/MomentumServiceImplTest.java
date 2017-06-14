@@ -26,8 +26,20 @@ public class MomentumServiceImplTest {
     @Test
     public void getResult() throws Exception {
 
-        MomentumVO momentumVO = new MomentumVO(10, 20, LocalDate.of(2012, 3, 5), LocalDate.of(2012, 5, 20));
+        MomentumVO momentumVO = new MomentumVO(10, 20, LocalDate.of(2016, 3, 5), LocalDate.of(2016, 5, 20));
         System.out.println(momentumService.getResult(momentumVO));
     }
 
+    @Test
+    public void getResultLongTest() throws Exception {
+
+        MomentumVO momentumVO = new MomentumVO(10, 20, LocalDate.of(2016, 3, 5), LocalDate.of(2017, 5, 20));
+        System.out.println(momentumService.getResult(momentumVO));
+    }
+
+    @Test
+    public void getRsultShortTest() throws Exception{
+        MomentumVO momentumVO = new MomentumVO(10, 20, LocalDate.of(2016, 6, 5), LocalDate.of(2016, 8, 20));
+        System.out.println(momentumService.getResult(momentumVO));
+    }
 }

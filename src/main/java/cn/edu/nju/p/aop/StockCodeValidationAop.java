@@ -7,6 +7,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -20,10 +21,13 @@ public class StockCodeValidationAop {
     public void getCompanyInfoAndNews() {
     }
 
+    @Autowired
+    private StockHelper stockHelper;
+
     @Around("getCompanyInfoAndNews()")
     public Object stockCodeExistCheck(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         String code = (String) proceedingJoinPoint.getArgs()[0];
-        if (! StockHelper.codeExists(code)) {
+        if (! stockHelper.codeExists(code)) {
             return new BaseResult(ErrorCode.STOCK_NOT_FOUND.getErrorCode(), "Code of "+ code + " Not Exists!");
         }
         return proceedingJoinPoint.proceed();

@@ -1,5 +1,6 @@
 package cn.edu.nju.p.vo;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -7,7 +8,7 @@ import java.util.List;
 /**
  * 动量策略的参数
  */
-public class MomentumVO {
+public class MomentumVO implements Serializable{
 
     /**
      * 形成期天数

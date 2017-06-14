@@ -1,16 +1,16 @@
 package cn.edu.nju.p.utils;
 
 import cn.edu.nju.p.dao.StockDao;
-import cn.edu.nju.p.exception.StockNotFoundException;
+import cn.edu.nju.p.po.StockPO;
+import cn.edu.nju.p.utils.holiday.Holidays;
+import cn.edu.nju.p.utils.redis.StockRedisDataUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.*;
-import java.util.function.Predicate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -19,10 +19,17 @@ import java.util.stream.Collectors;
 @Component
 public class StockHelper {
 
-    private static StockDao stockDao;
+    @Autowired
+    private StockDao stockDao;
 
-    private static final String VERTIFICATION = "000002";
-    
+    @Autowired
+    private Holidays holidays;
+
+    private final String VERTIFICATION = "000002";
+
+    @Autowired
+    private StockRedisDataUtils redisDataUtils;
+
     /**
      * 根据股票代码判断这个日期是否存在数据
      *
@@ -31,9 +38,9 @@ public class StockHelper {
      * @return 存在数据返回true，不存在数据返回false
      */
     @Cacheable("checkValid")
-    public static boolean isValidByCode(String stockCode, LocalDate date) {
+    public boolean isValidByCode(String stockCode, LocalDate date) {
 
-        return !(isHoliday(date) || !stockDao.getStockIsOpen(stockCode, date));
+        return !(holidays.isHoliday(date) || !stockDao.getStockIsOpen(stockCode, date) || stockDao.getStockPO(stockCode, date) == null);
     }
 
     /**
@@ -42,42 +49,11 @@ public class StockHelper {
      * @param date
      * @return
      */
-    public static LocalDate getFirstValidDate(String stockCode, LocalDate date) {
+    public LocalDate getFirstValidDate(String stockCode, LocalDate date) {
         while (!isValidByCode(stockCode, date)) {
             date = date.minusDays(1);
         }
         return date;
-    }
-
-    /**
-     * 获取两个日期之间的所有有效日期，并且按条件进行过滤
-     * @param beginDate begin date
-     * @param endDate end date
-     * @param filterCondition filter condition
-     * @return
-     */
-    public static List<LocalDate> getBetweenValidDatesAndFilter(LocalDate beginDate, LocalDate endDate, Predicate<LocalDate> filterCondition) {
-
-        List<LocalDate> dateList = new ArrayList<>();
-        while (beginDate.isBefore(endDate)) {
-            dateList.add(beginDate);
-            beginDate = beginDate.plusDays(1);
-        }
-        dateList.add(endDate);
-
-        Predicate<LocalDate> notHoliday = localDate -> !isHoliday(localDate);
-
-        dateList = dateList.parallelStream()
-                .filter(notHoliday.and(filterCondition))
-                .sorted()
-                .collect(Collectors.toList());
-
-        return dateList;
-    }
-
-    public static boolean isHoliday(LocalDate localDate) {
-
-        return stockDao.getStockPO(VERTIFICATION, localDate) == null;
     }
 
 
@@ -88,15 +64,29 @@ public class StockHelper {
      * @param endDate 结束日期
      * @return 存在停牌情况返回true，不存在返回false
      */
-    public static boolean hasStopped(String stockCode, LocalDate beginDate, LocalDate endDate) {
+    @Cacheable("hasStopped")
+    public boolean hasStopped(String stockCode, LocalDate beginDate, LocalDate endDate) {
 
-        List<LocalDate> betweenDates = getBetweenValidDatesAndFilter(beginDate, endDate, a -> true);
-        for (LocalDate date : betweenDates) {
-            if (stockDao.getStockPO(stockCode, date) == null || !stockDao.getStockIsOpen(stockCode, date)) {
-                return true;
+        LocalDate currentDate = LocalDate.now();
+        if (endDate.plusDays(10).isBefore(currentDate)) {
+            //离当前日期较远的话
+            List<LocalDate> betweenDates = holidays.getBetweenDatesAndFilter(beginDate, endDate, a -> true);
+            for (LocalDate date : betweenDates) {
+                if (redisDataUtils.getStockPO(stockCode, date) == null || !redisDataUtils.getStockIsOpen(stockCode, date)) {
+                    System.out.println(redisDataUtils.getStockPO(stockCode,date));
+                    return true;
+                }
             }
+            return false;
+        } else {
+            List<LocalDate> betweenDates = holidays.getBetweenDatesAndFilter(beginDate, endDate, a -> true);
+            for (LocalDate date : betweenDates) {
+                if (stockDao.getStockPO(stockCode, date) == null || !stockDao.getStockIsOpen(stockCode, date)) {
+                    return true;
+                }
+            }
+            return false;
         }
-        return false;
     }
 
     /**
@@ -106,7 +96,8 @@ public class StockHelper {
      * @param endDate 结束日期
      * @return 过滤之后的股票池
      */
-    public static List<String> filterStockPool(List<String> stockPool,LocalDate beginDate,LocalDate endDate){
+    @Cacheable("filterStockPool")
+    public List<String> filterStockPool(List<String> stockPool,LocalDate beginDate,LocalDate endDate){
 
         return stockPool
                 .parallelStream()
@@ -118,9 +109,16 @@ public class StockHelper {
      * 根据当前日期获取推荐的股票
      * @return
      */
-    public static List<String> getRecommendStock() {
+    public List<String> getRecommendStock() {
 
-        return stockDao.getAllStocks();
+        List<String> allStocks = stockDao.getAllStocks();
+        List<String> stockPool = new ArrayList<>();
+        for (int i = 0; i < allStocks.size(); i++) {
+            if (i % 100 == 0) {
+                stockPool.add(allStocks.get(i));
+            }
+        }
+        return stockPool;
     }
 
 
@@ -130,7 +128,7 @@ public class StockHelper {
      * @param validDates 所有的有效日期
      * @return 返回基准收益率(累加的)
      */
-    public static ArrayList<List<Double>> getPrimaryRate(List<String> stockPool, List<LocalDate> validDates){
+    public ArrayList<List<Double>> getPrimaryRate(List<String> stockPool, List<LocalDate> validDates){
 
         List<Double> dailyPrimaryRates = new ArrayList<>();
         List<Double> accumulationPrimaryRates = new ArrayList<>();
@@ -160,10 +158,24 @@ public class StockHelper {
      * @param date 日期
      * @return 总收盘价
      */
-    public static double calculateTotalClose(List<String> stockPool, LocalDate date) {
+    public double calculateTotalClose(List<String> stockPool, LocalDate date) {
         double totalClose = 0.0;
         for (String code : stockPool) {
-            totalClose += stockDao.getStockAdjClose(code, date);
+
+            double close;
+
+            try {
+                StockPO po = redisDataUtils.getStockPO(code, date);
+                if (po.getIsOpen()) {
+                    close = po.getClose();
+                }else {
+                    close = po.getLastClose();
+                }
+            } catch (NullPointerException ne) {
+                close = 0;
+            }
+
+            totalClose += close;
         }
         return totalClose;
     }
@@ -173,14 +185,9 @@ public class StockHelper {
      * @param stockCode stock code
      * @return true if exists,else false
      */
-    public static boolean codeExists(String stockCode) {
+    public boolean codeExists(String stockCode) {
         List<String> codes = stockDao.getAllStocks();
         return codes.contains(stockCode);
-    }
-
-    @Autowired
-    public void setStockDao(StockDao dao) {
-        stockDao = dao;
     }
 
 }

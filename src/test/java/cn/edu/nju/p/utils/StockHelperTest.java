@@ -16,14 +16,14 @@ import java.time.LocalDate;
 @SpringBootTest
 public class StockHelperTest {
 
-    @Test
+   /* @Test
     public void hasStoppedTest() {
 
         String code = "000010";
         LocalDate beginDate = LocalDate.of(2012, 2, 3);
         LocalDate endDate = beginDate.minusYears(1);
         System.out.println(StockHelper.hasStopped(code,endDate,beginDate));
-    }
+    }*/
 
 
 }

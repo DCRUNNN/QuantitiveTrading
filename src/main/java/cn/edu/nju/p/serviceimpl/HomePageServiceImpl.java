@@ -6,6 +6,7 @@ import cn.edu.nju.p.po.StockPO;
 import cn.edu.nju.p.service.exhibition.HomePageService;
 import cn.edu.nju.p.utils.DateHelper;
 import cn.edu.nju.p.utils.StockHelper;
+import cn.edu.nju.p.utils.holiday.Holidays;
 import cn.edu.nju.p.utils.holiday.VacationDates;
 import cn.edu.nju.p.vo.StockMarketVO;
 import cn.edu.nju.p.vo.StockVO;
@@ -26,6 +27,8 @@ public class HomePageServiceImpl implements HomePageService{
     @Autowired
     private StockDao stockDao;
 
+    @Autowired
+    private Holidays holidays;
 
     /**
      * 获取当日的所有股票行情
@@ -59,7 +62,7 @@ public class HomePageServiceImpl implements HomePageService{
      */
     public StockMarketVO getMarketVO(LocalDate date) throws StockNoneException {
 
-        while (StockHelper.isHoliday(date)) {
+        while (holidays.isHoliday(date)) {
             date = date.minusDays(1);
         }
 
