@@ -158,7 +158,7 @@ public interface StockDao {
 					@Result(property = "high", column = "high", javaType = Double.class, jdbcType = JdbcType.DOUBLE),
 					@Result(property = "low", column = "low", javaType = Double.class, jdbcType = JdbcType.DOUBLE),
 					@Result(property = "close", column = "close", javaType = Double.class, jdbcType = JdbcType.DOUBLE),
-					@Result(property = "volume", column = " volume", javaType = Long.class, jdbcType = JdbcType.BIGINT),
+					@Result(property = "volume", column = "volume", javaType = Long.class, jdbcType = JdbcType.BIGINT),
 					@Result(property = "adj_close", column = "adj_close", javaType = Double.class, jdbcType = JdbcType.DOUBLE),
 					@Result(property = "lastClose", column = "lastClose", javaType = Double.class, jdbcType = JdbcType.DOUBLE),
 					@Result(property = "market", column = "market", javaType = String.class, jdbcType = JdbcType.VARCHAR),
