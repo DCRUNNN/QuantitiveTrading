@@ -82,7 +82,6 @@ public class MeanReversionServiceImpl implements MeanReversionService {
             if (i % holdingDay == 0) {
                 //能够整除，重新选仓
                 stockToHold = getWinner(stockPool, currentDate, meanDayNum, holdingNum);
-                System.out.println("winner --> " +stockToHold);
                 beginClose = stockHelper.calculateTotalClose(stockToHold, validDates.get(i - 1));
                 moneyPer100 = new BigDecimal(100 * beginClose).intValue();
                 nums = lastMoney / moneyPer100;
@@ -157,8 +156,6 @@ public class MeanReversionServiceImpl implements MeanReversionService {
      * @return 股票的相对偏移量
      */
     public double getOffsetRate(LocalDate currentDate, String stockCode, int meanDayNum) {
-
-        System.out.println("calculating the " + stockCode + currentDate.toString());
 
         double total = 0;
         double close ;
