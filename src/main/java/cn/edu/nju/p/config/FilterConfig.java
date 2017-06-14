@@ -1,8 +1,5 @@
 package cn.edu.nju.p.config;
 
-import cn.edu.nju.p.filter.CorsFilter;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**

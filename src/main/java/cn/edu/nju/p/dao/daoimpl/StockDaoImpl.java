@@ -238,6 +238,10 @@ public class StockDaoImpl implements StockDao {
         System.out.println(count);
     }
 
+    @Override
+    public void updateStockDatabase(@Param("year") String year, @Param("StockPO") StockPO po) throws SQLException {
+
+    }
 
 
     public static void main(String[] args) {

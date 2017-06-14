@@ -191,6 +191,10 @@ public interface StockDao {
 	 */
 	List<String> getStockBySector(String sector);
 
+	@Update("Update t_stock_"+"${year}"+"SET open=#{StockPO.open},high=#{StockPO.high},low=#{StockPO.low},close=#{StockPO.close},volume=#{StockPO.volume},adj_close=#{StockPO.adj_close},quote_change=#{StockPO.quote_change}"+" WHERE code=#{StockPO.code} AND date=#{StockPO.date}")
+	void updateStockDatabase(@Param("year") String year, @Param("StockPO") StockPO po)throws SQLException;
+
+
 	@Insert("INSERT INTO t_stock_"+"${year}"+"(date,code,name,open,high,low,close,volume,adj_close,lastClose,market,quote_change,isOpen)" +
 			" VALUES(#{StockPO.date},#{StockPO.code},#{StockPO.name},#{StockPO.open},#{StockPO.high},#{StockPO.low},#{StockPO.close},#{StockPO.volume},#{StockPO.adj_close},#{StockPO.lastClose},#{StockPO.market},#{StockPO.quote_change},#{StockPO.isOpen})")
 	void insertIntoStockDatabase(@Param("year") String year,@Param("StockPO") StockPO po) throws SQLException;

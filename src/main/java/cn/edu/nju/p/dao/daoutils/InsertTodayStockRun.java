@@ -2,13 +2,15 @@ package cn.edu.nju.p.dao.daoutils;
 
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
+import org.springframework.stereotype.Component;
 
 import static org.quartz.JobBuilder.newJob;
 
 /**
  * Created by dell- on 2017/5/15.
  */
-public class UpdateMysqlDaily {
+@Component
+public class InsertTodayStockRun {
 
     public void run(String code,String market) throws Exception{
 
@@ -56,7 +58,7 @@ public class UpdateMysqlDaily {
     }
 
     public static void main(String[] args) {
-        UpdateMysqlDaily test = new UpdateMysqlDaily();
+        InsertTodayStockRun test = new InsertTodayStockRun();
         try {
 //            String[] codeList = {"000001", "000002"};
 //            String market = "sz"; //新浪的市场是要小写的
@@ -83,7 +85,7 @@ public class UpdateMysqlDaily {
 
             //创建jobDetail实例，绑定Job实现类
             //指明job的名称，所在组的名称，以及绑定job类
-            JobDetail job=JobBuilder.newJob(UpdateMysqlDailyJob.class).withIdentity("job1", "group1").build();
+            JobDetail job=JobBuilder.newJob(InsertTodayStockJob.class).withIdentity("job1", "group1").build();
 
             //定义调度触发规则
             //使用simpleTrigger规则
