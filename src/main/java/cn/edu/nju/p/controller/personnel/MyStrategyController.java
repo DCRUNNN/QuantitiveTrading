@@ -7,6 +7,8 @@ import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.List;
 
 /**
@@ -34,7 +36,7 @@ public class MyStrategyController {
     }
 
 
-    @PostMapping("/strategy")
+    @PostMapping
     public BaseResult addAStrategy(@RequestBody JSONObject strategyPo) {
 
         String phoneNumber = strategyPo.getString("phoneNumber");

@@ -24,9 +24,9 @@ public interface MyStrategyDao {
     @Insert("insert into my_strategy (phone_number,code,strategy_name) values(#{phoneNumber},#{code},#{strategyName})")
     void addMyStrategy(@Param("phoneNumber") String phoneNumber, @Param("code") String code, @Param("strategyName") String strategyName);
 
-    @Select("select * from my_strategy where phone_number = #{phoneNumber}")
+    @Select("select strategy_name from my_strategy where phone_number = #{phoneNumber}")
     List<String> getMyStrategyName(String phoneNumber);
 
-    @Select("select code from my_strategy where phone_number=#{phoneNumber},strategy_name=#{strategyName}")
+    @Select("select code from my_strategy where phone_number=#{phoneNumber} and locate(strategy_name,#{strategyName}) > 0")
     String getCode(@Param("phoneNumber") String phoneNumber, @Param("strategyName") String strategyName);
 }
