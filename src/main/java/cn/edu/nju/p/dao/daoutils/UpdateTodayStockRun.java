@@ -27,7 +27,7 @@ public class UpdateTodayStockRun {
 
             //创建jobDetail实例，绑定Job实现类
             //指明job的名称，所在组的名称，以及绑定job类
-            JobDetail job= JobBuilder.newJob(UpdateTodayStockJob.class).withIdentity("job1", "group1").build();
+            JobDetail job= JobBuilder.newJob(UpdateTodayStockJob.class).withIdentity("job2", "group2").build();
 
             //定义调度触发规则
             //使用simpleTrigger规则
@@ -36,8 +36,8 @@ public class UpdateTodayStockRun {
 //                        .startNow().build();
 
             //使用cornTrigger规则  每天9点执行
-            Trigger trigger=TriggerBuilder.newTrigger().withIdentity("simpleTrigger", "triggerGroup")
-                    .withSchedule(CronScheduleBuilder.cronSchedule("0 0/10 9-17 * * ?") //从早上9点到下午四点每隔十分钟执行一次任务
+            Trigger trigger=TriggerBuilder.newTrigger().withIdentity("simpleTrigger2", "triggerGroup2")
+                    .withSchedule(CronScheduleBuilder.cronSchedule("0 0/30 9-16 * * ?") //从早上9点到下午四点每隔30分钟执行一次任务
                     ).build();
 
             //把作业和触发器注册到任务调度中

@@ -134,4 +134,24 @@ public class StockDaoTest {
         LocalDate date = LocalDate.of(2008, 6, 12);
         System.out.println(stockDao.getStockIsOpen(code, date));
     }
+
+    @Test
+    public void testUpdate() throws Exception {
+        StockPO po = new StockPO();
+        po.setName("测试");
+        po.setDate("2017-06-14");
+        po.setCode("000001");
+        po.setOpen(-1);
+        po.setHigh(-2);
+        po.setLow(-3);
+        po.setClose(-4);
+        po.setAdj_close(-4);
+        po.setLastClose(-5);
+        po.setVolume(666);
+        po.setQuote_change("quo");
+        po.setMarket("深圳呀");
+        po.setIsOpen(true);
+
+        stockDao.updateStockDatabase("2017", po);
+    }
 }
