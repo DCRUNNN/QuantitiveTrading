@@ -24,12 +24,12 @@ public class StockCodeValidationAop {
     @Autowired
     private StockHelper stockHelper;
 
-    @Around("getCompanyInfoAndNews()")
+    /*@Around("getCompanyInfoAndNews()")
     public Object stockCodeExistCheck(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         String code = (String) proceedingJoinPoint.getArgs()[0];
         if (! stockHelper.codeExists(code)) {
             return new BaseResult(ErrorCode.STOCK_NOT_FOUND.getErrorCode(), "Code of "+ code + " Not Exists!");
         }
         return proceedingJoinPoint.proceed();
-    }
+    }*/
 }

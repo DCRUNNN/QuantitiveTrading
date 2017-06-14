@@ -8,15 +8,17 @@ import java.util.List;
  */
 public interface Strategy {
 
-    List<String> stockPool();
+    List<String> setStockPool();
 
-    List<String> getWinner();
+    List<String> setWinner(LocalDate beginDate, LocalDate endDate, List<String> stockPool);
 
-    /**
-     * 初始化参数
-     * @param beginDate　开始日期
-     * @param endDate　结束日期
-     * @param holdingDay　持有期
-     */
-    void initParam(LocalDate beginDate, LocalDate endDate, int holdingDay);
+    LocalDate setBeginDate();
+
+    LocalDate setEndDate();
+
+    int setHoldingDay();
+
+    int setFormativeDayNum();
+
 }
+

@@ -43,6 +43,7 @@ public class ChooseBestDayServiceImpl implements ChooseBestDayService {
 
         LocalDate beginDate = momentumParamVO.getBeginDate();
         LocalDate endDate = momentumParamVO.getEndDate();
+
         boolean isFormative = momentumParamVO.isFormativeDay();
         int dayNum = momentumParamVO.getDayNum();
         List<String> stockPool = momentumParamVO.getStockCodes() == null? stockHelper.getRecommendStock(): momentumParamVO.getStockCodes() ;
@@ -87,12 +88,13 @@ public class ChooseBestDayServiceImpl implements ChooseBestDayService {
     public Map<Integer,Double> getAbnormalReturns(boolean isFormative,int dayNum,LocalDate beginDate,LocalDate endDate,List<String> stockPool) {
 
         Map<Integer, Double> result = new LinkedHashMap<>();
-        for (int i = 1; i <=50; i++) {
+        for (int i = 1; i <=50; i+=2) {
             //形成期（持有期）的天数从1开始50结束
             MomentumVO momentumVO = isFormative ?
                     new MomentumVO(dayNum, i, beginDate, endDate, stockPool) :
                     new MomentumVO(i, dayNum, beginDate, endDate, stockPool);
             MomentumResultVO momentumResultVO = momentumService.getResult(momentumVO);
+
             double abnormalReturns = momentumResultVO.getYearYield() - momentumResultVO.getPrimaryYearYield();
             result.put(i,abnormalReturns);
         }
@@ -112,7 +114,7 @@ public class ChooseBestDayServiceImpl implements ChooseBestDayService {
     public Map<Integer, Double> getAbnormalReturnsForMean(LocalDate beginDate, LocalDate endDate, int holdingStockNum, int meanDayNum, List<String> stockPool) {
 
         Map<Integer, Double> result = new LinkedHashMap<>();
-        for (int i = 1; i <50; i++) {
+        for (int i = 1; i <50; i+=2) {
 
             MeanReversionParamVO paramVO = new MeanReversionParamVO(stockPool, i, holdingStockNum, beginDate, endDate, meanDayNum);
             MeanReversionResultVO reversionResultVO = meanReversionService.getResult(paramVO);

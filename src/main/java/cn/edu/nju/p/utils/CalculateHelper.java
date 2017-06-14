@@ -108,7 +108,6 @@ public class CalculateHelper {
      */
     public double getMaxDrawDown(){
 
-
         List<Double> adjRate = new ArrayList<>();
         accumulationYieldRates.forEach(rate -> adjRate.add(rate + 1));
 
@@ -142,6 +141,7 @@ public class CalculateHelper {
         for (int i = 1; i < accumulationYieldRates.size(); i++) {
             if (i % holdingDayNum == 0) {
                 double rateAPeriod = accumulationYieldRates.get(i) - accumulationYieldRates.get(i - holdingDayNum);
+                rateAPeriod = DoubleUtils.formatDouble(rateAPeriod * 100, 2);
                 if(result.containsKey(rateAPeriod)){
                     //如果重复的话 就替代
                     int num = result.get(rateAPeriod)+1;
