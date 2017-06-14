@@ -2,7 +2,7 @@ package cn.edu.nju.p.serviceimpl;
 
 import cn.edu.nju.p.dao.MyStockDao;
 import cn.edu.nju.p.dao.StockDao;
-import cn.edu.nju.p.service.Personnel.MyStockService;
+import cn.edu.nju.p.service.personnel.MyStockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

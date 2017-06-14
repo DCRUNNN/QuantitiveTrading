@@ -1,7 +1,7 @@
 package cn.edu.nju.p.controller.personnel;
 
 import cn.edu.nju.p.baseresult.BaseResult;
-import cn.edu.nju.p.service.Personnel.MyStockService;
+import cn.edu.nju.p.service.personnel.MyStockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

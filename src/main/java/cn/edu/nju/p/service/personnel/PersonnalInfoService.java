@@ -1,8 +1,6 @@
-package cn.edu.nju.p.service.Personnel;
+package cn.edu.nju.p.service.personnel;
 
 import cn.edu.nju.p.vo.ClientVO;
-
-import java.util.List;
 
 /**
  * Created by pc on 2017/6/10.

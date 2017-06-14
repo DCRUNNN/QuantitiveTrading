@@ -12,7 +12,7 @@ public interface ChooseBestDayService {
     /**
      * 获得动量策略的超额收益率和策略收益率和形成期（持有期）的关系
      * @param momentumParamVO 动量策略的一些参数
-     * @return 画图需要的惨素
+     * @return 画图需要的参数
      */
     BestDayResultVO getResultReturnsOfMomentum(MomentumParamVO momentumParamVO);
 

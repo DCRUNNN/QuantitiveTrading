@@ -1,12 +1,10 @@
 package cn.edu.nju.p.serviceimpl;
 
 import cn.edu.nju.p.dao.ClientDao;
-import cn.edu.nju.p.service.Personnel.PersonnalInfoService;
+import cn.edu.nju.p.service.personnel.PersonnalInfoService;
 import cn.edu.nju.p.vo.ClientVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * Created by pc on 2017/6/10.

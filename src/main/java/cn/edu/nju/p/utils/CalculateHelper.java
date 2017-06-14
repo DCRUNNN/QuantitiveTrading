@@ -119,7 +119,6 @@ public class CalculateHelper {
             }
             double back = (peak - ratePerDay) / peak;
             if (back > maxBack) {
-                System.out.println(peak + "-" + ratePerDay + "/" + peak);
                 maxBack = back;
                 System.out.println(maxBack);
 

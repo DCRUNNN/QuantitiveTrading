@@ -6,6 +6,7 @@ import cn.edu.nju.p.utils.StockHelper;
 import cn.edu.nju.p.utils.beans.ToolSpring;
 import cn.edu.nju.p.utils.holiday.Holidays;
 import cn.edu.nju.p.utils.redis.StockRedisDataUtils;
+import com.alibaba.fastjson.JSON;
 import org.datavec.api.formats.input.impl.LibSvmInputFormat;
 
 import java.math.BigDecimal;
@@ -88,6 +89,8 @@ public class StrategyRunner {
 
         List<String> dateList = betweenDates.parallelStream().map(LocalDate::toString).sorted().collect(Collectors.toList());
 
-        System.out.println(new StrategyResultVO(maps.get(1),accumulationYieldRates,dateList,beta,alpha,shapeRatio,maxDrawDown,yearYield,primaryYearYield));
+        String jsonString = JSON.toJSONString(new StrategyResultVO(maps.get(1), accumulationYieldRates, dateList, beta, alpha, shapeRatio, maxDrawDown, yearYield, primaryYearYield));
+        System.out.println(jsonString);
+
     }
 }

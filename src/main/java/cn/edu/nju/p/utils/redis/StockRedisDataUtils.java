@@ -116,7 +116,7 @@ public class StockRedisDataUtils {
      * 初始化redis中的所有股票数据
      */
     private void initAllRedisStockData() {
-        LocalDate beginDate = LocalDate.of(2016, 5, 24);
+        LocalDate beginDate = LocalDate.of(2006, 1, 1);
         LocalDate endDate = LocalDate.of(2017, 6, 12);
         while (beginDate.isBefore(endDate)) {
             initRedis(beginDate);

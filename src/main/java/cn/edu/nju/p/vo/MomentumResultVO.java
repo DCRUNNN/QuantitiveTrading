@@ -125,6 +125,22 @@ public class MomentumResultVO implements Serializable{
         this.primaryYearYield = primaryYearYield;
     }
 
+    public List<Double> getWinRates() {
+        return winRates;
+    }
+
+    public void setWinRates(List<Double> winRates) {
+        this.winRates = winRates;
+    }
+
+    public List<Integer> getRateNums() {
+        return rateNums;
+    }
+
+    public void setRateNums(List<Integer> rateNums) {
+        this.rateNums = rateNums;
+    }
+
     @Override
     public String toString() {
         return "MomentumResultVO{" +

@@ -1,16 +1,10 @@
 package cn.edu.nju.p.controller.personnel;
 
 import cn.edu.nju.p.baseresult.BaseResult;
-import cn.edu.nju.p.dao.ClientDao;
-import cn.edu.nju.p.po.ClientPO;
-import cn.edu.nju.p.service.Personnel.PersonnalInfoService;
-import cn.edu.nju.p.vo.ClientVO;
+import cn.edu.nju.p.service.personnel.PersonnalInfoService;
 import com.alibaba.fastjson.JSONObject;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * Created by cyz on 2017/6/6.

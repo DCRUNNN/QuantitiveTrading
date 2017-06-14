@@ -1,4 +1,4 @@
-package cn.edu.nju.p.service.Personnel;
+package cn.edu.nju.p.service.personnel;
 
 import java.util.List;
 
