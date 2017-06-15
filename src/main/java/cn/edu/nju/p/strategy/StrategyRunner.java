@@ -23,7 +23,6 @@ public class StrategyRunner {
 
     public static void run(Strategy strategy) {
 
-        StockRedisDataUtils redisDataUtils = ToolSpring.getBeans(StockRedisDataUtils.class);
         Holidays holidays = ToolSpring.getBeans(Holidays.class);
         StockHelper stockHelper = ToolSpring.getBeans(StockHelper.class);
         CalculateHelper calculateHelper = ToolSpring.getBeans(CalculateHelper.class);

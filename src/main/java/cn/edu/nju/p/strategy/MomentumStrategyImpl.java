@@ -30,8 +30,8 @@ public class MomentumStrategyImpl implements Strategy {
         this.redisDataUtils = ToolSpring.getBeans(StockRedisDataUtils.class);
         this.holdingDayNum = 5;
         this.formativeDayNum = 5;
-        this.beginDate = LocalDate.of(2016,5,10);
-        this.endDate = LocalDate.of(2016, 7, 10);
+        this.beginDate = LocalDate.of(2016,1,10);
+        this.endDate = LocalDate.of(2016, 12, 10);
     }
 
     @Override
