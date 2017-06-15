@@ -44,7 +44,6 @@ public class MyStrategyController {
 
     @PostMapping
     public BaseResult addAStrategy(@RequestBody JSONObject strategyPo) {
-
         String phoneNumber = strategyPo.getString("phoneNumber");
         String code = strategyPo.getString("code");
         String strategyName = strategyPo.getString("strategyName");
@@ -64,6 +63,11 @@ public class MyStrategyController {
         return new BaseResult<>(0, "删除成功!");
     }
 
+    @PostMapping("/addSaveStrategy")
+    public BaseResult addSaveStrategy(@RequestParam String phoneNumber,@RequestParam String strategyName,@RequestParam String url) {
+        myStrategyDao.addSaveStrategy(phoneNumber, strategyName, url);
+        return new BaseResult(0, "add a strategy sucessfully!");
+    }
 
     @GetMapping
     public BaseResult getStrategyCode(@RequestParam String phoneNumber, @RequestParam String strategyName) {

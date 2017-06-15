@@ -22,6 +22,9 @@ public interface MyStrategyDao {
     @Insert("insert into my_strategy (phone_number,code,strategy_name) values(#{phoneNumber},#{code},#{strategyName})")
     void addMyStrategy(@Param("phoneNumber") String phoneNumber, @Param("code") String code, @Param("strategyName") String strategyName);
 
+    @Insert("insert into my_save (phone_number,strategy_name,strategy_url) values(#{phoneNumber},#{strategyName},#{strategyURL})")
+    void addSaveStrategy(@Param("phoneNumber") String phoneNumber,@Param("strategyName") String strategyName,@Param("strategyURL")String strategyURL);
+
     @Select("select strategy_name from my_strategy where phone_number = #{phoneNumber}")
     List<String> getMyStrategyName(String phoneNumber);
 
