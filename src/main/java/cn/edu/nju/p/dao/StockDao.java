@@ -174,7 +174,7 @@ public interface StockDao {
 	 * @return all the stock codes
 	 */
 	@Select(value="SELECT distinct code from t_stock_2017")
-	@Cacheable("allStocks")
+//	@Cacheable("allStocks")
 	List<String> getAllStocks();
 
 	/**

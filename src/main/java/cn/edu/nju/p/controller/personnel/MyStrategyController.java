@@ -2,6 +2,8 @@ package cn.edu.nju.p.controller.personnel;
 
 import cn.edu.nju.p.baseresult.BaseResult;
 import cn.edu.nju.p.dao.MyStrategyDao;
+import cn.edu.nju.p.dao.StockDao;
+import cn.edu.nju.p.dao.StrategySquareDao;
 import cn.edu.nju.p.po.StrategyCodePO;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,9 @@ public class MyStrategyController {
 
     @Autowired
     private MyStrategyDao myStrategyDao;
+
+    @Autowired
+    private StrategySquareDao squareDao;
 
     @GetMapping("/{phoneNumber}")
     public BaseResult getMyStrategy(@PathVariable String phoneNumber){
@@ -52,4 +57,6 @@ public class MyStrategyController {
         String code = myStrategyDao.getCode(phoneNumber, strategyName);
         return new BaseResult(0, code);
     }
+
+
 }
