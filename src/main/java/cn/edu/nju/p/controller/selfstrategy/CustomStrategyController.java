@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 
@@ -70,6 +71,10 @@ public class CustomStrategyController {
             result = rc.getTraceMsg();
             errorCode = 40000002;
         }
+
+        //delete file
+        File file = new File("./target/classes/" + className + ".class");
+        file.delete();
         return new BaseResult(errorCode, result);
     }
 
