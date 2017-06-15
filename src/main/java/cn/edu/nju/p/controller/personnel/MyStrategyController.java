@@ -4,6 +4,7 @@ import cn.edu.nju.p.baseresult.BaseResult;
 import cn.edu.nju.p.dao.MyStrategyDao;
 import cn.edu.nju.p.dao.StockDao;
 import cn.edu.nju.p.dao.StrategySquareDao;
+import cn.edu.nju.p.po.SaveStrategyPO;
 import cn.edu.nju.p.po.StrategyCodePO;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -51,16 +53,29 @@ public class MyStrategyController {
     }
 
     @PostMapping("/deleteStrategy")
-    public BaseResult deleteStock(@RequestParam String phoneNumber, @RequestParam String strategyName) {
+    public BaseResult deleteStrategy(@RequestParam String phoneNumber, @RequestParam String strategyName) {
         myStrategyDao.deleteStrategy(phoneNumber, strategyName);
         return new BaseResult<>(0, "删除成功!");
     }
+
+    @GetMapping("/deleteSaveStrategy")
+    public BaseResult deleteSaveStrategy(@RequestParam String phoneNumber, @RequestParam String strategyName) {
+        myStrategyDao.deleteSaveStrategy(phoneNumber, strategyName);
+        return new BaseResult<>(0, "删除成功!");
+    }
+
 
     @GetMapping
     public BaseResult getStrategyCode(@RequestParam String phoneNumber, @RequestParam String strategyName) {
 
         String code = myStrategyDao.getCode(phoneNumber, strategyName);
         return new BaseResult(0, code);
+    }
+
+    @GetMapping("/save/{phoneNumber}")
+    public BaseResult getMySaveStrategyList(@PathVariable String phoneNumber){
+        List<SaveStrategyPO> poList = myStrategyDao.getMySaveStrategyList(phoneNumber);
+        return new BaseResult<>(0, poList);
     }
 
 

@@ -1,5 +1,6 @@
 package cn.edu.nju.p.dao;
 
+import cn.edu.nju.p.po.SaveStrategyPO;
 import cn.edu.nju.p.po.StrategyCodePO;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
@@ -29,4 +30,10 @@ public interface MyStrategyDao {
 
     @Delete("delete from my_strategy where phone_number=#{phoneNumber} and strategy_name=#{strategyName}")
     void deleteStrategy(@Param("phoneNumber") String phoneNumber, @Param("strategyName") String strategyName);
+
+    @Select("select * from my_save where phone_number=#{phoneNumber}")
+    List<SaveStrategyPO> getMySaveStrategyList(String phoneNumber);
+
+    @Delete("delete from my_save where phone_number=#{phoneNumber} and strategy_name=#{strategyName}")
+    void deleteSaveStrategy(@Param("phoneNumber") String phoneNumber,@Param("strategyName")String strategyName);
 }
