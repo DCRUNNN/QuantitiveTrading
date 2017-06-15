@@ -52,7 +52,7 @@ public class MyStrategyController {
         return new BaseResult(0, "add a strategy sucessfully!");
     }
 
-    @PostMapping("/deleteStrategy")
+    @GetMapping("/deleteStrategy")
     public BaseResult deleteStrategy(@RequestParam String phoneNumber, @RequestParam String strategyName) {
         myStrategyDao.deleteStrategy(phoneNumber, strategyName);
         return new BaseResult<>(0, "删除成功!");
