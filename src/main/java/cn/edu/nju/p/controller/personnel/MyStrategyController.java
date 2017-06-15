@@ -40,7 +40,6 @@ public class MyStrategyController {
         return new BaseResult<>(0, codePOS);
     }
 
-
     @PostMapping
     public BaseResult addAStrategy(@RequestBody JSONObject strategyPo) {
 
@@ -49,6 +48,12 @@ public class MyStrategyController {
         String strategyName = strategyPo.getString("strategyName");
         myStrategyDao.addMyStrategy(phoneNumber, code, strategyName);
         return new BaseResult(0, "add a strategy sucessfully!");
+    }
+
+    @PostMapping("/deleteStrategy")
+    public BaseResult deleteStock(@RequestParam String phoneNumber, @RequestParam String strategyName) {
+        myStrategyDao.deleteStrategy(phoneNumber, strategyName);
+        return new BaseResult<>(0, "删除成功!");
     }
 
     @GetMapping
